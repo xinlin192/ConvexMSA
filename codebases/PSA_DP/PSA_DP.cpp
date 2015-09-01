@@ -26,7 +26,7 @@ const double MIN_DOUBLE = -1*numeric_limits<double>::max();
 
 /* Define scores of each case */
 const double MATCH_SCORE = +2;
-const double MISMATCH_SCORE = -2;
+const double MISMATCH_SCORE = -1;
 const double INSERTION_SCORE = -1;
 const double DELETION_SCORE = -1;
 const char GAP_NOTATION = '-';
@@ -123,8 +123,12 @@ void smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
             char acidB = seqB[i-1];
             double mscore = isMatch2(acidA,acidB)?MATCH_SCORE:MISMATCH_SCORE;
             double mm_score = plane[i-1][j-1].score + mscore;
-            double ins_score = plane[i][j-1].score + INSERTION_SCORE;
-            double del_score = plane[i-1][j].score + DELETION_SCORE;
+            double ins_score = MIN_DOUBLE;
+            for (int l = 1; j - l > 0 ; l ++) 
+                ins_score = max(ins_score, plane[i][j-l].score + l * INSERTION_SCORE);
+            double del_score = MIN_DOUBLE;
+            for (int l = 1; i - l > 0 ; l ++) 
+                del_score = max(del_score, plane[i-l][j].score + l * DELETION_SCORE);
             double opt_score = MIN_DOUBLE;
             Action opt_action;
             char opt_acidA, opt_acidB;
@@ -186,6 +190,7 @@ int main (int argn, char** argv) {
         usage();
         exit(1);
     }
+
     // 2. input DNA sequence file
     ifstream seq_file(argv[1]);
     string primary_DNA, secondary_DNA;
@@ -199,6 +204,7 @@ int main (int argn, char** argv) {
     cout << ", ScoreMismatch: " << MISMATCH_SCORE << endl;
     cout << "1st_DNA: " << primary_DNA << endl;
     cout << "2nd_DNA: " << secondary_DNA << endl;
+
     // 3. process Dynamic Programming
     Sequence seqA (primary_DNA.begin(), primary_DNA.end());
     Sequence seqB (secondary_DNA.begin(), secondary_DNA.end());
@@ -210,14 +216,25 @@ int main (int argn, char** argv) {
 
     // 4. output the result
     cout << ">>>>>>>>>>>>>>>>>>>>>>>Summary<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    cout << "Length of Trace: " << trace.size() << endl;
-    /*
-    cout << "Score: " << out_tr.score;
-    cout << ", numInsertion: " << out_tr.numInsertion;
-    cout << ", numDeletion: " << out_tr.numDeletion;
-    cout << ", numMismatch: " << out_tr.numMismatch;
-    cout << ", numMatch: " << out_tr.numMatch << endl;
-    */
+    cout << "Length of Trace: " << trace.size();
+    cout << ", Score: " << trace.back().score;
+    cout << endl;
+    int numInsertion = 0, numDeletion = 0, numMatch = 0, numMismatch = 0, numUndefined = 0;
+    for (int i = 0; i < trace.size(); i ++) {
+        switch (trace[i].action) {
+            case MATCH: ++numMatch; break;
+            case INSERTION: ++numInsertion; break;
+            case DELETION: ++numDeletion; break;
+            case MISMATCH: ++numMismatch; break;
+            case UNDEFINED: ++numUndefined; break;
+        }
+    }
+    cout << "numMatch: " << numMatch;
+    cout << ", numInsertion: " << numInsertion;
+    cout << ", numDeletion: " << numDeletion;
+    cout << ", numMismatch: " << numMismatch;
+    cout << ", numUndefined: " << numUndefined;
+    cout << endl;
     // a. tuple view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     for (int i = 0; i < trace.size(); i ++) 

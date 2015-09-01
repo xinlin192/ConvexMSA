@@ -5,7 +5,7 @@ all:
 	g++ -fopenmp -O3 $(cpps) -o $(exec)
 
 push:
-	git add $(cpps) Makefile *.seq
+	git add $(cpps) Makefile
 	git commit -m "upgrade $(exec)"
 	git push
 
