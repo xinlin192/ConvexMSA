@@ -200,7 +200,7 @@ int main (int argn, char** argv) {
     getline(seq_file, secondary_DNA);
     seq_file.close();
     cout << "###############################################" << endl;
-    cout << "ScoreMatch: " << MISMATCH_SCORE;
+    cout << "ScoreMatch: " << MATCH_SCORE;
     cout << ", ScoreInsertion: " << INSERTION_SCORE;
     cout << ", ScoreDeletion: " << DELETION_SCORE;
     cout << ", ScoreMismatch: " << MISMATCH_SCORE;
