@@ -14,7 +14,11 @@
 #include <sstream> 
 #include <iostream>
 #include <fstream>
+
 using namespace std;
+
+/* Debugging option */
+//#define RECURSION_TRACE
 
 /* Define penalities of each case */
 const double MATCH_PENALTY = 0;
@@ -24,7 +28,7 @@ const double DELETION_PENALTY = 1;
 const char GAP_NOTATION = '-';
 
 /* Define match identification function */
-bool isMatch (char DNA1, char DNA2) {
+bool isMatch1 (char DNA1, char DNA2) {
     if (DNA1 > DNA2) {
         char temp = DNA1;
         DNA1 = DNA2;
@@ -33,6 +37,9 @@ bool isMatch (char DNA1, char DNA2) {
     if (DNA1 == 'A' and DNA2 == 'T' or DNA1 == 'C' and DNA2 == 'G') 
         return true;
     else return false;
+}
+bool isMatch2 (char DNA1, char DNA2) {
+    return DNA1==DNA2;
 }
 
 /* 
@@ -84,36 +91,40 @@ class Tracker {
         }
 };
 
-Tracker align (vector<char> & seqA, vector<char> & seqB, int posA, int posB, Tracker tr) {
+Tracker align (vector<char>& seqA, vector<char>& seqB, int posA, int posB, Tracker tr) {
     int lenA = seqA.size();
     int lenB = seqB.size();
     int remlenA = lenA - posA - 1;
     int remlenB = lenB - posB - 1;
     // 1. termination criteria
-    if (remlenA == 0 and remlenB == 0) {
+    if (remlenA < 0 and remlenB < 0) {
         return tr;
-    } else if (remlenA == 0 and remlenB == 1) {
+    } else if (remlenA < 0) {
         // deletion
-        tr.score += DELETION_PENALTY;
-        tr.aligned_seqA.push_back(GAP_NOTATION);
-        tr.aligned_seqB.push_back(seqB[posB]);
+        tr.score += DELETION_PENALTY * (remlenB+1);
+        for (int i = 0; i < remlenB+1; i++) {
+            tr.aligned_seqA.push_back(GAP_NOTATION);
+            tr.aligned_seqB.push_back(seqB[posB+i]);
+        }
         return tr;
-    } else if (remlenA == 1 and remlenB == 0) {
+    } else if (remlenB < 0) {
         // insertion
-        tr.score += INSERTION_PENALTY;
-        tr.aligned_seqA.push_back(seqA[posA]);
-        tr.aligned_seqB.push_back(GAP_NOTATION);
+        tr.score += INSERTION_PENALTY * (remlenA+1);
+        for (int i = 0; i < remlenA+1; i++) {
+            tr.aligned_seqA.push_back(seqA[posA]);
+            tr.aligned_seqB.push_back(GAP_NOTATION);
+        }
         return tr;   
     }
     // 2. invoke recursion to achieve dynamic programming
     Tracker insertion_tr (tr);  
     Tracker deletion_tr (tr);
     Tracker match_tr (tr);
-    if (remlenA > 0 and remlenB > 0) {
+    if (remlenA >= 0 and remlenB >= 0) {
         // trigger match or mismatch
         char seqA_acid = seqA[posA];
         char seqB_acid = seqB[posB];
-        if (isMatch(seqA_acid, seqB_acid))
+        if (isMatch2(seqA_acid, seqB_acid))
             match_tr.score += MATCH_PENALTY;
         else 
             match_tr.score += MISMATCH_PENALTY;
@@ -121,7 +132,7 @@ Tracker align (vector<char> & seqA, vector<char> & seqB, int posA, int posB, Tra
         match_tr.aligned_seqB.push_back(seqB_acid);
         match_tr = align(seqA, seqB, posA+1, posB+1, match_tr);
     }
-    if (remlenA > 0) {
+    if (remlenA >= 0) {
         // trigger insertion
         char seqA_acid = seqA[posA];
         insertion_tr.score += INSERTION_PENALTY;
@@ -129,7 +140,7 @@ Tracker align (vector<char> & seqA, vector<char> & seqB, int posA, int posB, Tra
         insertion_tr.aligned_seqB.push_back(GAP_NOTATION);
         insertion_tr = align(seqA, seqB, posA+1, posB, insertion_tr);
     } 
-    if (remlenB > 0) {
+    if (remlenB >= 0) {
         // trigger deletion
         char seqB_acid = seqB[posB];
         deletion_tr.score += DELETION_PENALTY;
@@ -139,14 +150,17 @@ Tracker align (vector<char> & seqA, vector<char> & seqB, int posA, int posB, Tra
     }
 
     // 3. compare trackers and return the best one
-    // 
-    if (match_tr.score <= min(deletion_tr.score, insertion_tr.score)) {
-        return match_tr;
-    } else if (insertion_tr.score <= min(deletion_tr.score, match_tr.score)) {
-        return insertion_tr;
-    } else if (deletion_tr.score <= min(match_tr.score, insertion_tr.score)) {
-        return deletion_tr;
-    }
+    Tracker opt_tr(0.0);
+    if (match_tr.score <= min(deletion_tr.score, insertion_tr.score)) 
+        opt_tr = match_tr;
+    else if (insertion_tr.score <= min(deletion_tr.score, match_tr.score))
+        opt_tr = insertion_tr;
+    else if (deletion_tr.score <= min(match_tr.score, insertion_tr.score)) 
+        opt_tr = deletion_tr;
+#ifdef RECURSION_TRACE
+    cout << opt_tr.toString() << endl;
+#endif
+    return opt_tr;
 }
 
 int main (int argn, char** argv) {

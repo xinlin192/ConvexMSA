@@ -1,12 +1,12 @@
 cpps=$(shell ls *.cpp)
-exec='PSA_NAIVE'
+exec='PSA_DFS'
 
 all: 
-	g++ -fopenmp -O3 $(cpps) -o PSA_NAIVE
+	g++ -fopenmp -O3 $(cpps) -o $(exec)
 
 push:
-	git add $(cpps) Makefile 
-	git commit -m "upgrade"
+	git add $(cpps) Makefile *.seq
+	git commit -m "upgrade $(exec)"
 	git push
 
 clean:
