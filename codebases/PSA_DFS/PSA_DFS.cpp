@@ -21,10 +21,10 @@ using namespace std;
 //#define RECURSION_TRACE
 
 /* Define penalities of each case */
-const double MATCH_PENALTY = 0;
-const double MISMATCH_PENALTY = 1;
-const double INSERTION_PENALTY = 1;
-const double DELETION_PENALTY = 1;
+const double MATCH_SCORE = +2;
+const double MISMATCH_SCORE = -1;
+const double INSERTION_SCORE = -1;
+const double DELETION_SCORE = -1;
 const char GAP_NOTATION = '-';
 
 /* Define match identification function */
@@ -58,23 +58,40 @@ class Tracker {
         double score;
         vector<char> aligned_seqA;
         vector<char> aligned_seqB;
+        int numInsertion, numDeletion, numMatch, numMismatch;
         Tracker (double score) {
             this->score = score;
+            this->numInsertion = 0;
+            this->numDeletion = 0;
+            this->numMatch = 0;
+            this->numMismatch = 0;
         }
         Tracker (Tracker& tr) {
             this->score = tr.score;
             this->aligned_seqA = tr.aligned_seqA;
             this->aligned_seqB = tr.aligned_seqB;
+            this->numInsertion = tr.numInsertion;
+            this->numDeletion = tr.numDeletion;
+            this->numMatch = tr.numMatch;
+            this->numMismatch = tr.numMismatch;
         }
         Tracker (double score, vector<char>& aligned_seqA, vector<char>& aligned_seqB) {
             this->score = score;
             this->aligned_seqA = aligned_seqA;
             this->aligned_seqB = aligned_seqB;
+            this->numInsertion = 0;
+            this->numDeletion = 0;
+            this->numMatch = 0;
+            this->numMismatch = 0;
         }
         void operator=(const Tracker& tr) {
             this->score = tr.score;
             this->aligned_seqA = tr.aligned_seqA;
             this->aligned_seqB = tr.aligned_seqB;
+            this->numInsertion = tr.numInsertion;
+            this->numDeletion = tr.numDeletion;
+            this->numMatch = tr.numMatch;
+            this->numMismatch = tr.numMismatch;
         }
         string toString () {
             ostringstream s;
@@ -101,7 +118,8 @@ Tracker align (vector<char>& seqA, vector<char>& seqB, int posA, int posB, Track
         return tr;
     } else if (remlenA < 0) {
         // deletion
-        tr.score += DELETION_PENALTY * (remlenB+1);
+        tr.score += DELETION_SCORE * (remlenB+1);
+        tr.numDeletion += (remlenB+1);
         for (int i = 0; i < remlenB+1; i++) {
             tr.aligned_seqA.push_back(GAP_NOTATION);
             tr.aligned_seqB.push_back(seqB[posB+i]);
@@ -109,7 +127,8 @@ Tracker align (vector<char>& seqA, vector<char>& seqB, int posA, int posB, Track
         return tr;
     } else if (remlenB < 0) {
         // insertion
-        tr.score += INSERTION_PENALTY * (remlenA+1);
+        tr.score += INSERTION_SCORE * (remlenA+1);
+        tr.numInsertion += (remlenA+1);
         for (int i = 0; i < remlenA+1; i++) {
             tr.aligned_seqA.push_back(seqA[posA]);
             tr.aligned_seqB.push_back(GAP_NOTATION);
@@ -124,10 +143,13 @@ Tracker align (vector<char>& seqA, vector<char>& seqB, int posA, int posB, Track
         // trigger match or mismatch
         char seqA_acid = seqA[posA];
         char seqB_acid = seqB[posB];
-        if (isMatch2(seqA_acid, seqB_acid))
-            match_tr.score += MATCH_PENALTY;
-        else 
-            match_tr.score += MISMATCH_PENALTY;
+        if (isMatch2(seqA_acid, seqB_acid)) {
+            match_tr.score += MATCH_SCORE;
+            match_tr.numMatch += 1;
+        } else {
+            match_tr.score += MISMATCH_SCORE;
+            match_tr.numMismatch += 1;
+        }
         match_tr.aligned_seqA.push_back(seqA_acid);
         match_tr.aligned_seqB.push_back(seqB_acid);
         match_tr = align(seqA, seqB, posA+1, posB+1, match_tr);
@@ -135,27 +157,29 @@ Tracker align (vector<char>& seqA, vector<char>& seqB, int posA, int posB, Track
     if (remlenA >= 0) {
         // trigger insertion
         char seqA_acid = seqA[posA];
-        insertion_tr.score += INSERTION_PENALTY;
+        insertion_tr.score += INSERTION_SCORE;
         insertion_tr.aligned_seqA.push_back(seqA_acid);
         insertion_tr.aligned_seqB.push_back(GAP_NOTATION);
+        insertion_tr.numInsertion += 1;
         insertion_tr = align(seqA, seqB, posA+1, posB, insertion_tr);
     } 
     if (remlenB >= 0) {
         // trigger deletion
         char seqB_acid = seqB[posB];
-        deletion_tr.score += DELETION_PENALTY;
+        deletion_tr.score += DELETION_SCORE;
         deletion_tr.aligned_seqA.push_back(GAP_NOTATION);
         deletion_tr.aligned_seqB.push_back(seqB_acid);
+        deletion_tr.numDeletion += 1;
         deletion_tr = align(seqA, seqB, posA, posB+1, deletion_tr);
     }
 
     // 3. compare trackers and return the best one
     Tracker opt_tr(0.0);
-    if (match_tr.score <= min(deletion_tr.score, insertion_tr.score)) 
+    if (match_tr.score >= max(deletion_tr.score, insertion_tr.score)) 
         opt_tr = match_tr;
-    else if (insertion_tr.score <= min(deletion_tr.score, match_tr.score))
+    else if (insertion_tr.score >= max(deletion_tr.score, match_tr.score))
         opt_tr = insertion_tr;
-    else if (deletion_tr.score <= min(match_tr.score, insertion_tr.score)) 
+    else if (deletion_tr.score <= max(match_tr.score, insertion_tr.score)) 
         opt_tr = deletion_tr;
 #ifdef RECURSION_TRACE
     cout << opt_tr.toString() << endl;
@@ -176,17 +200,25 @@ int main (int argn, char** argv) {
     getline(seq_file, secondary_DNA);
     seq_file.close();
     cout << "###############################################" << endl;
+    cout << "ScoreInsertion: " << INSERTION_SCORE;
+    cout << ", ScoreDeletion: " << DELETION_SCORE;
+    cout << ", ScoreMismatch: " << MISMATCH_SCORE;
+    cout << ", ScoreMatch: " << MISMATCH_SCORE << endl;
     cout << "1st_DNA: " << primary_DNA << endl;
     cout << "2nd_DNA: " << secondary_DNA << endl;
     cout << ">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    // 3. process dynamic programming
+    // 3. process Depth-first Search
     vector<char> seqA (primary_DNA.begin(), primary_DNA.end());
     vector<char> seqB (secondary_DNA.begin(), secondary_DNA.end());
     Tracker init_tr (0.0); 
     Tracker out_tr (0.0);
     out_tr = align(seqA, seqB, 0, 0, init_tr);
     // 4. output the result
-    cout << "Penalty (Score): " << out_tr.score << endl;
+    cout << "numInsertion: " << out_tr.numInsertion;
+    cout << ", numDeletion: " << out_tr.numDeletion;
+    cout << ", numMismatch: " << out_tr.numMismatch;
+    cout << ", numMatch: " << out_tr.numMatch;
+    cout << ", Score: " << out_tr.score << endl;
     cout << "1st_aligned_DNA: ";
     for (int i = 0; i < out_tr.aligned_seqA.size(); i++) 
         cout << out_tr.aligned_seqA[i];
