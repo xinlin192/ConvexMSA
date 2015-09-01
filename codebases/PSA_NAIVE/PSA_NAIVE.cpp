@@ -11,6 +11,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include <vector>
+#include <sstream> 
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -20,6 +21,7 @@ const double MATCH_PENALTY = 0;
 const double MISMATCH_PENALTY = 1;
 const double INSERTION_PENALTY = 1;
 const double DELETION_PENALTY = 1;
+const char GAP_NOTATION = '-';
 
 /* Define match identification function */
 bool isMatch (char DNA1, char DNA2) {
@@ -45,25 +47,44 @@ void usage () {
 }
 
 class Tracker {
-    double score;
-    vector<char> aligned_seqA;
-    vector<char> aligned_seqB;
-    Tracker () {
-        this.score = 0;
-    }
-    Tracker (Tracker tr) {
-        this.score = tr.score;
-        this.aligned_seqA = tr.aligned_seqA;
-        this.aligned_seqB = tr.aligned_seqB;
-    }
-    Tracker (double score, vector<char> aligned_seqA, vector<char> aligned_seqB) {
-        this.score = score;
-        this.aligned_seqA = aligned_seqA;
-        this.aligned_seqB = aligned_seqB;
-    }
-}
+    public:
+        double score;
+        vector<char> aligned_seqA;
+        vector<char> aligned_seqB;
+        Tracker (double score) {
+            this->score = score;
+        }
+        Tracker (Tracker& tr) {
+            this->score = tr.score;
+            this->aligned_seqA = tr.aligned_seqA;
+            this->aligned_seqB = tr.aligned_seqB;
+        }
+        Tracker (double score, vector<char>& aligned_seqA, vector<char>& aligned_seqB) {
+            this->score = score;
+            this->aligned_seqA = aligned_seqA;
+            this->aligned_seqB = aligned_seqB;
+        }
+        void operator=(const Tracker& tr) {
+            this->score = tr.score;
+            this->aligned_seqA = tr.aligned_seqA;
+            this->aligned_seqB = tr.aligned_seqB;
+        }
+        string toString () {
+            ostringstream s;
+            s << "Score: " << score << ", ";
+            s << "Aligned_SeqA: ";
+            for (int i = 0; i < aligned_seqA.size(); i ++) 
+                s << aligned_seqA[i];
+            s << ", ";
+            s << "Aligned_SeqB: ";
+            for (int i = 0; i < aligned_seqB.size(); i ++) 
+                s << aligned_seqB[i];
+            s << ". ";
+            return s.str();
+        }
+};
 
-Tracker align (vector<char>& seqA, vector<char>& seqB, int posA, int posB, Tracker tr) {
+Tracker align (vector<char> & seqA, vector<char> & seqB, int posA, int posB, Tracker tr) {
     int lenA = seqA.size();
     int lenB = seqB.size();
     int remlenA = lenA - posA - 1;
@@ -74,21 +95,58 @@ Tracker align (vector<char>& seqA, vector<char>& seqB, int posA, int posB, Track
     } else if (remlenA == 0 and remlenB == 1) {
         // deletion
         tr.score += DELETION_PENALTY;
-        tr.aligned_seqA.push_back('-');
-        tr.aligned_seqB.push_back(seqB[posB])
+        tr.aligned_seqA.push_back(GAP_NOTATION);
+        tr.aligned_seqB.push_back(seqB[posB]);
         return tr;
     } else if (remlenA == 1 and remlenB == 0) {
         // insertion
         tr.score += INSERTION_PENALTY;
-        tr.aligned_seqA.push_back(seqA[posA])
-        tr.aligned_seqB.push_back('-');
+        tr.aligned_seqA.push_back(seqA[posA]);
+        tr.aligned_seqB.push_back(GAP_NOTATION);
         return tr;   
     }
     // 2. invoke recursion to achieve dynamic programming
-    
+    Tracker insertion_tr (tr);  
+    Tracker deletion_tr (tr);
+    Tracker match_tr (tr);
+    if (remlenA > 0 and remlenB > 0) {
+        // trigger match or mismatch
+        char seqA_acid = seqA[posA];
+        char seqB_acid = seqB[posB];
+        if (isMatch(seqA_acid, seqB_acid))
+            match_tr.score += MATCH_PENALTY;
+        else 
+            match_tr.score += MISMATCH_PENALTY;
+        match_tr.aligned_seqA.push_back(seqA_acid);
+        match_tr.aligned_seqB.push_back(seqB_acid);
+        match_tr = align(seqA, seqB, posA+1, posB+1, match_tr);
+    }
+    if (remlenA > 0) {
+        // trigger insertion
+        char seqA_acid = seqA[posA];
+        insertion_tr.score += INSERTION_PENALTY;
+        insertion_tr.aligned_seqA.push_back(seqA_acid);
+        insertion_tr.aligned_seqB.push_back(GAP_NOTATION);
+        insertion_tr = align(seqA, seqB, posA+1, posB, insertion_tr);
+    } 
+    if (remlenB > 0) {
+        // trigger deletion
+        char seqB_acid = seqB[posB];
+        deletion_tr.score += DELETION_PENALTY;
+        deletion_tr.aligned_seqA.push_back(GAP_NOTATION);
+        deletion_tr.aligned_seqB.push_back(seqB_acid);
+        deletion_tr = align(seqA, seqB, posA, posB+1, deletion_tr);
+    }
 
     // 3. compare trackers and return the best one
-
+    // 
+    if (match_tr.score <= min(deletion_tr.score, insertion_tr.score)) {
+        return match_tr;
+    } else if (insertion_tr.score <= min(deletion_tr.score, match_tr.score)) {
+        return insertion_tr;
+    } else if (deletion_tr.score <= min(match_tr.score, insertion_tr.score)) {
+        return deletion_tr;
+    }
 }
 
 int main (int argn, char** argv) {
@@ -103,19 +161,26 @@ int main (int argn, char** argv) {
     getline(seq_file, primary_DNA);
     getline(seq_file, secondary_DNA);
     seq_file.close();
-    cout << "###############################################"
+    cout << "###############################################" << endl;
     cout << "1st_DNA: " << primary_DNA << endl;
     cout << "2nd_DNA: " << secondary_DNA << endl;
-    cout << ">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<"
+    cout << ">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     // 3. process dynamic programming
     vector<char> seqA (primary_DNA.begin(), primary_DNA.end());
     vector<char> seqB (secondary_DNA.begin(), secondary_DNA.end());
-    Tracker init_tr ();
-    Tracker out_tr (align(seqA, seqB, 0, 0, init_tr));
+    Tracker init_tr (0.0); 
+    Tracker out_tr (0.0);
+    out_tr = align(seqA, seqB, 0, 0, init_tr);
     // 4. output the result
     cout << "Penalty (Score): " << out_tr.score << endl;
-    cout << "1st_aligned_DNA: " << out_tr.aligned_seqA << endl;
-    cout << "2nd_aligned_DNA: " << out_tr.aligned_seqB << endl;
-    cout << "###############################################"
+    cout << "1st_aligned_DNA: ";
+    for (int i = 0; i < out_tr.aligned_seqA.size(); i++) 
+        cout << out_tr.aligned_seqA[i];
+    cout << endl;
+    cout << "2nd_aligned_DNA: ";
+    for (int i = 0; i < out_tr.aligned_seqB.size(); i++) 
+        cout << out_tr.aligned_seqB[i];
+    cout << endl;
+    cout << "###############################################";
     return 0;
 }
