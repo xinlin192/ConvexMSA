@@ -200,10 +200,11 @@ int main (int argn, char** argv) {
     getline(seq_file, secondary_DNA);
     seq_file.close();
     cout << "###############################################" << endl;
-    cout << "ScoreInsertion: " << INSERTION_SCORE;
+    cout << "ScoreMatch: " << MISMATCH_SCORE;
+    cout << ", ScoreInsertion: " << INSERTION_SCORE;
     cout << ", ScoreDeletion: " << DELETION_SCORE;
     cout << ", ScoreMismatch: " << MISMATCH_SCORE;
-    cout << ", ScoreMatch: " << MISMATCH_SCORE << endl;
+    cout << endl;
     cout << "1st_DNA: " << primary_DNA << endl;
     cout << "2nd_DNA: " << secondary_DNA << endl;
     cout << ">>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<" << endl;
@@ -214,11 +215,12 @@ int main (int argn, char** argv) {
     Tracker out_tr (0.0);
     out_tr = align(seqA, seqB, 0, 0, init_tr);
     // 4. output the result
-    cout << "numInsertion: " << out_tr.numInsertion;
+    cout << "numMatch: " << out_tr.numMatch;
+    cout << ", numInsertion: " << out_tr.numInsertion;
     cout << ", numDeletion: " << out_tr.numDeletion;
     cout << ", numMismatch: " << out_tr.numMismatch;
-    cout << ", numMatch: " << out_tr.numMatch;
-    cout << ", Score: " << out_tr.score << endl;
+    cout << ", Score: " << out_tr.score;
+    cout << endl;
     cout << "1st_aligned_DNA: ";
     for (int i = 0; i < out_tr.aligned_seqA.size(); i++) 
         cout << out_tr.aligned_seqA[i];
