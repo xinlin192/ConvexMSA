@@ -26,7 +26,7 @@ const double MIN_DOUBLE = -1*numeric_limits<double>::max();
 
 /* Define scores of each case */
 const double MATCH_SCORE = +2;
-const double MISMATCH_SCORE = -1;
+const double MISMATCH_SCORE = -2;
 const double INSERTION_SCORE = -1;
 const double DELETION_SCORE = -1;
 const char GAP_NOTATION = '-';
@@ -78,7 +78,8 @@ class Cell {
             stringstream s;
             s << "(" << this->row_index << ", " << this->col_index << ", ";
             s << action2str(this->action) << ", ";
-            s << this->acidA << ", " << this->acidB << ") ";
+            s << this->acidA << ", " << this->acidB;
+            s << ", " << this->score << ") ";
             return s.str();
         }
         char toActSymbol () {
@@ -120,7 +121,8 @@ void smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
             if (i == 0 or j == 0) continue;
             char acidA = seqA[j-1];
             char acidB = seqB[i-1];
-            double mm_score = plane[i-1][j-1].score + isMatch2(acidA,acidB)?MATCH_SCORE:MISMATCH_SCORE;
+            double mscore = isMatch2(acidA,acidB)?MATCH_SCORE:MISMATCH_SCORE;
+            double mm_score = plane[i-1][j-1].score + mscore;
             double ins_score = plane[i][j-1].score + INSERTION_SCORE;
             double del_score = plane[i-1][j].score + DELETION_SCORE;
             double opt_score = MIN_DOUBLE;
