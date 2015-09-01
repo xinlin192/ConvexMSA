@@ -87,7 +87,7 @@ class Cell {
                 case DELETION: return '|';
                 case MATCH: return '\\';
                 case MISMATCH: return '@';
-                case UNDEFINED: return '?';
+                case UNDEFINED: return '*';
             }
         }
 };
@@ -246,12 +246,12 @@ int main (int argn, char** argv) {
         cout << endl;
     }
     cout << endl;
-    cout << "* - ";
+    cout << "* * ";
     for (int i = 0; i < seqA.size(); i ++) 
         cout << seqA[i] << " ";
     cout << endl;
     for (int i = 0; i < plane.size(); i ++) {
-        if (i == 0) cout << "- ";
+        if (i == 0) cout << "* ";
         else cout << seqB[i-1] << " ";
         for (int j = 0; j < plane[i].size(); j++) {
             cout << plane[i][j].toActSymbol();
