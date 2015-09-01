@@ -1,5 +1,5 @@
 /*###############################################################
-## MODULE: PSA_NAIVE.cpp
+## MODULE: PSA_DP.cpp
 ## VERSION: 1.0 
 ## SINCE 2015-08-29
 ##      
@@ -100,7 +100,7 @@ typedef vector<Cell> Trace;
    The second sequence is the one to be aligned with the observed one.
    */
 void usage () {
-    cout << "./PSA_NAIVE [seq_file]" << endl;
+    cout << "./PSA_DP [seq_file]" << endl;
     cout << "seq_file should contain two DNA sequence in its first line and second line. " << endl;
     cout << "The first sequence is observed. " << endl;
     cout << "The second sequence is the one to be aligned with the observed one." << endl;
