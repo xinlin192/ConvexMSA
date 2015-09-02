@@ -66,7 +66,7 @@ class Cell {
         double score; 
         Action action;
 
-        int row_index, col_index; 
+        int row_index, col_index, dep_index; 
         char acidA, acidB;
         Cell () {
             this->score = 0;
@@ -110,69 +110,78 @@ void usage () {
     cout << "The second sequence is the one to be aligned with the observed one." << endl;
 }
 
-
-void cubic_smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
-    int nRow = plane.size();
-    int nCol = plane[0].size();
-    // 1. fill in the plane
+void cubic_smith_waterman (Sequence seqA, Sequence seqB, Cube& cube, Trace& trace) {
+    int nRow = cube.size();
+    int nCol = cube[0].size();
+    int nDep = cube[0][0].size();
+    // 1. fill in the cube
     double max_score = MIN_DOUBLE;
     int max_i = -1, max_j = -1;
     for (int i = 0; i < nRow; i ++) {
         for (int j = 0; j < nCol; j ++) {
-            plane[i][j].row_index = i;
-            plane[i][j].col_index = j;
-            if (i == 0 or j == 0) continue;
-            char acidA = seqA[j-1];
-            char acidB = seqB[i-1];
-            double mscore = isMatch2(acidA,acidB)?MATCH_SCORE:MISMATCH_SCORE;
-            double mm_score = plane[i-1][j-1].score + mscore;
-            double ins_score = MIN_DOUBLE;
-            for (int l = 1; j - l > 0 ; l ++) 
-                ins_score = max(ins_score, plane[i][j-l].score + l * INSERTION_SCORE);
-            double del_score = MIN_DOUBLE;
-            for (int l = 1; i - l > 0 ; l ++) 
-                del_score = max(del_score, plane[i-l][j].score + l * DELETION_SCORE);
-            double opt_score = MIN_DOUBLE;
-            Action opt_action;
-            char opt_acidA, opt_acidB;
-            if (ins_score >= max(mm_score, del_score)) {
-                opt_score = ins_score;
-                opt_action = INSERTION;
-                opt_acidA = acidA;
-                opt_acidB = GAP_NOTATION;
-            } else if (del_score >= max(mm_score, ins_score)) {
-                opt_score = del_score;
-                opt_action = DELETION;
-                opt_acidA = GAP_NOTATION;
-                opt_acidB = acidB;
-            } else if (mm_score >= max(ins_score, del_score)) {
-                opt_score = mm_score;
-                opt_action = isMatch2(acidA,acidB)?MATCH:MISMATCH;
-                opt_acidA = acidA;
-                opt_acidB = acidB;
-            }
-            plane[i][j].score = opt_score;
-            plane[i][j].action = opt_action;
-            plane[i][j].acidA = opt_acidA;
-            plane[i][j].acidB = opt_acidB;
-
-            if (opt_score >= max_score) {
-                max_score = opt_score;
-                max_i = i;
-                max_j = j;
+            for (int k = 0; k < nDep; k ++) {
+                cube[i][j][k].row_index = i;
+                cube[i][j][k].col_index = j;
+                cube[i][j][k].dep_index = k;
+                if (i == 0 or j == 0 or k == 0) continue;
+                char acidA = seqA[j-1];
+                char acidB = seqB[i-1];
+                // 1a. get max matach/mismatch score
+                double mscore = isMatch2(acidA,acidB)?MATCH_SCORE:MISMATCH_SCORE;
+                double mm_score = cube[i-1][j-1][].score + mscore;
+                // 1b. get max insertion score
+                double ins_score = MIN_DOUBLE;
+                for (int l = 1; j - l > 0 ; l ++) 
+                    ins_score = max(ins_score, cube[i][j-l].score + l * INSERTION_SCORE);
+                double del_score = MIN_DOUBLE;
+                // 1c. get max deletion score
+                for (int l = 1; i - l > 0 ; l ++) 
+                    del_score = max(del_score, cube[i-l][j].score + l * DELETION_SCORE);
+                double opt_score = MIN_DOUBLE;
+                // 1d. get optimal action for the current cube
+                Action opt_action;
+                char opt_acidA, opt_acidB;
+                if (ins_score >= max(mm_score, del_score)) {
+                    opt_score = ins_score;
+                    opt_action = INSERTION;
+                    opt_acidA = acidA;
+                    opt_acidB = GAP_NOTATION;
+                } else if (del_score >= max(mm_score, ins_score)) {
+                    opt_score = del_score;
+                    opt_action = DELETION;
+                    opt_acidA = GAP_NOTATION;
+                    opt_acidB = acidB;
+                } else if (mm_score >= max(ins_score, del_score)) {
+                    opt_score = mm_score;
+                    opt_action = isMatch2(acidA,acidB)?MATCH:MISMATCH;
+                    opt_acidA = acidA;
+                    opt_acidB = acidB;
+                }
+                // 1e. assign the optimal score/action to the cell
+                cube[i][j][k].score = opt_score;
+                cube[i][j][k].action = opt_action;
+                cube[i][j][k].acidA = opt_acidA;
+                cube[i][j][k].acidB = opt_acidB;
+                // 1f. keep track of the globally optimal cell
+                if (opt_score >= max_score) {
+                    max_score = opt_score;
+                    max_i = i;
+                    max_j = j;
+                    max_k = k;
+                }
             }
         }
     }
     // 2. trace back
     cout << "max_i: " << max_i << ", max_j: " << max_j << endl;
     if (max_i == 0 or max_j == 0) {
-        trace.push_back(plane[max_i][max_j]);
+        trace.push_back(cube[max_i][max_j][max_k]);
         return; 
     }
     int i,j;
     for (i = max_i, j = max_j; i > 0 and j > 0; ) {
-        trace.insert(trace.begin(), plane[i][j]);
-        switch (plane[i][j].action) {
+        trace.insert(trace.begin(), cube[i][j][k]);
+        switch (cube[i][j].action) {
             case MATCH: i--; j--; break;
             case MISMATCH: i--; j--; break;
             case INSERTION: j--; break;
@@ -183,7 +192,7 @@ void cubic_smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& tr
     if (i == 0 and j == 0) return;
     // special cases
     else 
-        trace.insert(trace.begin(), plane[1][1]);
+        trace.insert(trace.begin(), cube[1][1]);
     
 }
 
@@ -215,7 +224,7 @@ int main (int argn, char** argv) {
     int lenSeqB = seqB.size();
     Cube cube (lenSeqB+1, Plane(lenSeqA+1, Trace(5, Cell())));
     Trace trace (0, Cell());
-    // cubic_smith_waterman (seqA, seqB, plane, trace);
+    cubic_smith_waterman (seqA, seqB, cube, trace);
 
     // 4. output the result
     /*
