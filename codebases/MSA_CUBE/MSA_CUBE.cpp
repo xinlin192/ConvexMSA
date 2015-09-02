@@ -1,8 +1,7 @@
 /*###############################################################
-## MODULE: PSA_CUBE.cpp
+## MODULE: MSA_CUBE.cpp
 ## VERSION: 1.0 
 ## SINCE 2015-09-01
-## AUTHOR Jimmy Lin (xl5224) - JimmyLin@utexas.edu  
 ## DESCRIPTION: 
 ##      
 #################################################################
@@ -50,7 +49,9 @@ bool isMatch2 (char DNA1, char DNA2) {
 
 /* Data Structure */
 enum Action {
-    INSERTION, DELETION, MATCH, MISMATCH, UNDEFINED
+    UNDEFINED, INSERTION,
+    MATCH_A, MATCH_T, MATCH_C, MATCH_G,
+    DELETION_A, DELETION_T, DELETION_C, DELETION_G
 };
 string action2str (Action action) {
     switch (action) {
@@ -181,7 +182,7 @@ void cubic_smith_waterman (Sequence seqA, Sequence seqB, Cube& cube, Trace& trac
     int i,j;
     for (i = max_i, j = max_j; i > 0 and j > 0; ) {
         trace.insert(trace.begin(), cube[i][j][k]);
-        switch (cube[i][j].action) {
+        switch (cube[i][j][k].action) {
             case MATCH: i--; j--; break;
             case MISMATCH: i--; j--; break;
             case INSERTION: j--; break;
