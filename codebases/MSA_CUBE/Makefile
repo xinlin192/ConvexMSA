@@ -1,5 +1,5 @@
 cpps=$(shell ls *.cpp)
-exec='PSA_CUBE'
+exec='MSA_CUBE'
 
 all: 
 	g++ -fopenmp -O3 $(cpps) -o $(exec)
