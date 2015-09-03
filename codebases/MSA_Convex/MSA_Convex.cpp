@@ -12,7 +12,6 @@
 
 #include "MSA_Convex.h"
 
-using namespace std;
 
 /* Debugging option */
 //#define RECURSION_TRACE
@@ -122,7 +121,7 @@ void usage () { cout << "./PSA_CUBE [seq_file]" << endl;
 //}
 /*}}}*/
 
-void convexMSA (SequenceSet& allSeqs, vector<Tensor4D>& W, vector<Tensor4D>& C, Trace& trace) {
+void convexMSA (SequenceSet& allSeqs, vector<Tensor4D>& W, vector<Tensor4D>& C) {
 
 }
 
@@ -160,10 +159,10 @@ int main (int argn, char** argv) {
         lenSeqs[i] = allSeqs[i].size();
 
     // 3. relaxed convex program: ADMM-based algorithm
-    Trace trace (0, Cell());
+    // Trace trace (0, Cell());
     vector<Tensor4D> W;  // W_1 .. W_n for each sequence
     vector<Tensor4D> C;  // Score for each W_1 .. W_n
-    convexMSA (allSeqs, W, C, trace);
+    convexMSA (allSeqs, W, C);
 
     // 4. output the result
     /*

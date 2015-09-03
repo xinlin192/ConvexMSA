@@ -1,11 +1,10 @@
 CC=g++
-CFLAGS='-O3 -fopenmp'
 
 cpps=$(shell ls *.cpp)
 exec='MSA_Convex'
 
 all: 
-	$(CC) $(CFLAGS) $(cpps) -o $(exec)
+	$(CC) -fopenmp -O3 $(cpps) -o $(exec)
 
 push:
 	git add $(cpps) Makefile
