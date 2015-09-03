@@ -141,14 +141,47 @@ void tensor5D_init (vector<Tensor4D>& C, SequenceSet& allSeqs, vector<int>& lenS
 }
 
 void tensor5D_avg (Tensor5D dest, Tensor5D src1, Tensor5D src2) {
-        
+    int N = src1.size();
+    for (int n = 0; n < N; n ++) {
+        int T1 = src1[n].size();
+        for (int i = 0; i < T1; i ++) {
+            int T2 = src1[n][i].size();
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        dest[n][i][j][d][m] = 0.5*(src1[n][i][j][d][m] + src2[n][i][j][d][m]);
+        }
+    }
 }
 void tensor5D_sub (Tensor5D dest, Tensor5D src1, Tensor5D src2) {
-    
+    int N = src1.size();
+    for (int n = 0; n < N; n ++) {
+        int T1 = src1[n].size();
+        for (int i = 0; i < T1; i ++) {
+            int T2 = src1[n][i].size();
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        dest[n][i][j][d][m] = src1[n][i][j][d][m] - src2[n][i][j][d][m];
+        }
+    }
 }
 void tensor5D_frob_prod ();
 void tensor5D_lin_update ();
-void tensor5D_copy ();
+
+void tensor5D_copy (Tensor5D dest, Tensor5D src1) {
+    int N = src1.size();
+    for (int n = 0; n < N; n ++) {
+        int T1 = src1[n].size();
+        for (int i = 0; i < T1; i ++) {
+            int T2 = src1[n][i].size();
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        dest[n][i][j][d][m] = src1[n][i][j][d][m];
+        }
+    }  
+}
 
 vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     // 1. initialization
