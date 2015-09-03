@@ -35,7 +35,7 @@ void usage () { cout << "./PSA_CUBE [seq_file]" << endl;
 }
 
 /* FrankWolf Algorithm */
- /*{{{*/
+/*{{{*/
 //void FrankWolf () {
 //    int nRow = tensor.size();
 //    int nCol = tensor[0].size();
