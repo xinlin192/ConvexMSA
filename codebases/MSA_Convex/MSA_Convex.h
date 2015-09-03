@@ -21,6 +21,7 @@ using namespace std;
 
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*numeric_limits<double>::max();
+const double MAX_DOUBLE = numeric_limits<double>::max();
 const int NUM_DNA_TYPE = 4; 
 const int NUM_MOVEMENT = 9;
 
