@@ -1,10 +1,11 @@
 CC=g++
 
 cpps=$(shell ls *.cpp)
+hfiles=$(shell ls *.h)
 exec='MSA_Convex'
 
 all: 
-	$(CC) -fopenmp -O3 $(cpps) -o $(exec)
+	$(CC) -fopenmp -O3 $(cpps) $(hfiles) -o $(exec)
 
 push:
 	git add $(cpps) Makefile
