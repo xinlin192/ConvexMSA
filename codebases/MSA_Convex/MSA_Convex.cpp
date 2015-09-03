@@ -121,8 +121,73 @@ void usage () { cout << "./PSA_CUBE [seq_file]" << endl;
 //}
 /*}}}*/
 
-void convexMSA (SequenceSet& allSeqs, vector<Tensor4D>& W, vector<Tensor4D>& C) {
+int get_init_model_length (vector<int>& lenSeqs) {
+    int max_seq_length = -1;
+    int numSeq = lenSeqs.size(); 
+    for (int i = 0; i < numSeq; i ++)
+        if (lenSeqs[i] > max_seq_length) 
+            max_seq_length = lenSeqs[i];
+    return max_seq_length;
+}
 
+void tensor5D_init (vector<Tensor4D>& C, SequenceSet& allSeqs, vector<int>& lenSeqs, int init_T2) {
+    int numSeq = allSeqs.size();
+    for (int n = 0; n < numSeq; n ++) {
+        for (int i = 0; i < lenSeqs[n]; i ++) {
+            Tensor tmp_tensor (init_T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)));
+            C[n].push_back(tmp_tensor);
+        }
+    }
+}
+
+void tensor5D_avg (Tensor5D dest, Tensor5D src1, Tensor5D src2) {
+        
+}
+void tensor5D_sub (Tensor5D dest, Tensor5D src1, Tensor5D src2) {
+    
+}
+void tensor5D_frob_prod ();
+void tensor5D_lin_update ();
+void tensor5D_copy ();
+
+vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
+    // 1. initialization
+    int T2 = get_init_model_length (lenSeqs); // model_seq_length
+    vector<Tensor4D> Z (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+    vector<Tensor4D> C (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+    vector<Tensor4D> W_1 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+    vector<Tensor4D> W_2 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+    vector<Tensor4D> Y_1 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+    vector<Tensor4D> Y_2 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+    tensor5D_init (Z, allSeqs, lenSeqs, T2);
+    tensor5D_init (C, allSeqs, lenSeqs, T2);
+    tensor5D_init (W_1, allSeqs, lenSeqs, T2);
+    tensor5D_init (W_2, allSeqs, lenSeqs, T2);
+    tensor5D_init (Y_1, allSeqs, lenSeqs, T2);
+    tensor5D_init (Y_2, allSeqs, lenSeqs, T2);
+
+    // 2. ADMM iteration
+    int iter = 0;
+    int MAX_ADMM_ITER = 1000;
+    double MU = 1.0;
+    for (iter < MAX_ADMM_ITER) {
+        // 2a. Subprogram: FrankWolf Algorithm
+        
+        // 2b. Subprogram: 
+
+        // 2c. update Z: Z = (W_1 + W_2) / 2
+        average (Z, W_1, W_2);
+        // 2d. update Y_1 and Y_2: Y_1 = 
+        lin_update (Y_1, W_1, Z, MU);
+        lin_update (Y_2, W_2, Z, MU);
+    }
+    return Z;
 }
 
 int main (int argn, char** argv) {
@@ -148,21 +213,20 @@ int main (int argn, char** argv) {
     cout << ", ScoreInsertion: " << INSERTION_SCORE;
     cout << ", ScoreDeletion: " << DELETION_SCORE;
     cout << ", ScoreMismatch: " << MISMATCH_SCORE << endl;
-    for (int i = 0; i < numSeq; i ++) {
-        cout << "Seq_" << i << ": ";
-        for (int j = 0; j < allSeqs[i].size(); j ++) 
-            cout << allSeqs[i][j];
+    for (int n = 0; n < numSeq; n ++) {
+        char buffer [50];
+        sprintf (buffer, "Seq%5d", n);
+        cout << buffer << ": ";
+        for (int j = 0; j < allSeqs[n].size(); j ++) 
+            cout << allSeqs[n][j];
         cout << endl;
     }
     vector<int> lenSeqs (numSeq, 0);
-    for (int i = 0; i < numSeq; i ++) 
-        lenSeqs[i] = allSeqs[i].size();
+    for (int n = 0; n < numSeq; n ++) 
+        lenSeqs[n] = allSeqs[n].size();
 
     // 3. relaxed convex program: ADMM-based algorithm
-    // Trace trace (0, Cell());
-    vector<Tensor4D> W;  // W_1 .. W_n for each sequence
-    vector<Tensor4D> C;  // Score for each W_1 .. W_n
-    convexMSA (allSeqs, W, C);
+    W = CVX_ADMM_MSA (allSeqs, lenSeqs);
 
     // 4. output the result
     /*
