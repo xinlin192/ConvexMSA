@@ -24,6 +24,17 @@
    const double DELETION_SCORE = -1;
    const char GAP_NOTATION = '-';
    */
+const int MAX_FW_ITER = 100
+const int MAX_ADMM_ITER = 1000;
+
+const double C_I = 1; // penalty of insertion
+const double C_D = 1; // penalty of deletion
+const double C_MM = 1; // penalty of mismatch
+const double C_M = 0; // penalty of match
+
+const int INS_BASE_IDX = 0;
+const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G
+const int MAT_BASE_IDX = 5; // 1-A, 2-T, 3-C, 4-G
 
 
 /* 
@@ -35,94 +46,6 @@ void usage () { cout << "./PSA_CUBE [seq_file]" << endl;
     cout << "The first sequence is observed. " << endl;
     cout << "The second sequence is the one to be aligned with the observed one." << endl;
 }
-
-/* FrankWolf Algorithm */
-/*{{{*/
-//void FrankWolf () {
-//    int nRow = tensor.size();
-//    int nCol = tensor[0].size();
-//    int nDep = tensor[0][0].size();
-//    // 1. fill in the tensor
-//    double max_score = MIN_DOUBLE;
-//    int max_i = -1, max_j = -1;
-//    for (int i = 0; i < nRow; i ++) {
-//        for (int j = 0; j < nCol; j ++) {
-//            for (int k = 0; k < nDep; k ++) {
-//                tensor[i][j][k].row_index = i;
-//                tensor[i][j][k].col_index = j;
-//                tensor[i][j][k].dep_index = k;
-//                if (i == 0 or j == 0 or k == 0) continue;
-//                char acidA = seqA[j-1];
-//                char acidB = seqB[i-1];
-//                // 1a. get max matach/mismatch score
-//                double mscore = isMatch2(acidA,acidB)?MATCH_SCORE:MISMATCH_SCORE;
-//                double mm_score = tensor[i-1][j-1][].score + mscore;
-//                // 1b. get max insertion score
-//                double ins_score = MIN_DOUBLE;
-//                for (int l = 1; j - l > 0 ; l ++) 
-//                    ins_score = max(ins_score, tensor[i][j-l].score + l * INSERTION_SCORE);
-//                double del_score = MIN_DOUBLE;
-//                // 1c. get max deletion score
-//                for (int l = 1; i - l > 0 ; l ++) 
-//                    del_score = max(del_score, tensor[i-l][j].score + l * DELETION_SCORE);
-//                double opt_score = MIN_DOUBLE;
-//                // 1d. get optimal action for the current tensor
-//                Action opt_action;
-//                char opt_acidA, opt_acidB;
-//                if (ins_score >= max(mm_score, del_score)) {
-//                    opt_score = ins_score;
-//                    opt_action = INSERTION;
-//                    opt_acidA = acidA;
-//                    opt_acidB = GAP_NOTATION;
-//                } else if (del_score >= max(mm_score, ins_score)) {
-//                    opt_score = del_score;
-//                    opt_action = DELETION;
-//                    opt_acidA = GAP_NOTATION;
-//                    opt_acidB = acidB;
-//                } else if (mm_score >= max(ins_score, del_score)) {
-//                    opt_score = mm_score;
-//                    opt_action = isMatch2(acidA,acidB)?MATCH:MISMATCH;
-//                    opt_acidA = acidA;
-//                    opt_acidB = acidB;
-//                }
-//                // 1e. assign the optimal score/action to the cell
-//                tensor[i][j][k].score = opt_score;
-//                tensor[i][j][k].action = opt_action;
-//                tensor[i][j][k].acidA = opt_acidA;
-//                tensor[i][j][k].acidB = opt_acidB;
-//                // 1f. keep track of the globally optimal cell
-//                if (opt_score >= max_score) {
-//                    max_score = opt_score;
-//                    max_i = i;
-//                    max_j = j;
-//                    max_k = k;
-//                }
-//            }
-//        }
-//    }
-//    // 2. trace back
-//    cout << "max_i: " << max_i << ", max_j: " << max_j << endl;
-//    if (max_i == 0 or max_j == 0) {
-//        trace.push_back(tensor[max_i][max_j][max_k]);
-//        return; 
-//    }
-//    int i,j;
-//    for (i = max_i, j = max_j; i > 0 and j > 0; ) {
-//        trace.insert(trace.begin(), tensor[i][j][k]);
-//        switch (tensor[i][j][k].action) {
-//            case MATCH: i--; j--; break;
-//            case MISMATCH: i--; j--; break;
-//            case INSERTION: j--; break;
-//            case DELETION: i--; break;
-//            case UNDEFINED: cerr << "uncatched action." << endl; break;
-//        }
-//    }
-//    if (i == 0 and j == 0) return;
-//    // special cases
-//    else 
-//        trace.insert(trace.begin(), tensor[1][1]);
-//}
-/*}}}*/
 
 int get_init_model_length (vector<int>& lenSeqs) {
     int max_seq_length = -1;
@@ -197,36 +120,140 @@ void tensor4D_copy (Tensor4D& dest, Tensor4D& src1) {
     }
     return ;
 }
+
+/* 3-d smith waterman algorithm */
+/*{{{*/
+void cube_smith_waterman (Tensor4D& S, Tensor4D& M, Tensor4D& C, Sequence data_seq, Sequence model_seq) {
+    // 1. set up 3-d model
+    int T1 = S.size();
+    int T2 = S[0].size();
+    int T3 = S[0][0].size();
+    Cube cube (T1, Plane (T2, Trace (T3, Cell())));
+    // 2. fill in the tensor
+    double max_score = MIN_DOUBLE;
+    int max_i = -1, max_j = -1, max_k = -1;
+    for (int i = 0; i < nRow; i ++) {
+        for (int j = 0; j < nCol; j ++) {
+            for (int k = 0; k < nDep; k ++) {
+                cube[i][j][k].location[0] = i;
+                cube[i][j][k].location[1] = j;
+                cube[i][j][k].location[2] = k;
+                if (i == 0 or j == 0) continue;
+                /*
+                char acidA = seqA[j-1];
+                char acidB = seqB[i-1];
+                */
+                // 1a. get max matach/mismatch score
+                double mth_score = MAX_DOUBLE;
+                for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
+                    mth_score = min 
+                double mscore = isMatch2(acidA,acidB)?MATCH_SCORE:MISMATCH_SCORE;
+                double mm_score = tensor[i-1][j-1][].score + mscore;
+                // 1b. get max insertion score
+                double ins_score = MAX_DOUBLE;
+                for (int l = 1; j - l > 0 ; l ++) 
+                    ins_score = min(ins_score, cube[i][j-l][k].score + l * C_I);
+                // 1c. get max deletion score
+                double del_score = MAX_DOUBLE;
+                for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
+                    del_score = min(del_score, cube[i][j-1][d].score + M[i][j][k][DEL_BASE_IDX+d] + C_D);
+                // 1d. get optimal action for the current tensor
+                double opt_score = MAX_DOUBLE;
+                Action opt_action;
+                char opt_acidA, opt_acidB;
+                if (ins_score >= max(mm_score, del_score)) {
+                    opt_score = ins_score;
+                    opt_action = INSERTION;
+                    opt_acidA = acidA;
+                    opt_acidB = GAP_NOTATION;
+                } else if (del_score >= max(mm_score, ins_score)) {
+                    opt_score = del_score;
+                    opt_action = DELETION;
+                    opt_acidA = GAP_NOTATION;
+                    opt_acidB = acidB;
+                } else if (mm_score >= max(ins_score, del_score)) {
+                    opt_score = mm_score;
+                    opt_action = isMatch2(acidA,acidB)?MATCH:MISMATCH;
+                    opt_acidA = acidA;
+                    opt_acidB = acidB;
+                }
+                // 1e. assign the optimal score/action to the cell
+                tensor[i][j][k].score = opt_score;
+                tensor[i][j][k].action = opt_action;
+                tensor[i][j][k].acidA = opt_acidA;
+                tensor[i][j][k].acidB = opt_acidB;
+                // 1f. keep track of the globally optimal cell
+                if (opt_score >= max_score) {
+                    max_score = opt_score;
+                    max_i = i;
+                    max_j = j;
+                    max_k = k;
+                }
+            }
+        }
+    }
+    // 3. trace back
+    cout << "max_i: " << max_i << ", max_j: " << max_j << endl;
+    if (max_i == 0 or max_j == 0) {
+        trace.push_back(cube[max_i][max_j][max_k]);
+        return; 
+    }
+    int i,j;
+    for (i = max_i, j = max_j; i > 0 and j > 0; ) {
+        trace.insert(trace.begin(), tensor[i][j][k]);
+        switch (tensor[i][j][k].action) {
+            case MATCH: i--; j--; break;
+            case MISMATCH: i--; j--; break;
+            case INSERTION: j--; break;
+            case DELETION: i--; break;
+            case UNDEFINED: cerr << "uncatched action." << endl; break;
+        }
+    }
+    if (i == 0 and j == 0) return;
+    // special cases
+    else 
+        trace.insert(trace.begin(), tensor[1][1]);
+
+    // 4. reintepret it as 4-d data structure
+    
+}
+/*}}}*/
+
 void tensor4D_frank_wolfe_algo (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu) {
     // 1. Find the update direction
     int T1 = W.size();
     int T2 = W[0].size();
-    Tensor4D G (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
-    for (int i = 0; i < T1; i ++) 
-        for (int j = 0; j < T2; j ++) 
-            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                for (int m = 0; m < NUM_MOVEMENT; m ++)
-                    G[i][j][d][m] = C[i][j][d][m] + mu*(W[i][j][d][m] - Z[i][j][d][m]) + Y[i][j][d][m];
-    Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+    Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+    int fw_iter;
+    for (fw_iter < MAX_FW_ITER) {
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        M[i][j][d][m] = mu*(W[i][j][d][m] - Z[i][j][d][m]) + Y[i][j][d][m]; 
+                        // G[i][j][d][m] = C[i][j][d][m] + mu*(W[i][j][d][m] - Z[i][j][d][m]) + Y[i][j][d][m];
+        Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+        cube_smith_waterman (S, M, C);
 
-    // 2. Exact Line search: determine the optimal step size \alpha
-    // alpha = { [ -(2/mu)*C - W + Z + (1/mu)*Y ] dot S } / || S ||^2
-    //           ---------------combo------------------
-    double s_square = tensor4D_frob_prod (S, S);
-    double combo = 0.0;
-    for (int i = 0; i < T1; i ++) 
-        for (int j = 0; j < T2; j ++) 
-            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                for (int m = 0; m < NUM_MOVEMENT; m ++)
-                    combo += ((-2.0*mu)/C[i][j][d][m] - W[i][j][d][m] + Z[i][j][d][m] + (1/mu)*Y[i][j][d][m]) * S[i][j][d][m];
-    double alpha = combo / s_square;
+        // 2. Exact Line search: determine the optimal step size \alpha
+        // alpha = { [ -(2/mu)*C - W + Z + (1/mu)*Y ] dot S } / || S ||^2
+        //           ---------------combo------------------
+        double s_square = tensor4D_frob_prod (S, S);
+        double combo = 0.0;
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        combo += ((-2.0*mu)/C[i][j][d][m] - W[i][j][d][m] + Z[i][j][d][m] + (1/mu)*Y[i][j][d][m]) * S[i][j][d][m];
+        double alpha = combo / s_square;
 
-    // 3. update W
-    for (int i = 0; i < T1; i ++) 
-        for (int j = 0; j < T2; j ++) 
-            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                for (int m = 0; m < NUM_MOVEMENT; m ++)
-                    W[i][j][d][m] += alpha * S[i][j][d][m];
+        // 3. update W
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        W[i][j][d][m] += alpha * S[i][j][d][m];
+    }
     return; 
 }
 
@@ -235,17 +262,17 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     int numSeq = allSeqs.size();
     int T2 = get_init_model_length (lenSeqs); // model_seq_length
     vector<Tensor4D> Z (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
-                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> C (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
-                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> W_1 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
-                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> W_2 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
-                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> Y_1 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
-                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> Y_2 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
-                        vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  
     tensor5D_init (Z, allSeqs, lenSeqs, T2);
     tensor5D_init (C, allSeqs, lenSeqs, T2);
     tensor5D_init (W_1, allSeqs, lenSeqs, T2);
@@ -255,7 +282,6 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
 
     // 2. ADMM iteration
     int iter = 0;
-    int MAX_ADMM_ITER = 1000;
     double mu = 1.0;
     for (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
