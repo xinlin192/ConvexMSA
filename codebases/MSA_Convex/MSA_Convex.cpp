@@ -17,11 +17,14 @@
 //#define RECURSION_TRACE
 
 /* Define Scores of all Actions */
-const double MATCH_SCORE = +2;
-const double MISMATCH_SCORE = -1;
-const double INSERTION_SCORE = -1;
-const double DELETION_SCORE = -1;
-const char GAP_NOTATION = '-';
+/*
+   const double MATCH_SCORE = +2;
+   const double MISMATCH_SCORE = -1;
+   const double INSERTION_SCORE = -1;
+   const double DELETION_SCORE = -1;
+   const char GAP_NOTATION = '-';
+   */
+
 
 /* 
    The first sequence is observed. 
@@ -192,19 +195,39 @@ void tensor4D_copy (Tensor4D& dest, Tensor4D& src1) {
                 for (int m = 0; m < NUM_MOVEMENT; m ++)
                     dest[i][j][d][m] = src1[i][j][d][m];
     }
+    return ;
 }
 void tensor4D_frank_wolfe_algo (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu) {
     // 1. Find the update direction
-    Tensor4D G (0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
-    Tensor4D tmp (0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
-    tensor4D_init (G);
-    tensor4D_init (tmp);
-    tensor4D_sub (tmp, W, Z);
-    tensor4D_ratio_mult (G, tmp, mu);
-    tensor4D_add (tmp, G, Y);
-    tensor4D_add (G, tmp, C);
-    // 2. Exact Line search
-    double alpha = 1.0;
+    int T1 = W.size();
+    int T2 = W[0].size();
+    Tensor4D G (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+    for (int i = 0; i < T1; i ++) 
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    G[i][j][d][m] = C[i][j][d][m] + mu*(W[i][j][d][m] - Z[i][j][d][m]) + Y[i][j][d][m];
+    Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+
+    // 2. Exact Line search: determine the optimal step size \alpha
+    // alpha = { [ -(2/mu)*C - W + Z + (1/mu)*Y ] dot S } / || S ||^2
+    //           ---------------combo------------------
+    double s_square = tensor4D_frob_prod (S, S);
+    double combo = 0.0;
+    for (int i = 0; i < T1; i ++) 
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    combo += ((-2.0*mu)/C[i][j][d][m] - W[i][j][d][m] + Z[i][j][d][m] + (1/mu)*Y[i][j][d][m]) * S[i][j][d][m];
+    double alpha = combo / s_square;
+
+    // 3. update W
+    for (int i = 0; i < T1; i ++) 
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    W[i][j][d][m] += alpha * S[i][j][d][m];
+    return; 
 }
 
 vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
@@ -240,13 +263,15 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
         for (int n = 0; n < numSeq; n++) 
             tensor4D_frank_wolfe (W_1[n], Z[n], Y_1[n], C[n], mu);
         // 2b. Subprogram: 
-        
+
         // 2c. update Z: Z = (W_1 + W_2) / 2
+        // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++)
             tensor4D_average (Z[n], W_1[n], W_2[n]);
         // 2d. update Y_1 and Y_2: Y_1 += 1/mu * (W_1 - Z)
+        // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++)
-            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], 1.0/mu;
+            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], 1.0/mu);
         for (int n = 0; n < numSeq; n ++)
             tensor4D_lin_update (Y_2[n], W_2[n], Z[n], 1.0/mu);
     }
