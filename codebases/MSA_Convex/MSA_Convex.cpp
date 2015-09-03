@@ -140,51 +140,76 @@ void tensor5D_init (vector<Tensor4D>& C, SequenceSet& allSeqs, vector<int>& lenS
     }
 }
 
-void tensor5D_avg (Tensor5D dest, Tensor5D src1, Tensor5D src2) {
-    int N = src1.size();
-    for (int n = 0; n < N; n ++) {
-        int T1 = src1[n].size();
-        for (int i = 0; i < T1; i ++) {
-            int T2 = src1[n][i].size();
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        dest[n][i][j][d][m] = 0.5*(src1[n][i][j][d][m] + src2[n][i][j][d][m]);
-        }
+void tensor4D_avg (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2) {
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    dest[i][j][d][m] = 0.5*(src1[i][j][d][m] + src2[i][j][d][m]);
     }
 }
-void tensor5D_sub (Tensor5D dest, Tensor5D src1, Tensor5D src2) {
-    int N = src1.size();
-    for (int n = 0; n < N; n ++) {
-        int T1 = src1[n].size();
-        for (int i = 0; i < T1; i ++) {
-            int T2 = src1[n][i].size();
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        dest[n][i][j][d][m] = src1[n][i][j][d][m] - src2[n][i][j][d][m];
-        }
+void tensor4D_sub (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2) {
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    dest[i][j][d][m] = src1[i][j][d][m] - src2[i][j][d][m];
     }
 }
-void tensor5D_frob_prod ();
-void tensor5D_lin_update ();
-
-void tensor5D_copy (Tensor5D dest, Tensor5D src1) {
+double tensor4D_frob_prod (Tensor4D& src1, Tensor4D& src2) {
+    double prod = 0.0;
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    prod += src1[i][j][d][m] * src2[i][j][d][m];
+    }
+    return prod;
+}
+void tensor4D_lin_update (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2, double& ratio) {
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    dest[i][j][d][m] += ratio * (src1[i][j][d][m] - src2[i][j][d][m]);
+    }
+}
+void tensor4D_copy (Tensor4D& dest, Tensor4D& src1) {
     int N = src1.size();
-    for (int n = 0; n < N; n ++) {
-        int T1 = src1[n].size();
-        for (int i = 0; i < T1; i ++) {
-            int T2 = src1[n][i].size();
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        dest[n][i][j][d][m] = src1[n][i][j][d][m];
-        }
-    }  
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    dest[i][j][d][m] = src1[i][j][d][m];
+    }
+}
+void tensor4D_frank_wolfe_algo (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu) {
+    // 1. Find the update direction
+    Tensor4D G (0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+    Tensor4D tmp (0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+    tensor4D_init (G);
+    tensor4D_init (tmp);
+    tensor4D_sub (tmp, W, Z);
+    tensor4D_ratio_mult (G, tmp, mu);
+    tensor4D_add (tmp, G, Y);
+    tensor4D_add (G, tmp, C);
+    // 2. Exact Line search
+    double alpha = 1.0;
 }
 
 vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     // 1. initialization
+    int numSeq = allSeqs.size();
     int T2 = get_init_model_length (lenSeqs); // model_seq_length
     vector<Tensor4D> Z (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  // Score for each W_1 .. W_n
@@ -208,17 +233,22 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     // 2. ADMM iteration
     int iter = 0;
     int MAX_ADMM_ITER = 1000;
-    double MU = 1.0;
+    double mu = 1.0;
     for (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
-        
+        // NOTE: parallelize this for to enable parallelism
+        for (int n = 0; n < numSeq; n++) 
+            tensor4D_frank_wolfe (W_1[n], Z[n], Y_1[n], C[n], mu);
         // 2b. Subprogram: 
-
+        
         // 2c. update Z: Z = (W_1 + W_2) / 2
-        average (Z, W_1, W_2);
-        // 2d. update Y_1 and Y_2: Y_1 = 
-        lin_update (Y_1, W_1, Z, MU);
-        lin_update (Y_2, W_2, Z, MU);
+        for (int n = 0; n < numSeq; n ++)
+            tensor4D_average (Z[n], W_1[n], W_2[n]);
+        // 2d. update Y_1 and Y_2: Y_1 += 1/mu * (W_1 - Z)
+        for (int n = 0; n < numSeq; n ++)
+            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], 1.0/mu;
+        for (int n = 0; n < numSeq; n ++)
+            tensor4D_lin_update (Y_2[n], W_2[n], Z[n], 1.0/mu);
     }
     return Z;
 }
