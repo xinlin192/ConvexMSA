@@ -26,9 +26,16 @@ const int NUM_MOVEMENT = 9;
 
 /* Data Structure */
 enum Action {
-    UNDEFINED, INSERTION,
-    MATCH_A, MATCH_T, MATCH_C, MATCH_G,
-    DELETION_A, DELETION_T, DELETION_C, DELETION_G
+    INSERTION = 0,
+    DELETION_A = 1,
+    DELETION_T = 2, 
+    DELETION_C = 3, 
+    DELETION_G = 4,
+    MATCH_A = 5,
+    MATCH_T = 6, 
+    MATCH_C = 7, 
+    MATCH_G = 8, 
+    UNDEFINED = 9
 };
 string action2str (Action action) {
     /*
@@ -40,6 +47,7 @@ string action2str (Action action) {
         case UNDEFINED: return "Undefined";
     }
     */
+    return "";
 }
 class Cell {
     public:
@@ -94,7 +102,7 @@ bool isMatch1 (char DNA1, char DNA2) {
         DNA1 = DNA2;
         DNA2 = temp;
     }
-    if (DNA1 == 'A' and DNA2 == 'T' or DNA1 == 'C' and DNA2 == 'G') 
+    if ((DNA1 == 'A' and DNA2 == 'T') or (DNA1 == 'C' and DNA2 == 'G')) 
         return true;
     else return false;
 }

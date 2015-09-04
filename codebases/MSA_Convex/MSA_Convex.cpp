@@ -1,5 +1,4 @@
-/*###############################################################
-## MODULE: MSA_Convex.cpp
+/*################################################################ MODULE: MSA_Convex.cpp
 ## VERSION: 1.0 
 ## SINCE 2015-09-01
 ## DESCRIPTION: 
@@ -15,7 +14,7 @@
 //#define RECURSION_TRACE
 
 /* Define Scores and Other Constants */
-const int MAX_FW_ITER = 100
+const int MAX_FW_ITER = 100;
 const int MAX_ADMM_ITER = 1000;
 
 const char GAP_NOTATION = '-';
@@ -36,6 +35,8 @@ int dna2T3idx (char dna) {
         case 'C': return 2;
         case 'G': return 3;
     }
+    cerr << "dna2T3idx issue." << endl;
+    return -1;
 }
 
 /* 
@@ -69,7 +70,7 @@ void tensor5D_init (vector<Tensor4D>& C, SequenceSet& allSeqs, vector<int>& lenS
 
 /* Tensors auxiliary function */
 /*{{{*/
-void tensor4D_avg (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2) {
+void tensor4D_average (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2) {
     int T1 = src1.size();
     for (int i = 0; i < T1; i ++) {
         int T2 = src1[i].size();
@@ -101,7 +102,7 @@ double tensor4D_frob_prod (Tensor4D& src1, Tensor4D& src2) {
     }
     return prod;
 }
-void tensor4D_lin_update (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2, double& ratio) {
+void tensor4D_lin_update (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2, double ratio) {
     int T1 = src1.size();
     for (int i = 0; i < T1; i ++) {
         int T2 = src1[i].size();
@@ -134,7 +135,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     int T3 = S[0][0].size();
     Cube cube (T1, Plane (T2, Trace (T3, Cell(3))));
     // 2. fill in the tensor
-    double global_min_score = max_DOUBLE;
+    double global_min_score = MAX_DOUBLE;
     int gmin_i = -1, gmin_j = -1, gmin_k = -1;
     for (int i = 0; i < T1; i ++) {
         for (int j = 0; j < T2; j ++) {
@@ -145,7 +146,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 if (i == 0 or j == 0) continue;
                 vector<double> scores (NUM_MOVEMENT, 0.0); 
                 // 1a. get insertion score
-                double ins_score = cube[i][j-l][k].score + l * C_I;
+                double ins_score = cube[i][j-1][k].score + C_I;
                 scores[INS_BASE_IDX] = ins_score;
                 // 1b. get deletion score
                 double del_score;
@@ -176,29 +177,42 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 cube[i][j][k].action = min_action;
                 switch (cube[i][j][k].action) {
                     case INSERTION: 
-                        cube[i][j][k].acidA = data_dna[i]; // data dna
+                        cube[i][j][k].acidA = data_seq[i]; // data dna
                         cube[i][j][k].acidB = GAP_NOTATION; // model dna
                         break;
                     case DELETION_A: 
-                        cube[i][j][k].acidA = data_dna[i]; 
-                        cube[i][j][k].acidB = GAP_NOTATION; 
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = 'A'; 
                         break;
                     case DELETION_T: 
-                        cube[i][j][k].acidA = data_dna[i]; 
-                        cube[i][j][k].acidB = GAP_NOTATION; 
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = 'T'; 
                         break;
                     case DELETION_C: 
-                        cube[i][j][k].acidA = data_dna[i]; 
-                        cube[i][j][k].acidB = GAP_NOTATION; 
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = 'C'; 
                         break;
                     case DELETION_G: 
-                        cube[i][j][k].acidA = data_dna[i]; 
-                        cube[i][j][k].acidB = GAP_NOTATION; 
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = 'G'; 
                         break;
-                    case MATCH_A: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
-                    case MATCH_T: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
-                    case MATCH_C: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
-                    case MATCH_G: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
+                    case MATCH_A:
+                        cube[i][j][k].acidA = data_seq[i]; 
+                        cube[i][j][k].acidB = 'A'; 
+                        i--; j--; k = dna2T3idx(data_seq[i-1]);
+                        break;
+                    case MATCH_T: 
+                        cube[i][j][k].acidA = data_seq[i]; 
+                        cube[i][j][k].acidB = 'T'; 
+                        break;
+                    case MATCH_C: 
+                        cube[i][j][k].acidA = data_seq[i]; 
+                        cube[i][j][k].acidB = 'C'; 
+                        break;
+                    case MATCH_G:
+                        cube[i][j][k].acidA = data_seq[i]; 
+                        cube[i][j][k].acidB = 'G'; 
+                        break;
                     case UNDEFINED: cerr << "uncatched action." << endl; break;
                 }
                 // 1f. keep track of the globally optimal cell
@@ -217,8 +231,8 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
     }
-    int i,j;
-    for (i = max_i, j = max_j; i > 0 and j > 0; ) {
+    int i,j,k;
+    for (i = gmin_i, j = gmin_j, k = gmin_k; i > 0 and j > 0; ) {
         trace.insert(trace.begin(), cube[i][j][k]);
         switch (cube[i][j][k].action) {
             case INSERTION: i--; break;
@@ -235,8 +249,16 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     }
     if (i == 0 and j == 0) return;
     else trace.insert(trace.begin(), cube[1][1][dna2T3idx(data_seq[0])]);
-    // TODO: 4. reintepret it as 4-d data structure
-    
+    // 4. reintepret it as 4-d data structure
+    int ntr = trace.size();
+    for (int t = 0; t < ntr; t ++) {
+        Cell tmp_cell = trace[t];
+        i = tmp_cell.location[0];
+        j = tmp_cell.location[1];
+        k = tmp_cell.location[2];
+        int m = tmp_cell.action;
+        S[i][j][k][m] = 1.0;
+    }
 /*}}}*/
 }
 
@@ -247,7 +269,7 @@ void frank_wolfe_algo (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
     int T2 = W[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
     int fw_iter;
-    for (fw_iter < MAX_FW_ITER) {
+    while (fw_iter < MAX_FW_ITER) {
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
@@ -307,11 +329,11 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     // 2. ADMM iteration
     int iter = 0;
     double mu = 1.0;
-    for (iter < MAX_ADMM_ITER) {
+    while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n++) 
-            frank_wolfe (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[i]);
+            frank_wolfe_algo (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
         // 2b. Subprogram: 
 
         // 2c. update Z: Z = (W_1 + W_2) / 2
@@ -321,7 +343,7 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
         // 2d. update Y_1 and Y_2: Y_1 += 1/mu * (W_1 - Z)
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++)
-            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], 1.0/mu);
+            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], (1.0/mu));
         for (int n = 0; n < numSeq; n ++)
             tensor4D_lin_update (Y_2[n], W_2[n], Z[n], 1.0/mu);
     }
@@ -348,10 +370,10 @@ int main (int argn, char** argv) {
     }
     seq_file.close();
     cout << "#########################################################" << endl;
-    cout << "ScoreMatch: " << MATCH_SCORE;
-    cout << ", ScoreInsertion: " << INSERTION_SCORE;
-    cout << ", ScoreDeletion: " << DELETION_SCORE;
-    cout << ", ScoreMismatch: " << MISMATCH_SCORE << endl;
+    cout << "ScoreMatch: " << C_M;
+    cout << ", ScoreInsertion: " << C_I;
+    cout << ", ScoreDeletion: " << C_D;
+    cout << ", ScoreMismatch: " << C_MM << endl;
     for (int n = 0; n < numSeq; n ++) {
         char buffer [50];
         sprintf (buffer, "Seq%5d", n);
@@ -365,7 +387,7 @@ int main (int argn, char** argv) {
         lenSeqs[n] = allSeqs[n].size();
 
     // 3. relaxed convex program: ADMM-based algorithm
-    W = CVX_ADMM_MSA (allSeqs, lenSeqs);
+    vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs);
 
     // 4. output the result
     /*
