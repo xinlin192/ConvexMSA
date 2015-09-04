@@ -34,8 +34,17 @@ const double C_M = 0; // penalty of match
 
 const int INS_BASE_IDX = 0;
 const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G
-const int MAT_BASE_IDX = 5; // 1-A, 2-T, 3-C, 4-G
+const int MTH_BASE_IDX = 5; // 5-A, 6-T, 7-C, 8-G
+Action T4idx2Action [9] = {INSERTION,DELETION_A, DELETION_T, DELETION_C, DELETION_G, MATCH_A, MATCH_T, MATCH_C, MATCH_G};
 
+int dna2T3idx (char dna) {
+    switch (dna) {
+        case 'A': return 0;
+        case 'T': return 1;
+        case 'C': return 2;
+        case 'G': return 3;
+    }
+}
 
 /* 
    The first sequence is observed. 
@@ -123,15 +132,15 @@ void tensor4D_copy (Tensor4D& dest, Tensor4D& src1) {
 
 /* 3-d smith waterman algorithm */
 /*{{{*/
-void cube_smith_waterman (Tensor4D& S, Tensor4D& M, Tensor4D& C, Sequence data_seq, Sequence model_seq) {
+void cube_smith_waterman (Tensor4D& S, Tensor4D& M, Tensor4D& C, Sequence& data_seq, Trace& trace) {
     // 1. set up 3-d model
     int T1 = S.size();
     int T2 = S[0].size();
     int T3 = S[0][0].size();
     Cube cube (T1, Plane (T2, Trace (T3, Cell())));
     // 2. fill in the tensor
-    double max_score = MIN_DOUBLE;
-    int max_i = -1, max_j = -1, max_k = -1;
+    double global_min_score = max_DOUBLE;
+    int gmin_i = -1, gmin_j = -1, gmin_k = -1;
     for (int i = 0; i < nRow; i ++) {
         for (int j = 0; j < nCol; j ++) {
             for (int k = 0; k < nDep; k ++) {
@@ -139,69 +148,60 @@ void cube_smith_waterman (Tensor4D& S, Tensor4D& M, Tensor4D& C, Sequence data_s
                 cube[i][j][k].location[1] = j;
                 cube[i][j][k].location[2] = k;
                 if (i == 0 or j == 0) continue;
-                /*
-                char acidA = seqA[j-1];
-                char acidB = seqB[i-1];
-                */
-                // 1a. get max matach/mismatch score
-                double mth_score = MAX_DOUBLE;
-                for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
-                    mth_score = min 
-                double mscore = isMatch2(acidA,acidB)?MATCH_SCORE:MISMATCH_SCORE;
-                double mm_score = tensor[i-1][j-1][].score + mscore;
-                // 1b. get max insertion score
-                double ins_score = MAX_DOUBLE;
-                for (int l = 1; j - l > 0 ; l ++) 
-                    ins_score = min(ins_score, cube[i][j-l][k].score + l * C_I);
-                // 1c. get max deletion score
-                double del_score = MAX_DOUBLE;
-                for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
-                    del_score = min(del_score, cube[i][j-1][d].score + M[i][j][k][DEL_BASE_IDX+d] + C_D);
-                // 1d. get optimal action for the current tensor
-                double opt_score = MAX_DOUBLE;
-                Action opt_action;
-                char opt_acidA, opt_acidB;
-                if (ins_score >= max(mm_score, del_score)) {
-                    opt_score = ins_score;
-                    opt_action = INSERTION;
-                    opt_acidA = acidA;
-                    opt_acidB = GAP_NOTATION;
-                } else if (del_score >= max(mm_score, ins_score)) {
-                    opt_score = del_score;
-                    opt_action = DELETION;
-                    opt_acidA = GAP_NOTATION;
-                    opt_acidB = acidB;
-                } else if (mm_score >= max(ins_score, del_score)) {
-                    opt_score = mm_score;
-                    opt_action = isMatch2(acidA,acidB)?MATCH:MISMATCH;
-                    opt_acidA = acidA;
-                    opt_acidB = acidB;
+                vector<double> scores (NUM_MOVEMENT, 0.0); 
+                // 1a. get insertion score
+                double ins_score = cube[i][j-l][k].score + l * C_I;
+                scores[INS_BASE_IDX] = ins_score;
+                // 1b. get deletion score
+                double del_score;
+                for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
+                    del_score = cube[i][j-1][d].score + M[i][j][k][DEL_BASE_IDX+d] + C_D;
+                    scores[DEL_BASE_IDX+d] = del_score;
+                }
+                // 1c. get max matach/mismatch score
+                double mth_score;
+                char data_dna = data_seq[i];
+                double mscore = (dna2T3idx(data_dna)==k)?C_M:C_MM;
+                for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
+                    mth_score = cube[i-1][j-1][d].score + M[i][j][k][MTH_BASE_IDX+d] + mscore; 
+                    scores[MTH_BASE_IDX+d] = mth_score;
+                }
+                // 1d. get optimal action for the current cell
+                double min_score = MAX_DOUBLE;
+                Action min_action;
+                char min_acidA, min_acidB;
+                for (int mv = 0; mv < scores.size(); mv++) {
+                    if (scores[mv] < min_score) {
+                        min_score = scores[mv];
+                        min_action = T4idx2Action[mv];
+                    }
                 }
                 // 1e. assign the optimal score/action to the cell
-                tensor[i][j][k].score = opt_score;
-                tensor[i][j][k].action = opt_action;
-                tensor[i][j][k].acidA = opt_acidA;
-                tensor[i][j][k].acidB = opt_acidB;
+                cube[i][j][k].score = min_score;
+                cube[i][j][k].action = min_action;
+                //TODO: acidA and acidB
+
                 // 1f. keep track of the globally optimal cell
-                if (opt_score >= max_score) {
-                    max_score = opt_score;
-                    max_i = i;
-                    max_j = j;
-                    max_k = k;
+                if (min_score <= global_min_score) {
+                    global_min_score = min_score;
+                    gmin_i = i;
+                    gmin_j = j;
+                    gmin_k = k;
                 }
             }
         }
     }
     // 3. trace back
-    cout << "max_i: " << max_i << ", max_j: " << max_j << endl;
-    if (max_i == 0 or max_j == 0) {
-        trace.push_back(cube[max_i][max_j][max_k]);
+    cout << "min_i: " << gmin_i << ", min_j: " << gmin_j << ", min_k: " << gmin_k << endl;
+    if (gmin_i == 0 or gmin_j == 0) {
+        trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
     }
     int i,j;
     for (i = max_i, j = max_j; i > 0 and j > 0; ) {
-        trace.insert(trace.begin(), tensor[i][j][k]);
-        switch (tensor[i][j][k].action) {
+        trace.insert(trace.begin(), cube[i][j][k]);
+        // TODO: 
+        switch (cube[i][j][k].action) {
             case MATCH: i--; j--; break;
             case MISMATCH: i--; j--; break;
             case INSERTION: j--; break;
@@ -210,11 +210,11 @@ void cube_smith_waterman (Tensor4D& S, Tensor4D& M, Tensor4D& C, Sequence data_s
         }
     }
     if (i == 0 and j == 0) return;
-    // special cases
+    // TODO: special cases
     else 
         trace.insert(trace.begin(), tensor[1][1]);
 
-    // 4. reintepret it as 4-d data structure
+    // TODO: 4. reintepret it as 4-d data structure
     
 }
 /*}}}*/

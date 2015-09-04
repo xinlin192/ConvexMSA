@@ -18,7 +18,6 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 
-
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*numeric_limits<double>::max();
 const double MAX_DOUBLE = numeric_limits<double>::max();
