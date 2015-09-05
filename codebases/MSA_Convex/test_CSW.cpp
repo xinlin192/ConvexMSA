@@ -56,10 +56,39 @@ int main (int argn, char** argv) {
     cube_smith_waterman (S, trace, M, C, data_seq);
 
     // 3. show the result
+    cout << ">>>>>>>>>>>>>>>>>>>>>>>Summary<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+    cout << "ScoreMatch: " << C_M;
+    cout << ", ScoreInsertion: " << C_I;
+    cout << ", ScoreDeletion: " << C_D;
+    cout << ", ScoreMismatch: " << C_MM << endl;
+    cout << "Length of Trace: " << trace.size();
+    cout << ", Score: " << trace.back().score;
+    cout << endl;
+    /*
+    int numInsertion = 0, numDeletion = 0, numMatch = 0, numMismatch = 0, numUndefined = 0;
+    for (int i = 0; i < trace.size(); i ++) {
+        switch (trace[i].action) {
+            case MATCH: ++numMatch; break;
+            case INSERTION: ++numInsertion; break;
+            case DELETION: ++numDeletion; break;
+            case MISMATCH: ++numMismatch; break;
+            case UNDEFINED: ++numUndefined; break;
+        }
+    }
+    cout << "numMatch: " << numMatch;
+    cout << ", numInsertion: " << numInsertion;
+    cout << ", numDeletion: " << numDeletion;
+    cout << ", numMismatch: " << numMismatch;
+    cout << ", numUndefined: " << numUndefined;
+    cout << endl;
+    */
+
     // 3a. tuple view
+    cout << ">>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     for (int i = 0; i < trace.size(); i ++) 
         cout << trace[i].toString() << endl;
     // 3b. sequence view
+    cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     cout << "1st_aligned_DNA: ";
     for (int i = 0; i < trace.size(); i ++) 
         cout << trace[i].acidA;
