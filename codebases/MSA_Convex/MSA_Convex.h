@@ -24,7 +24,19 @@ const double MAX_DOUBLE = numeric_limits<double>::max();
 const int NUM_DNA_TYPE = 4; 
 const int NUM_MOVEMENT = 9;
 
+/* Algorithmic Seeting */
+const int MAX_FW_ITER = 100;
+const int MAX_ADMM_ITER = 1000;
+
+/* Define Scores and Other Constants */
+const char GAP_NOTATION = '-';
+const double C_I = 1; // penalty of insertion
+const double C_D = 1; // penalty of deletion
+const double C_MM = 1; // penalty of mismatch
+const double C_M = 0; // penalty of match
+
 /* Data Structure */
+/*{{{*/
 enum Action {
     INSERTION = 0,
     DELETION_A = 1,
@@ -38,15 +50,13 @@ enum Action {
     UNDEFINED = 9
 };
 string action2str (Action action) {
-    /*
-    switch (action) {
-        case INSERTION: return "Insertion";
-        case DELETION: return "Deletion";
-        case MATCH: return "Match";
-        case MISMATCH: return "Mismatch";
-        case UNDEFINED: return "Undefined";
-    }
-    */
+    // switch (action) {
+    //     case INSERTION: return "Insertion";
+    //     case DELETION: return "Deletion";
+    //     case MATCH: return "Match";
+    //     case MISMATCH: return "Mismatch";
+    //     case UNDEFINED: return "Undefined";
+    // }
     return "";
 }
 class Cell {
@@ -65,9 +75,8 @@ class Cell {
             this->acidA = '?';
             this->acidB = '?';
         }
-
-        /* convert to string:
-         *    [(location vector), action, acidA, acidB, score] */
+        // convert to string:
+        //    [(location vector), action, acidA, acidB, score] 
         string toString () {
             stringstream s;
             s << "[(";
@@ -94,6 +103,24 @@ typedef vector<vector<double> > Matrix; // 2-d double matrix
 typedef vector<Matrix > Tensor;  // 3-d double tensor
 typedef vector<Tensor > Tensor4D; // 4-d double Tensor
 typedef vector<Tensor4D > Tensor5D;  // 5-d double Tensor
+/*}}}*/
+
+/* T4 architecture */
+const int INS_BASE_IDX = 0;
+const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G
+const int MTH_BASE_IDX = 5; // 5-A, 6-T, 7-C, 8-G
+Action T4idx2Action [9] = {INSERTION,DELETION_A, DELETION_T, DELETION_C, DELETION_G, MATCH_A, MATCH_T, MATCH_C, MATCH_G};
+int dna2T3idx (char dna) {
+    switch (dna) {
+        case 'A': return 0;
+        case 'T': return 1;
+        case 'C': return 2;
+        case 'G': return 3;
+    }
+    cerr << "dna2T3idx issue: " << dna << endl;
+    exit(1);
+    return -1;
+}
 
 /* Define match identification function */
 bool isMatch1 (char DNA1, char DNA2) {
@@ -108,4 +135,199 @@ bool isMatch1 (char DNA1, char DNA2) {
 }
 bool isMatch2 (char DNA1, char DNA2) {
     return DNA1==DNA2;
+}
+
+/* Tensors auxiliary function */
+/*{{{*/
+void tensor5D_init (vector<Tensor4D>& C, SequenceSet& allSeqs, vector<int>& lenSeqs, int init_T2) {
+    int numSeq = allSeqs.size();
+    for (int n = 0; n < numSeq; n ++) {
+        for (int i = 0; i < lenSeqs[n]; i ++) {
+            Tensor tmp_tensor (init_T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)));
+            C[n].push_back(tmp_tensor);
+        }
+    }
+}
+void tensor4D_average (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2) {
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    dest[i][j][d][m] = 0.5*(src1[i][j][d][m] + src2[i][j][d][m]);
+    }
+}
+double tensor4D_frob_prod (Tensor4D& src1, Tensor4D& src2) {
+    double prod = 0.0;
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    prod += src1[i][j][d][m] * src2[i][j][d][m];
+    }
+    return prod;
+}
+void tensor4D_lin_update (Tensor4D& dest, Tensor4D& src1, Tensor4D& src2, double ratio) {
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    dest[i][j][d][m] += ratio * (src1[i][j][d][m] - src2[i][j][d][m]);
+    }
+}
+void tensor4D_copy (Tensor4D& dest, Tensor4D& src1) {
+    int N = src1.size();
+    int T1 = src1.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = src1[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    dest[i][j][d][m] = src1[i][j][d][m];
+    }
+    return ;
+}
+/*}}}*/
+
+/* 3-d smith waterman algorithm */
+void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, Sequence& data_seq) {
+    /*{{{*/
+    // 1. set up 3-d model
+    int T1 = S.size() + 1;
+    int T2 = S[0].size() + 1;
+    int T3 = S[0][0].size();
+    Cube cube (T1, Plane (T2, Trace (T3, Cell(3))));
+    // 2. fill in the tensor
+    double global_min_score = MAX_DOUBLE;
+    int gmin_i = -1, gmin_j = -1, gmin_k = -1;
+    for (int i = 0; i < T1; i ++) {
+        char data_dna = data_seq[i];
+        int dna_idx = dna2T3idx(data_dna);
+        cout << "i = " << i  << ", data_dna: " << data_dna << endl;
+        for (int j = 0; j < T2; j ++) {
+            for (int k = 0; k < T3; k ++) {
+                cout << "i=" << i << ", j=" << j << ", k=" << k << endl;
+                cube[i][j][k].location[0] = i;
+                cube[i][j][k].location[1] = j;
+                cube[i][j][k].location[2] = k;
+                if (i == 0 or j == 0) continue;
+                vector<double> scores (NUM_MOVEMENT, 0.0); 
+                // 1a. get insertion score
+                double ins_score = cube[i][j-1][k].score + C_I;
+                scores[INS_BASE_IDX] = ins_score;
+                // 1b. get deletion score
+                double del_score;
+                for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
+                    del_score = cube[i][j-1][d].score + M[i][j][k][DEL_BASE_IDX+d] + C_D;
+                    scores[DEL_BASE_IDX+d] = del_score;
+                }
+                // 1c. get max matach/mismatch score
+                double mth_score;
+                double mscore = (data_dna==k)?C_M:C_MM;
+                for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
+                    mth_score = cube[i-1][j-1][d].score + M[i][j][k][MTH_BASE_IDX+d] + mscore; 
+                    scores[MTH_BASE_IDX+d] = mth_score;
+                }
+                // 1d. get optimal action for the current cell
+                double min_score = MAX_DOUBLE;
+                Action min_action;
+                char min_acidA, min_acidB;
+                for (int mv = 0; mv < scores.size(); mv++) {
+                    if (scores[mv] < min_score) {
+                        min_score = scores[mv];
+                        min_action = T4idx2Action[mv];
+                    }
+                }
+                // 1e. assign the optimal score/action to the cell
+                cube[i][j][k].score = min_score;
+                cube[i][j][k].action = min_action;
+                switch (cube[i][j][k].action) {
+                    case INSERTION: 
+                        cube[i][j][k].acidA = data_seq[i]; // data dna
+                        cube[i][j][k].acidB = GAP_NOTATION; // model dna
+                        break;
+                    case DELETION_A: 
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = 'A'; 
+                        break;
+                    case DELETION_T: 
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = 'T'; 
+                        break;
+                    case DELETION_C: 
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = 'C'; 
+                        break;
+                    case DELETION_G: 
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = 'G'; 
+                        break;
+                    case MATCH_A:
+                        cube[i][j][k].acidA = data_seq[i]; 
+                        cube[i][j][k].acidB = 'A'; 
+                        break;
+                    case MATCH_T: 
+                        cube[i][j][k].acidA = data_seq[i]; 
+                        cube[i][j][k].acidB = 'T'; 
+                        break;
+                    case MATCH_C: 
+                        cube[i][j][k].acidA = data_seq[i]; 
+                        cube[i][j][k].acidB = 'C'; 
+                        break;
+                    case MATCH_G:
+                        cube[i][j][k].acidA = data_seq[i]; 
+                        cube[i][j][k].acidB = 'G'; 
+                        break;
+                    case UNDEFINED: cerr << "uncatched action." << endl; break;
+                }
+                // 1f. keep track of the globally optimal cell
+                if (min_score <= global_min_score) {
+                    global_min_score = min_score;
+                    gmin_i = i;
+                    gmin_j = j;
+                    gmin_k = k;
+                }
+            }
+        }
+    }
+    // 3. trace back
+    cout << "min_i: " << gmin_i << ", min_j: " << gmin_j << ", min_k: " << gmin_k << endl;
+    if (gmin_i == 0 or gmin_j == 0) {
+        trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
+        return; 
+    }
+    int i,j,k;
+    for (i = gmin_i, j = gmin_j, k = gmin_k; i > 0 and j > 0; ) {
+        trace.insert(trace.begin(), cube[i][j][k]);
+        switch (cube[i][j][k].action) {
+            case INSERTION: i--; break;
+            case DELETION_A: j--; k = dna2T3idx('A'); break;
+            case DELETION_T: j--; k = dna2T3idx('T'); break;
+            case DELETION_C: j--; k = dna2T3idx('C'); break;
+            case DELETION_G: j--; k = dna2T3idx('G'); break;
+            case MATCH_A: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
+            case MATCH_T: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
+            case MATCH_C: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
+            case MATCH_G: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
+            case UNDEFINED: cerr << "uncatched action." << endl; break;
+        }
+    }
+    if (i == 0 and j == 0) return;
+    else trace.insert(trace.begin(), cube[1][1][dna2T3idx(data_seq[0])]);
+    // 4. reintepret it as 4-d data structure
+    int ntr = trace.size();
+    for (int t = 0; t < ntr; t ++) {
+        Cell tmp_cell = trace[t];
+        i = tmp_cell.location[0];
+        j = tmp_cell.location[1];
+        k = tmp_cell.location[2];
+        int m = tmp_cell.action;
+        S[i][j][k][m] = 1.0;
+    }
+    /*}}}*/
 }
