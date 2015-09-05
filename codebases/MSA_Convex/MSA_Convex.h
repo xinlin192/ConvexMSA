@@ -206,7 +206,8 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     double global_min_score = MAX_DOUBLE;
     int gmin_i = -1, gmin_j = -1, gmin_k = -1;
     for (int i = 0; i < T1; i ++) {
-        char data_dna = data_seq[i];
+        char data_dna = data_seq[i-1];
+        cout << "1" << endl;
         int dna_idx = dna2T3idx(data_dna);
         cout << "i = " << i  << ", data_dna: " << data_dna << endl;
         for (int j = 0; j < T2; j ++) {
@@ -295,6 +296,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             }
         }
     }
+    cout << "go to trace back" << endl;
     // 3. trace back
     cout << "min_i: " << gmin_i << ", min_j: " << gmin_j << ", min_k: " << gmin_k << endl;
     if (gmin_i == 0 or gmin_j == 0) {
