@@ -33,7 +33,8 @@ int get_init_model_length (vector<int>& lenSeqs) {
 }
 
 
-void frank_wolfe_algo (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu, Sequence data_seq) {
+/* We resolve the first subproblem through the frank-wolfe algorithm */
+void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu, Sequence data_seq) {
 /*{{{*/
     // 1. Find the update direction
     int T1 = W.size();
@@ -73,6 +74,22 @@ void frank_wolfe_algo (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 /*}}}*/
 }
 
+/* We resolve the second subproblem through sky-plane projection */
+void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4D>& Y, double& mu, SequenceSet& allSeqs) {
+    int numSeq = allSeqs.size();
+    vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
+                        vector<double>(NUM_MOVEMENT, 0.0)))));  
+    for (int n = 0; n < numSeq; n ++) 
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Z[n][i][j][d][m]);
+    
+
+    return;
+}
+
 vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
 /*{{{*/
     // 1. initialization
@@ -104,9 +121,9 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n++) 
-            frank_wolfe_algo (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
+            first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
         // 2b. Subprogram: 
-
+            second_subproblem (W_2, Z, Y_2, mu, allSeqs);
         // 2c. update Z: Z = (W_1 + W_2) / 2
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++)
