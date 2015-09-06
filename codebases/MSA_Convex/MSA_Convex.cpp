@@ -77,16 +77,42 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 /* We resolve the second subproblem through sky-plane projection */
 void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4D>& Y, double& mu, SequenceSet& allSeqs) {
     int numSeq = allSeqs.size();
+    int T2 = W[0][0].size();
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
-    for (int n = 0; n < numSeq; n ++) 
-        for (int i = 0; i < T1; i ++) 
+    // 1. compute delta
+    for (int n = 0; n < numSeq; n ++) {
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++) { 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Z[n][i][j][d][m]);
-    
+        }
+    }
+    // 2. determine the trace 
+    Matrix mplane (4, vector<double>(T2, 0.0));
+    for (int n = 0; n < numSeq; n ++) {
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++) { 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        mplane[d][j] = delta[n][i][j][d][m]
+        }
+    }
 
+    // 3. recover values for W 
+     for (int n = 0; n < numSeq; n ++) {
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++) { 
+            int T2 = W[n][i].size();
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        W[n][i][j][d][m] = 0;
+        }
+    }   
     return;
 }
 
