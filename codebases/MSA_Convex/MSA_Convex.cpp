@@ -81,43 +81,54 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     // 1. compute delta
+    Tensor tensor (4, Matrix (T2, vector<double>(4, 0.0)));
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
                         delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Z[n][i][j][d][m]);
+                        if (m == DELETION_A or m == MATCH_A)
+                              tensor[d][j][dna2T3idx('A')] += delta[n][i][j][d][m];
+                        else if (m == DELETION_T or m == MATCH_T)
+                              tensor[d][j][dna2T3idx('T')] += delta[n][i][j][d][m];
+                        else if (m == DELETION_C or m == MATCH_C)
+                              tensor[d][j][dna2T3idx('C')] += delta[n][i][j][d][m];
+                        else if (m == DELETION_G or m == MATCH_G)
+                              tensor[d][j][dna2T3idx('G')] += delta[n][i][j][d][m];
+                    }
         }
     }
-    // 2. determine the trace 
-    Matrix mplane (4, vector<double>(T2, 0.0));
-    for (int n = 0; n < numSeq; n ++) {
-        int T1 = W[n].size();
-        for (int i = 0; i < T1; i ++) { 
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        mplane[d][j] = delta[n][i][j][d][m]
-        }
-    }
+    // 2. determine the trace: run viterbi algorithm
+    Trace trace (0, Cell(2)); // 1d: ATCG, 2d: j
+    viterbi_algo (trace, tensor);
 
     // 3. recover values for W 
-     for (int n = 0; n < numSeq; n ++) {
+    for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
-            int T2 = W[n][i].size();
+            // 3a. all elements clear to zero
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        W[n][i][j][d][m] = 0;
+                        W[n][i][j][d][m] = 0.0;
+            // 3b. set a number of selected elements to 1
+            for (int t = 0; t < trace.size(); t++) {
+                int sd = trace[t].location[0];
+                int sj = trace[t].location[1];
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    // FIXME: delta_n_t1_t2 > 0 then set 1
+                    if (delta[n][i][sj][sd][m] > 0.0) 
+                        W[n][i][sj][sd][m] = 1.0;
+            }
         }
     }   
     return;
 }
 
 vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
-/*{{{*/
+    /*{{{*/
     // 1. initialization
     int numSeq = allSeqs.size();
     int T2 = get_init_model_length (lenSeqs); // model_seq_length
@@ -149,7 +160,7 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
         for (int n = 0; n < numSeq; n++) 
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
         // 2b. Subprogram: 
-            second_subproblem (W_2, Z, Y_2, mu, allSeqs);
+        second_subproblem (W_2, Z, Y_2, mu, allSeqs);
         // 2c. update Z: Z = (W_1 + W_2) / 2
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++)
@@ -162,7 +173,7 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
             tensor4D_lin_update (Y_2[n], W_2[n], Z[n], 1.0/mu);
     }
     return Z;
-/*}}}*/
+    /*}}}*/
 }
 
 int main (int argn, char** argv) {
@@ -228,7 +239,7 @@ int main (int argn, char** argv) {
     // a. tuple view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     for (int i = 0; i < trace.size(); i ++) 
-        cout << trace[i].toString() << endl;
+    cout << trace[i].toString() << endl;
     // b. sequence view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     cout << "1st_aligned_DNA: ";
