@@ -81,7 +81,7 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     // 1. compute delta
-    Tensor tensor (4, Matrix (T2, vector<double>(4, 0.0)));
+    Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
@@ -90,18 +90,18 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
                         delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Z[n][i][j][d][m]);
                         if (m == DELETION_A or m == MATCH_A)
-                              tensor[d][j][dna2T3idx('A')] += delta[n][i][j][d][m];
+                              tensor[j][d][dna2T3idx('A')] += delta[n][i][j][d][m];
                         else if (m == DELETION_T or m == MATCH_T)
-                              tensor[d][j][dna2T3idx('T')] += delta[n][i][j][d][m];
+                              tensor[j][d][dna2T3idx('T')] += delta[n][i][j][d][m];
                         else if (m == DELETION_C or m == MATCH_C)
-                              tensor[d][j][dna2T3idx('C')] += delta[n][i][j][d][m];
+                              tensor[j][d][dna2T3idx('C')] += delta[n][i][j][d][m];
                         else if (m == DELETION_G or m == MATCH_G)
-                              tensor[d][j][dna2T3idx('G')] += delta[n][i][j][d][m];
+                              tensor[j][d][dna2T3idx('G')] += delta[n][i][j][d][m];
                     }
         }
     }
     // 2. determine the trace: run viterbi algorithm
-    Trace trace (0, Cell(2)); // 1d: ATCG, 2d: j
+    Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
     viterbi_algo (trace, tensor);
 
     // 3. recover values for W 
@@ -115,8 +115,8 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                         W[n][i][j][d][m] = 0.0;
             // 3b. set a number of selected elements to 1
             for (int t = 0; t < trace.size(); t++) {
-                int sd = trace[t].location[0];
-                int sj = trace[t].location[1];
+                int sj = trace[t].location[0];
+                int sd = trace[t].location[1];
                 for (int m = 0; m < NUM_MOVEMENT; m ++)
                     // FIXME: delta_n_t1_t2 > 0 then set 1
                     if (delta[n][i][sj][sd][m] > 0.0) 

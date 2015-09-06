@@ -124,6 +124,17 @@ int dna2T3idx (char dna) {
         }
     return -1;
 }
+char T3idx2dna (int idx) {
+    if (idx == 0) return 'A';
+    else if (idx == 1) return 'T';
+    else if (idx == 2) return 'C';
+    else if (idx == 3) return 'G';
+    else {
+        err << "T3idx2dna issue: " << idx << endl;
+        exit(1);
+    }
+    return -1;
+}
 
 /* Define match identification function */
 bool isMatch1 (char DNA1, char DNA2) {
@@ -344,4 +355,49 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         S[i-1][j-1][k][m] = 1.0;
     }
     /*}}}*/
+}
+
+/* 2-d viterbi algorithm */
+void viterbi_algo (Trace trace, Tensor transition) {
+    int J = transition.size();
+    int D1 = transition[0].size();
+    int D2 = transition[0][0].size();
+    Plane plane (J, Trace(D2, Cell(2)));
+    // 1. pass forward
+    for (int j = 0; j < J; j++) {
+        vector<double> max_score (D2, MIN_DOUBLE);
+        vector<int> max_d1 (D1, -1);
+        for (int d1 = 0; d1 < D1; d1 ++) {
+            for (int d2 = 0; d2 < D2; d2 ++) {
+                double score = plane[j-1][d1].score + tensor[j][d1][d2];
+                if (score > max_score) {
+                    max_score[d2] = score;
+                    max_d1[d2] = d1;
+                }
+            }
+        }
+        for (int d2 = 0; d2 < D2; d2 ++) {
+            plane[j][d2].score = max_score[d2];
+            plane[j][d2].location[0] = j;
+            plane[j][d2].location[1] = d2;
+            plane[j][d2].acidA = T3idx2dna(max_d1[d2]);
+            plane[j][d2].acidB = T3idx2dna(d2);
+        }
+    }
+    // 2. trace backward
+    int j = J-1;
+    double max_score = MIN_DOUBLE;
+    int max_d2 = -1;
+    for (int d2 = 0; d2 < D2; d2++) {
+        if (plane[j][d2] > max_score) {
+            max_score = plane[j][d2];
+            max_d2 = d2;
+        }
+    }
+    trace.insert(trace.begin(), plane[j][max_d2]);   
+    for (j = J-2; j > 0; j--) {
+        int last_d2 = dna2T3idx(trace[0].acidA);
+        trace.insert(trace.begin(), plane[j][last_d2]);   
+    }
+    return ;
 }
