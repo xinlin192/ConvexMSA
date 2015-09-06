@@ -396,7 +396,7 @@ void viterbi_algo (Trace trace, Tensor transition) {
         }
     }
     trace.insert(trace.begin(), plane[j][max_d2]);   
-    for (j = J-2; j > 0; j--) {
+    for (j = J-2; j >= 0; j--) {
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);   
     }
