@@ -359,6 +359,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
 
 /* 2-d viterbi algorithm */
 void viterbi_algo (Trace trace, Tensor transition) {
+/*{{{*/
     int J = transition.size();
     int D1 = transition[0].size();
     int D2 = transition[0][0].size();
@@ -401,3 +402,4 @@ void viterbi_algo (Trace trace, Tensor transition) {
     }
     return ;
 }
+/*}}}*/
