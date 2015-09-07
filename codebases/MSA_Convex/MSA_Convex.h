@@ -264,6 +264,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 // 1e. assign the optimal score/action to the cell
                 cube[i][j][k].score = min_score;
                 cube[i][j][k].action = min_action;
+                /*
                 switch (cube[i][j][k].action) {
                     case INSERTION: 
                         cube[i][j][k].acidA = data_dna; // data dna
@@ -303,7 +304,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                         break;
                     case UNDEFINED: cerr << "uncatched action." << endl; break;
                 }
-                
+                */
             }
         }
     }
@@ -336,10 +337,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             case DELETION_T: j--; k = dna2T3idx('T'); break;
             case DELETION_C: j--; k = dna2T3idx('C'); break;
             case DELETION_G: j--; k = dna2T3idx('G'); break;
-           // case MATCH_A: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
-           // case MATCH_T: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
-           // case MATCH_C: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
-           // case MATCH_G: i--; j--; k = dna2T3idx(data_seq[i-1]); break;
             case MATCH_A: i--; j--; k = dna2T3idx('A'); break;
             case MATCH_T: i--; j--; k = dna2T3idx('T'); break;
             case MATCH_C: i--; j--; k = dna2T3idx('C'); break;
