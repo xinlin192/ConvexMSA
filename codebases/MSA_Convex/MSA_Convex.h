@@ -300,18 +300,24 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                         break;
                     case UNDEFINED: cerr << "uncatched action." << endl; break;
                 }
-                // 1f. keep track of the globally optimal cell
-                if (min_score <= global_min_score) {
-                    global_min_score = min_score;
-                    gmin_i = i;
-                    gmin_j = j;
-                    gmin_k = k;
-                }
+                
             }
         }
     }
     cout << "go to trace back" << endl;
     // 3. trace back
+    // 1f. keep track of the globally optimal cell
+    for (int i = T1-1, j = 1; j < T2; j ++) {
+        for (int k = 0; k < T3; k ++) {
+            double min_score = cube[i][j][k].score;
+            if (min_score <= global_min_score) {
+                global_min_score = min_score;
+                gmin_i = i;
+                gmin_j = j;
+                gmin_k = k;
+            }
+        }
+    }
     cout << "min_i: " << gmin_i << ", min_j: " << gmin_j << ", min_k: " << gmin_k << endl;
     if (gmin_i == 0 or gmin_j == 0) {
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
