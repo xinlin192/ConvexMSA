@@ -130,7 +130,7 @@ char T3idx2dna (int idx) {
     else if (idx == 2) return 'C';
     else if (idx == 3) return 'G';
     else {
-        err << "T3idx2dna issue: " << idx << endl;
+        cerr << "T3idx2dna issue: " << idx << endl;
         exit(1);
     }
     return -1;
@@ -370,8 +370,8 @@ void viterbi_algo (Trace trace, Tensor transition) {
         vector<int> max_d1 (D1, -1);
         for (int d1 = 0; d1 < D1; d1 ++) {
             for (int d2 = 0; d2 < D2; d2 ++) {
-                double score = plane[j-1][d1].score + tensor[j][d1][d2];
-                if (score > max_score) {
+                double score = plane[j-1][d1].score + transition[j][d1][d2];
+                if (score > max_score[d2]) {
                     max_score[d2] = score;
                     max_d1[d2] = d1;
                 }
@@ -390,8 +390,8 @@ void viterbi_algo (Trace trace, Tensor transition) {
     double max_score = MIN_DOUBLE;
     int max_d2 = -1;
     for (int d2 = 0; d2 < D2; d2++) {
-        if (plane[j][d2] > max_score) {
-            max_score = plane[j][d2];
+        if (plane[j][d2].score > max_score) {
+            max_score = plane[j][d2].score;
             max_d2 = d2;
         }
     }
