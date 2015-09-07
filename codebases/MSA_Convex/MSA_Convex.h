@@ -218,6 +218,9 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     // 2. fill in the tensor
     double global_min_score = MAX_DOUBLE;
     int gmin_i = -1, gmin_j = -1, gmin_k = -1;
+    for (int i = 0; i < T1; i ++) 
+        for (int k = 0; k < T3; k ++) 
+            cube[i][0][k].score = i * C_I;
     for (int i = 0; i < T1; i ++) {
         for (int j = 0; j < T2; j ++) {
             for (int k = 0; k < T3; k ++) {
@@ -240,10 +243,10 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 }
                 // 1c. get max matach/mismatch score
                 double mth_score;
-                cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
+                // cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
                 // FIXME: definition of mscore 
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
-                    double mscore = (dna_idx==d)?C_M:C_MM;
+                    double mscore = (dna_idx==k)?C_M:C_MM;
                     mth_score = cube[i-1][j-1][d].score + M[i-1][j-1][k][MTH_BASE_IDX+d] + mscore; 
                     scores[MTH_BASE_IDX+d] = mth_score;
                 }
@@ -252,7 +255,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 Action min_action;
                 char min_acidA, min_acidB;
                 for (int mv = 0; mv < scores.size(); mv++) {
-                    cout << "s_" << mv << ": " << scores[mv] << endl;
+                    // cout << "s_" << mv << ": " << scores[mv] << endl;
                     if (scores[mv] < min_score) {
                         min_score = scores[mv];
                         min_action = T4idx2Action[mv];
@@ -310,7 +313,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     for (int i = T1-1, j = 1; j < T2; j ++) {
         for (int k = 0; k < T3; k ++) {
             double min_score = cube[i][j][k].score;
-            if (min_score <= global_min_score) {
+            if (min_score < global_min_score) {
                 global_min_score = min_score;
                 gmin_i = i;
                 gmin_j = j;
