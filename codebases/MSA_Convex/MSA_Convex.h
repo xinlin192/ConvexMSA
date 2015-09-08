@@ -70,12 +70,14 @@ class Cell {
         int dim;   
         vector<int> location; 
         char acidA, acidB;
+        int ans_idx;
         Cell (int dim) {
             this->score = 0;
             this->action = UNDEFINED; this->dim = dim; for (int i = 0; i < dim; i ++) 
                 location.push_back(-1);
             this->acidA = '?';
             this->acidB = '?';
+            this->ans_idx = -1;
         }
         // convert to string:
         //    [(location vector), action, acidA, acidB, score] 
@@ -244,7 +246,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 // 1c. get max matach/mismatch score
                 double mth_score;
                 // cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
-                // FIXME: definition of mscore 
+                // d is inheriter, FIXME: verify the semantics of M
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
                     double mscore = (dna_idx==k)?C_M:C_MM;
                     mth_score = cube[i-1][j-1][d].score + M[i-1][j-1][k][MTH_BASE_IDX+d] + mscore; 
@@ -252,19 +254,27 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 }
                 // 1d. get optimal action for the current cell
                 double min_score = MAX_DOUBLE;
+                int min_ansid = -1;
                 Action min_action;
-                char min_acidA, min_acidB;
-                for (int mv = 0; mv < scores.size(); mv++) {
-                    // cout << "s_" << mv << ": " << scores[mv] << endl;
-                    if (scores[mv] < min_score) {
-                        min_score = scores[mv];
-                        min_action = T4idx2Action[mv];
+                cout << "scores: ";
+                for (int ansid = 0; ansid < scores.size(); ansid++) {
+                    cout << scores[ansid] << "," ;
+                    if (scores[ansid] < min_score) {
+                        min_ansid = ansid;
+                        min_score = scores[ansid];
+                        if (ansid == INS_BASE_IDX) 
+                            min_action = INSERTION;
+                        else if (DEL_BASE_IDX <= ansid and ansid < MTH_BASE_IDX) 
+                            min_action = T4idx2Action[DEL_BASE_IDX+dna2T3idx(data_dna)];
+                        else if (MTH_BASE_IDX <= ansid and ansid < NUM_MOVEMENT) 
+                            min_action = T4idx2Action[MTH_BASE_IDX + k];
                     }
                 }
+                cout << endl;
                 // 1e. assign the optimal score/action to the cell
                 cube[i][j][k].score = min_score;
                 cube[i][j][k].action = min_action;
-                /*
+                cube[i][j][k].ans_idx = min_ansid;
                 switch (cube[i][j][k].action) {
                     case INSERTION: 
                         cube[i][j][k].acidA = data_dna; // data dna
@@ -304,7 +314,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                         break;
                     case UNDEFINED: cerr << "uncatched action." << endl; break;
                 }
-                */
             }
         }
     }
@@ -331,7 +340,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     for (i = gmin_i, j = gmin_j, k = gmin_k; i > 0 and j > 0; ) {
         trace.insert(trace.begin(), cube[i][j][k]);
         cout << cube[i][j][k].toString() << endl;
-        switch (cube[i][j][k].action) {
+        switch (cube[i][j][k].ans_idx) {
             case INSERTION: i--; break;
             case DELETION_A: j--; k = dna2T3idx('A'); break;
             case DELETION_T: j--; k = dna2T3idx('T'); break;

@@ -69,6 +69,17 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         W[i][j][d][m] += alpha * S[i][j][d][m];
+
+        // 4. output iteration tracking info
+        double cost = MAX_DOUBLE;
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                        double sterm = 0.5*mu * (W[i][j][d][m] - Z[i][j][d][m] + 1.0/mu*Y[i][j][d][m]);
+                        cost += C[i][j][d][m] * W[i][j][d][m] + sterm*sterm;
+                    }
+         
     }
     return; 
 /*}}}*/

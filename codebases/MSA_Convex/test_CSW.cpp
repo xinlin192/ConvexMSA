@@ -9,12 +9,15 @@
 ################################################################*/
 
 #include "MSA_Convex.h"
-string seq_1 = "AGTCAGCCTTGACCCTAGCT";
+
+string seq_1 = "C";
+string seq_2 = "AGT";
+string seq_3 = "AGTCAGCCTTGACCCTAGCT";
 
 /* This file aims at making test on cube_smith_waterman */
 int main (int argn, char** argv) {
     // 1. configure tested environment
-    string data_dna(seq_1);
+    string data_dna(seq_3);
     int T1 = data_dna.length();
     int T2 = data_dna.length();
     int T3 = NUM_DNA_TYPE;
@@ -97,5 +100,5 @@ int main (int argn, char** argv) {
     for (int i = 0; i < trace.size(); i ++) 
         cout << trace[i].acidB;
     cout << endl;
-    return 0;
 }
+
