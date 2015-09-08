@@ -12,7 +12,7 @@
 
 /* Debugging option */
 //#define RECURSION_TRACE
-
+#define CUBE_SMITH_WATERMAN_DEBUG
 /* 
    The first sequence is observed. 
    The second sequence is the one to be aligned with the observed one.
@@ -79,7 +79,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                         double sterm = 0.5*mu * (W[i][j][d][m] - Z[i][j][d][m] + 1.0/mu*Y[i][j][d][m]);
                         cost += C[i][j][d][m] * W[i][j][d][m] + sterm*sterm;
                     }
-         
+        cout << "iter=" << fw_iter << ", cost=" << cost << endl; 
     }
     return; 
 /*}}}*/

@@ -226,7 +226,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     for (int i = 0; i < T1; i ++) {
         for (int j = 0; j < T2; j ++) {
             for (int k = 0; k < T3; k ++) {
-                cout << "i=" << i << ", j=" << j << ", k=" << k << endl;
+                // cout << "i=" << i << ", j=" << j << ", k=" << k << endl;
                 cube[i][j][k].location[0] = i;
                 cube[i][j][k].location[1] = j;
                 cube[i][j][k].location[2] = k;
@@ -256,9 +256,13 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 double min_score = MAX_DOUBLE;
                 int min_ansid = -1;
                 Action min_action;
+#ifdef CUBE_SMITH_WATERMAN_DEBUG
                 cout << "scores: ";
+#endif
                 for (int ansid = 0; ansid < scores.size(); ansid++) {
+#ifdef CUBE_SMITH_WATERMAN_DEBUG
                     cout << scores[ansid] << "," ;
+#endif
                     if (scores[ansid] < min_score) {
                         min_ansid = ansid;
                         min_score = scores[ansid];
@@ -270,7 +274,9 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                             min_action = T4idx2Action[MTH_BASE_IDX + k];
                     }
                 }
+#ifdef CUBE_SMITH_WATERMAN_DEBUG
                 cout << endl;
+#endif
                 // 1e. assign the optimal score/action to the cell
                 cube[i][j][k].score = min_score;
                 cube[i][j][k].action = min_action;
@@ -317,7 +323,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             }
         }
     }
-    cout << "go to trace back" << endl;
     // 3. trace back
     // 1f. keep track of the globally optimal cell
     for (int i = T1-1, j = 1; j < T2; j ++) {
@@ -331,7 +336,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             }
         }
     }
-    cout << "min_i: " << gmin_i << ", min_j: " << gmin_j << ", min_k: " << gmin_k << endl;
+    // cout << "min_i: " << gmin_i << ", min_j: " << gmin_j << ", min_k: " << gmin_k << endl;
     if (gmin_i == 0 or gmin_j == 0) {
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
@@ -353,11 +358,9 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             case UNDEFINED: cerr << "uncatched action." << endl; break;
         }
     }
-    cout << "go to special case" << endl;
     // if (i == 0 and j == 0) return;
     // else trace.insert(trace.begin(), cube[1][1][dna2T3idx(data_seq[0])]);
     // 4. reintepret it as 4-d data structure
-    cout << "go to reintepret" << endl;
     int ntr = trace.size();
     cout << "ntr: " << ntr << endl;
     for (int t = 0; t < ntr; t ++) {
