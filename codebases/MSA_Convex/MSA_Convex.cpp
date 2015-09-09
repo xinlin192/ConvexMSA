@@ -33,7 +33,7 @@ int get_init_model_length (vector<int>& lenSeqs) {
 }
 
 double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu) {
-    double cost = 0.0, lin_term, qua_term = 0.0;
+    double cost = 0.0, lin_term = 0.0, qua_term = 0.0;
     double Ws = tensor4D_frob_prod (W, W); 
     int T1 = W.size();
     int T2 = W[0].size();
@@ -46,8 +46,8 @@ double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y,
                     qua_term += sterm * sterm;
                 }
     cost = lin_term + qua_term;
-    cout << "||W||^2: " << Ws << ", lin_term: " << lin_term <<  ", qua_sterm: " << qua_term<< endl;
-    cout << "iter=" << fw_iter << ", cost=" << cost << endl; 
+    cout << "iter=" << fw_iter << ", cost=" << cost ; 
+    cout << ", ||W||^2: " << Ws << ", lin_term: " << lin_term <<  ", qua_sterm: " << qua_term<< endl;
 }
 
 /* We resolve the first subproblem through the frank-wolfe algorithm */
@@ -57,9 +57,10 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
     int T1 = W.size();
     int T2 = W[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
-    int fw_iter = 0;
+    int fw_iter = -1;
     first_subproblem_log(fw_iter, W, Z, Y, C, mu);
     while (fw_iter < MAX_FW_ITER) {
+        fw_iter ++;
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
@@ -79,7 +80,13 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         combo += ((-2.0/mu)*C[i][j][d][m] - W[i][j][d][m] + Z[i][j][d][m] + (1/mu)*Y[i][j][d][m]) * S[i][j][d][m];
-        double alpha = combo / s_square;
+        double alpha;
+        // FIXME: why first iteration we need to manually set alpha to 1.0
+        if (fw_iter == 0) 
+            alpha = 1;
+        else
+            alpha = combo / s_square;
+        cout << "combo: " << combo << ", s_square: " << s_square << endl;
 
         // 3. update W
         for (int i = 0; i < T1; i ++) 
@@ -90,27 +97,33 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 
         // 4. output iteration tracking info
         first_subproblem_log(fw_iter, W, Z, Y, C, mu);
-        fw_iter ++;
+        // 5. early stop condition
+        if (alpha < 10e-6) {
+            cout << "alpha=" << alpha << ", early stop!" << endl;
+            break; 
+        }
     }
     return; 
     /*}}}*/
 }
 
 /* We resolve the second subproblem through sky-plane projection */
-void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4D>& Y, double& mu, SequenceSet& allSeqs) {
+void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4D>& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     int numSeq = allSeqs.size();
     int T2 = W[0][0].size();
+    // 1. compute delta
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
-    // 1. compute delta
+    tensor5D_init (delta, allSeqs, lenSeqs, T2);
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
+    cerr << "Compute delta..." << endl;
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Z[n][i][j][d][m]);
+                        delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + (1.0/mu)*Y[n][i][j][d][m]);
                         if (m == DELETION_A or m == MATCH_A)
                             tensor[j][d][dna2T3idx('A')] += delta[n][i][j][d][m];
                         else if (m == DELETION_T or m == MATCH_T)
@@ -123,10 +136,12 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
         }
     }
     // 2. determine the trace: run viterbi algorithm
+    cerr << "Go to viterbi..." << endl;
     Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
     viterbi_algo (trace, tensor);
 
     // 3. recover values for W 
+    cerr << "Recover Values of W.." << endl;
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
@@ -179,13 +194,19 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
-        for (int n = 0; n < numSeq; n++) 
+        cerr << "first subproblem" << endl;
+        for (int n = 0; n < numSeq; n++) {
+            cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
+        }
+        cout << "=============================================================================";
+        cerr << "second subproblem" << endl;
         // 2b. Subprogram: 
-        second_subproblem (W_2, Z, Y_2, mu, allSeqs);
+        second_subproblem (W_2, Z, Y_2, mu, allSeqs, lenSeqs);
+        cout << "=============================================================================";
         // 2c. update Z: Z = (W_1 + W_2) / 2
         // NOTE: parallelize this for to enable parallelism
-        for (int n = 0; n < numSeq; n ++)
+        for (int n = 0; n < numSeq; n ++) 
             tensor4D_average (Z[n], W_1[n], W_2[n]);
         // 2d. update Y_1 and Y_2: Y_1 += 1/mu * (W_1 - Z)
         // NOTE: parallelize this for to enable parallelism
