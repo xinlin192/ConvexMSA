@@ -278,7 +278,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 // cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
                 // d is inheriter, FIXME: verify the semantics of M
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
-                    double mscore = (dna_idx==k)?C_M:C_MM;
+                    // double mscore = (dna_idx==k)?C_M:C_MM;
                     mth_score = cube[i-1][j-1][d].score + M[i-1][j-1][k][MTH_BASE_IDX+d] + C[i-1][j-1][k][MTH_BASE_IDX+d]; 
                     scores[MTH_BASE_IDX+d] = mth_score;
                 }
