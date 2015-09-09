@@ -374,7 +374,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     int i,j,k;
     for (i = gmin_i, j = gmin_j, k = gmin_k; i > 0 and j > 0; ) {
         trace.insert(trace.begin(), cube[i][j][k]);
-        cout << cube[i][j][k].toString() << endl;
+        // cout << cube[i][j][k].toString() << endl;
         switch (cube[i][j][k].ans_idx) {
             case INSERTION: i--; break;
             case DELETION_A: j--; k = dna2T3idx('A'); break;
@@ -392,7 +392,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     // else trace.insert(trace.begin(), cube[1][1][dna2T3idx(data_seq[0])]);
     // 4. reintepret it as 4-d data structure
     int ntr = trace.size();
-    cout << "ntr: " << ntr << endl;
     for (int t = 0; t < ntr; t ++) {
         Cell tmp_cell = trace[t];
         i = tmp_cell.location[0];

@@ -32,6 +32,42 @@ int get_init_model_length (vector<int>& lenSeqs) {
     return max_seq_length;
 }
 
+
+double get_sub1_cost (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, Tensor5D& C, double& mu, SequenceSet& allSeqs) {
+    int numSeq = W.size();
+    int T2 = W[0].size();
+    double lin_term = 0.0, qua_term = 0.0;
+    for (int n = 0; n < numSeq; n ++) {
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                        double sterm = W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Y[n][i][j][d][m];
+                        lin_term += C[n][i][j][d][m] * W[n][i][j][d][m];
+                        qua_term += 0.5 * mu * sterm * sterm;
+                    }
+    }
+    return lin_term + qua_term;
+}
+
+double get_sub2_cost (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, SequenceSet& allSeqs) {
+    int numSeq = W.size();
+    int T2 = W[0].size();
+    double qua_term = 0.0;
+    for (int n = 0; n < numSeq; n ++) {
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                        double sterm = W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Y[n][i][j][d][m];
+                        qua_term += sterm * sterm;
+                    }
+    }
+    return qua_term;
+}
+
 double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu) {
     double cost = 0.0, lin_term = 0.0, qua_term = 0.0;
     double Ws = tensor4D_frob_prod (W, W); 
@@ -116,7 +152,6 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     tensor5D_init (delta, allSeqs, lenSeqs, T2);
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
-    cerr << "Compute delta..." << endl;
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
@@ -136,12 +171,10 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
         }
     }
     // 2. determine the trace: run viterbi algorithm
-    cerr << "Go to viterbi..." << endl;
     Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
     viterbi_algo (trace, tensor);
 
     // 3. recover values for W 
-    cerr << "Recover Values of W.." << endl;
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
@@ -195,16 +228,18 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
-        cerr << "first subproblem" << endl;
         for (int n = 0; n < numSeq; n++) {
             cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
         }
-        cout << "=============================================================================";
-        cerr << "second subproblem" << endl;
+        double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
+        cerr << "Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
+        cout << "=============================================================================" << endl;
         // 2b. Subprogram: 
         second_subproblem (W_2, Z, Y_2, mu, allSeqs, lenSeqs);
-        cout << "=============================================================================";
+        double sub2_cost = get_sub2_cost (W_2, Z, Y_2, mu, allSeqs);
+        cerr << "Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
+        cout << "=============================================================================" << endl;
         // 2c. update Z: Z = (W_1 + W_2) / 2
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++) 
