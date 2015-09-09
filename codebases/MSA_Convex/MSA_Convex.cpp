@@ -32,15 +32,33 @@ int get_init_model_length (vector<int>& lenSeqs) {
     return max_seq_length;
 }
 
+double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu) {
+    double cost = 0.0, lin_term, qua_term = 0.0;
+    double Ws = tensor4D_frob_prod (W, W); 
+    int T1 = W.size();
+    int T2 = W[0].size();
+    for (int i = 0; i < T1; i ++) 
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                    double sterm = 0.5*mu * (W[i][j][d][m] - Z[i][j][d][m] + 1.0/mu*Y[i][j][d][m]);
+                    lin_term += C[i][j][d][m] * W[i][j][d][m];
+                    qua_term += sterm * sterm;
+                }
+    cost = lin_term + qua_term;
+    cout << "||W||^2: " << Ws << ", lin_term: " << lin_term <<  ", qua_sterm: " << qua_term<< endl;
+    cout << "iter=" << fw_iter << ", cost=" << cost << endl; 
+}
 
 /* We resolve the first subproblem through the frank-wolfe algorithm */
 void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu, Sequence data_seq) {
-/*{{{*/
+    /*{{{*/
     // 1. Find the update direction
     int T1 = W.size();
     int T2 = W[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
-    int fw_iter;
+    int fw_iter = 0;
+    first_subproblem_log(fw_iter, W, Z, Y, C, mu);
     while (fw_iter < MAX_FW_ITER) {
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
@@ -60,7 +78,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        combo += ((-2.0*mu)/C[i][j][d][m] - W[i][j][d][m] + Z[i][j][d][m] + (1/mu)*Y[i][j][d][m]) * S[i][j][d][m];
+                        combo += ((-2.0/mu)*C[i][j][d][m] - W[i][j][d][m] + Z[i][j][d][m] + (1/mu)*Y[i][j][d][m]) * S[i][j][d][m];
         double alpha = combo / s_square;
 
         // 3. update W
@@ -71,18 +89,11 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                         W[i][j][d][m] += alpha * S[i][j][d][m];
 
         // 4. output iteration tracking info
-        double cost = MAX_DOUBLE;
-        for (int i = 0; i < T1; i ++) 
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        double sterm = 0.5*mu * (W[i][j][d][m] - Z[i][j][d][m] + 1.0/mu*Y[i][j][d][m]);
-                        cost += C[i][j][d][m] * W[i][j][d][m] + sterm*sterm;
-                    }
-        cout << "iter=" << fw_iter << ", cost=" << cost << endl; 
+        first_subproblem_log(fw_iter, W, Z, Y, C, mu);
+        fw_iter ++;
     }
     return; 
-/*}}}*/
+    /*}}}*/
 }
 
 /* We resolve the second subproblem through sky-plane projection */
@@ -101,13 +112,13 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
                         delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Z[n][i][j][d][m]);
                         if (m == DELETION_A or m == MATCH_A)
-                              tensor[j][d][dna2T3idx('A')] += delta[n][i][j][d][m];
+                            tensor[j][d][dna2T3idx('A')] += delta[n][i][j][d][m];
                         else if (m == DELETION_T or m == MATCH_T)
-                              tensor[j][d][dna2T3idx('T')] += delta[n][i][j][d][m];
+                            tensor[j][d][dna2T3idx('T')] += delta[n][i][j][d][m];
                         else if (m == DELETION_C or m == MATCH_C)
-                              tensor[j][d][dna2T3idx('C')] += delta[n][i][j][d][m];
+                            tensor[j][d][dna2T3idx('C')] += delta[n][i][j][d][m];
                         else if (m == DELETION_G or m == MATCH_G)
-                              tensor[j][d][dna2T3idx('G')] += delta[n][i][j][d][m];
+                            tensor[j][d][dna2T3idx('G')] += delta[n][i][j][d][m];
                     }
         }
     }
