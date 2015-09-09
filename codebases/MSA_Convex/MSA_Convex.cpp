@@ -187,6 +187,7 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     tensor5D_init (W_2, allSeqs, lenSeqs, T2);
     tensor5D_init (Y_1, allSeqs, lenSeqs, T2);
     tensor5D_init (Y_2, allSeqs, lenSeqs, T2);
+    set_C (C, allSeqs);
 
     // 2. ADMM iteration
     int iter = 0;

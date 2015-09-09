@@ -152,6 +152,36 @@ bool isMatch2 (char DNA1, char DNA2) {
     return DNA1==DNA2;
 }
 
+void set_C (Tensor5D& C, SequenceSet allSeqs) {
+    int T0 = C.size();
+    int T2 = C[0][0].size();
+    int T3 = NUM_DNA_TYPE;
+    int T4 = NUM_MOVEMENT;
+    for (int n = 0; n < T0; n ++) {
+        int T1 = C[n].size();
+        for (int i = 0; i < T1; i ++) {
+            for (int j = 0; j < T2; j ++) {
+                for (int k = 0; k < T3; k ++) {
+                    for (int m = 0; m < T4; m ++) {
+                        if (m == INS_BASE_IDX) 
+                            C[n][i][j][k][m] = C_I;
+                        else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) 
+                            C[n][i][j][k][m] = C_D;
+                        else if (MTH_BASE_IDX <= m) {
+                            if (dna2T3idx(allSeqs[n][i]) == k)
+                                C[n][i][j][k][m] = C_M;
+                            else
+                                C[n][i][j][k][m] = C_MM;
+                        }
+                    }
+                }
+            }
+        }
+    }
+   
+}
+
+
 /* Tensors auxiliary function */
 /*{{{*/
 void tensor5D_init (vector<Tensor4D>& C, SequenceSet& allSeqs, vector<int>& lenSeqs, int init_T2) {
@@ -235,12 +265,12 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 int dna_idx = dna2T3idx(data_dna);
                 vector<double> scores (NUM_MOVEMENT, 0.0); 
                 // 1a. get insertion score
-                double ins_score = cube[i-1][j][k].score + C_I;
+                double ins_score = cube[i-1][j][k].score + C[i-1][j-1][k][INS_BASE_IDX];
                 scores[INS_BASE_IDX] = ins_score;
                 // 1b. get deletion score
                 double del_score;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
-                    del_score = cube[i][j-1][d].score + M[i-1][j-1][k][DEL_BASE_IDX+d] + C_D;
+                    del_score = cube[i][j-1][d].score + M[i-1][j-1][k][DEL_BASE_IDX+d] + C[i-1][j-1][k][DEL_BASE_IDX+d];
                     scores[DEL_BASE_IDX+d] = del_score;
                 }
                 // 1c. get max matach/mismatch score
@@ -249,7 +279,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 // d is inheriter, FIXME: verify the semantics of M
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
                     double mscore = (dna_idx==k)?C_M:C_MM;
-                    mth_score = cube[i-1][j-1][d].score + M[i-1][j-1][k][MTH_BASE_IDX+d] + mscore; 
+                    mth_score = cube[i-1][j-1][d].score + M[i-1][j-1][k][MTH_BASE_IDX+d] + C[i-1][j-1][k][MTH_BASE_IDX+d]; 
                     scores[MTH_BASE_IDX+d] = mth_score;
                 }
                 // 1d. get optimal action for the current cell
