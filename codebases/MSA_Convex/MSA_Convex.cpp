@@ -106,36 +106,34 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         Trace trace (0, Cell(3));
         cube_smith_waterman (S, trace, M, C, data_seq);
 
-        // 2. Exact Line search: determine the optimal step size \alpha
-        // alpha = { [ -(2/mu)*C - W + Z + (1/mu)*Y ] dot S } / || S ||^2
+        // 2. Exact Line search: determine the optimal step size \gamma
+        // gamma = [ ( C + Y_1 + mu*W_1 - mu*Z ) dot (W_1 - S) ] / || W_1 - S ||^2
         //           ---------------combo------------------
-        double s_square = tensor4D_frob_prod (S, S);
-        double combo = 0.0;
+        double numerator = 0.0, denominator = 0.0;
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        combo += ((-2.0/mu)*C[i][j][d][m] - W[i][j][d][m] + Z[i][j][d][m] + (1/mu)*Y[i][j][d][m]) * S[i][j][d][m];
-        double alpha;
-        // FIXME: why first iteration we need to manually set alpha to 1.0
-        if (fw_iter == 0) 
-            alpha = 1;
-        else
-            alpha = combo / s_square;
-        cout << "combo: " << combo << ", s_square: " << s_square << endl;
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                        double wms = W[i][j][d][m] - S[i][j][d][m];
+                        numerator += (C[i][j][d][m] + Y[i][j][d][m] + mu*W[i][j][d][m] - mu*Z[i][j][d][m]) * wms;
+                        denominator += mu * wms * wms;
+                    }
+        double gamma = numerator / denominator;
+        if (fw_iter == 0) gamma = 1.0;
+        cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
         // 3. update W
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        W[i][j][d][m] += alpha * S[i][j][d][m];
+                        W[i][j][d][m] = (1-gamma) * W[i][j][d][m] + gamma* S[i][j][d][m];
 
         // 4. output iteration tracking info
         first_subproblem_log(fw_iter, W, Z, Y, C, mu);
         // 5. early stop condition
-        if (alpha < 10e-6) {
-            cout << "alpha=" << alpha << ", early stop!" << endl;
+        if (-10e-6 < gamma and gamma < 10e-6) {
+            cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
     }
