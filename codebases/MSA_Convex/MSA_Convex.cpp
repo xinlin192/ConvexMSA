@@ -77,9 +77,9 @@ double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y,
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                 for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                    double sterm = 0.5*mu * (W[i][j][d][m] - Z[i][j][d][m] + 1.0/mu*Y[i][j][d][m]);
+                    double sterm =  (W[i][j][d][m] - Z[i][j][d][m] + 1.0/mu*Y[i][j][d][m]);
                     lin_term += C[i][j][d][m] * W[i][j][d][m];
-                    qua_term += sterm * sterm;
+                    qua_term += 0.5*mu *sterm * sterm;
                 }
     cost = lin_term + qua_term;
     cout << "[FW1] iter=" << fw_iter << ", cost=" << cost ; 
@@ -98,8 +98,8 @@ double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        double sterm = 0.5*mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Y[n][i][j][d][m]);
-                        qua_term += sterm * sterm;
+                        double sterm =  (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Y[n][i][j][d][m]);
+                        qua_term += 0.5*mu *sterm * sterm;
                     }
     }
     cost = qua_term;
@@ -168,32 +168,42 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4D>& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     int numSeq = allSeqs.size();
     int T2 = W[0][0].size();
-    // 1. compute delta
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     tensor5D_init (delta, allSeqs, lenSeqs, T2);
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
-    for (int n = 0; n < numSeq; n ++) {
-        int T1 = W[n].size();
-        for (int i = 0; i < T1; i ++) { 
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + (1.0/mu)*Y[n][i][j][d][m]);
-                        if (m == DELETION_A or m == MATCH_A)
-                            tensor[j][d][dna2T3idx('A')] += delta[n][i][j][d][m];
-                        else if (m == DELETION_T or m == MATCH_T)
-                            tensor[j][d][dna2T3idx('T')] += delta[n][i][j][d][m];
-                        else if (m == DELETION_C or m == MATCH_C)
-                            tensor[j][d][dna2T3idx('C')] += delta[n][i][j][d][m];
-                        else if (m == DELETION_G or m == MATCH_G)
-                            tensor[j][d][dna2T3idx('G')] += delta[n][i][j][d][m];
-                    }
-        }
-    }
+
     int fw_iter = -1;
     while (fw_iter < MAX_2nd_FW_ITER) {
         fw_iter ++;
+        // 1. compute delta
+        for (int n = 0; n < numSeq; n ++) {
+            int T1 = W[n].size();
+            for (int i = 0; i < T1; i ++) { 
+                for (int j = 0; j < T2; j ++) 
+                    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                        for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                            delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + (1.0/mu)*Y[n][i][j][d][m]);
+                            if (m == DELETION_A or m == MATCH_A)
+                                tensor[j][d][dna2T3idx('A')] += delta[n][i][j][d][m];
+                            else if (m == DELETION_T or m == MATCH_T)
+                                tensor[j][d][dna2T3idx('T')] += delta[n][i][j][d][m];
+                            else if (m == DELETION_C or m == MATCH_C)
+                                tensor[j][d][dna2T3idx('C')] += delta[n][i][j][d][m];
+                            else if (m == DELETION_G or m == MATCH_G)
+                                tensor[j][d][dna2T3idx('G')] += delta[n][i][j][d][m];
+                        }
+            }
+        }
+        double delta_square = 0.0;
+        for (int n = 0; n < numSeq; n ++) 
+            delta_square = tensor4D_frob_prod (delta[n], delta[n]);
+        cout << "delta_square: " << delta_square << endl;
+        
+        if ( delta_square < 10e-6 ) {
+            cout << "small delta. early stop." << endl;
+            break;
+        }
         // 2. determine the trace: run viterbi algorithm
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
         viterbi_algo (trace, tensor);
@@ -205,10 +215,10 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
             int T1 = S[n].size();
             for (int i = 0; i < T1; i ++) { 
                 // 3a. all elements clear to zero
-                for (int j = 0; j < T2; j ++) 
-                    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                        for (int m = 0; m < NUM_MOVEMENT; m ++)
-                            S[n][i][j][d][m] = 0.0;
+                // for (int j = 0; j < T2; j ++) 
+                //    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                //        for (int m = 0; m < NUM_MOVEMENT; m ++)
+                //            S[n][i][j][d][m] = 0.0;
                 // 3b. set a number of selected elements to 1
                 for (int t = 0; t < trace.size(); t++) {
                     int sj = trace[t].location[0];
@@ -234,6 +244,11 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                             numerator += (Y[n][i][j][d][m] + mu*W[n][i][j][d][m] - mu*Z[n][i][j][d][m]) * wms;
                             denominator += mu * wms * wms;
                         }
+        }
+        cout << "numerator: " << numerator << ", denominator: " << denominator << endl;
+        if ( denominator < 10e-6) {
+            cout << "small denominator: " << denominator << endl;
+            break;
         }
         double gamma = numerator / denominator;
         if (fw_iter == 0) gamma = 1.0;
@@ -291,6 +306,8 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     int iter = 0;
     double mu = 1.0;
     while (iter < MAX_ADMM_ITER) {
+        // FIXME: W_1 and W_2 reinitialize at the beginning? 
+
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n++) {
