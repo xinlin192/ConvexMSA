@@ -114,6 +114,11 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
     int T1 = W.size();
     int T2 = W[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+    for (int i = 0; i < T1; i ++) 
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    W[i][j][d][m] = 0.0;
     int fw_iter = -1;
     first_subproblem_log(fw_iter, W, Z, Y, C, mu);
     while (fw_iter < MAX_1st_FW_ITER) {
@@ -159,6 +164,8 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
             cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
+        // TODO: remove this after debug
+        if (fw_iter == 0) break;
     }
     return; 
     /*}}}*/
@@ -168,6 +175,15 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4D>& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     int numSeq = allSeqs.size();
     int T2 = W[0][0].size();
+    for (int n = 0; n < numSeq; n ++) {
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++)  
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) 
+                        W[n][i][j][d][m] = 0.0;
+    }
+
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     tensor5D_init (delta, allSeqs, lenSeqs, T2);
@@ -184,20 +200,29 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++) {
                             delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + (1.0/mu)*Y[n][i][j][d][m]);
+                            if (delta[n][i][j][d][m] > 0)
+                                cout << n << "," << i << "," << j << "," << d  << "," << m << ": " << delta[n][i][j][d][m] << endl;
                             if (m == DELETION_A or m == MATCH_A)
-                                tensor[j][d][dna2T3idx('A')] += delta[n][i][j][d][m];
+                                tensor[j][d][dna2T3idx('A')] += max(0.0, delta[n][i][j][d][m]);
                             else if (m == DELETION_T or m == MATCH_T)
-                                tensor[j][d][dna2T3idx('T')] += delta[n][i][j][d][m];
+                                tensor[j][d][dna2T3idx('T')] += max(0.0, delta[n][i][j][d][m]);
                             else if (m == DELETION_C or m == MATCH_C)
-                                tensor[j][d][dna2T3idx('C')] += delta[n][i][j][d][m];
+                                tensor[j][d][dna2T3idx('C')] += max(0.0, delta[n][i][j][d][m]);
                             else if (m == DELETION_G or m == MATCH_G)
-                                tensor[j][d][dna2T3idx('G')] += delta[n][i][j][d][m];
+                                tensor[j][d][dna2T3idx('G')] += max(0.0, delta[n][i][j][d][m]);
                         }
             }
         }
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int k = 0; k < NUM_DNA_TYPE; k ++) {
+                    if (tensor[j][d][k] > 0)
+                    cout << "(" << j << ", " << d << ", " << k << ")=" << tensor[j][d][k] << endl;
+                }
+
         double delta_square = 0.0;
         for (int n = 0; n < numSeq; n ++) 
-            delta_square = tensor4D_frob_prod (delta[n], delta[n]);
+            delta_square += tensor4D_frob_prod (delta[n], delta[n]);
         cout << "delta_square: " << delta_square << endl;
         
         if ( delta_square < 10e-6 ) {
@@ -214,11 +239,6 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
         for (int n = 0; n < numSeq; n ++) {
             int T1 = S[n].size();
             for (int i = 0; i < T1; i ++) { 
-                // 3a. all elements clear to zero
-                // for (int j = 0; j < T2; j ++) 
-                //    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                //        for (int m = 0; m < NUM_MOVEMENT; m ++)
-                //            S[n][i][j][d][m] = 0.0;
                 // 3b. set a number of selected elements to 1
                 for (int t = 0; t < trace.size(); t++) {
                     int sj = trace[t].location[0];
@@ -229,6 +249,12 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                 }
             }
         }   
+       for (int t = 0; t < trace.size(); t++) 
+            cout << "(" <<  trace[t].location[0] << ", " << trace[t].acidA << ", "<< trace[t].acidB << ")=" << trace[t].score << endl;
+        double S_s = 0.0;
+        for (int n = 0; n < numSeq; n ++) 
+            S_s += tensor4D_frob_prod (S[n], S[n]);
+        cout << "S_s: " << S_s << endl;
 
         // 4. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( Y_2 + mu*W_2 - mu*Z ) dot (W_2 - S) ] / || W_2 - S ||^2
@@ -251,7 +277,7 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
             break;
         }
         double gamma = numerator / denominator;
-        if (fw_iter == 0) gamma = 1.0;
+        // if (fw_iter == 0) gamma = 1.0;
         gamma = max(gamma, 0.0);
         gamma = min(gamma, 1.0);
         cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
@@ -329,9 +355,9 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
         // 2d. update Y_1 and Y_2: Y_1 += mu * (W_1 - Z)
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++)
-            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], mu);
+            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], 0.1*mu);
         for (int n = 0; n < numSeq; n ++)
-            tensor4D_lin_update (Y_2[n], W_2[n], Z[n], mu);
+            tensor4D_lin_update (Y_2[n], W_2[n], Z[n], 0.1*mu);
         // 2e. TODO: stopping conditions?
 
     }

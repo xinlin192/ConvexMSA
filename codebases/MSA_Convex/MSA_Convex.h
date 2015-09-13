@@ -174,6 +174,7 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                             else
                                 C[n][i][j][k][m] = C_MM;
                         }
+                        
                     }
                 }
             }
@@ -405,7 +406,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
 }
 
 /* 2-d viterbi algorithm */
-void viterbi_algo (Trace trace, Tensor transition) {
+void viterbi_algo (Trace& trace, Tensor& transition) {
 /*{{{*/
     int J = transition.size();
     int D1 = transition[0].size();
@@ -448,6 +449,7 @@ void viterbi_algo (Trace trace, Tensor transition) {
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);   
     }
+    // cout << "viterbi_max: " << trace[J-1].score << endl;
     return ;
 }
 /*}}}*/
