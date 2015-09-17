@@ -16,7 +16,7 @@
 //#define SECOND_SUBPROBLEM_DEBUG
 
 /* Programming Setting option */
- #define ADMM_EARLY_STOP
+#define ADMM_EARLY_STOP
 
 /* 
    The first sequence is observed. 
@@ -184,7 +184,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 }
 
 /* We resolve the second subproblem through sky-plane projection */
-void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4D>& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
+void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     int numSeq = allSeqs.size();
     int T2 = W[0][0].size();
     // reinitialize W_2 to all-zero matrix
@@ -325,11 +325,10 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
     return;
 }
 
-vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
+Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
     /*{{{*/
     // 1. initialization
     int numSeq = allSeqs.size();
-    int T2 = get_init_model_length (lenSeqs); // model_seq_length
     vector<Tensor4D> Z (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> C (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
@@ -443,23 +442,25 @@ int main (int argn, char** argv) {
         lenSeqs[n] = allSeqs[n].size();
 
     // 3. relaxed convex program: ADMM-based algorithm
-    vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs);
+    int T2 = get_init_model_length (lenSeqs); // model_seq_length
+    vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
 
     // 4. output the result
     /*
-       cout << ">>>>>>>>>>>>>>>>>>>>>>>Summary<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+    cout << ">>>>>>>>>>>>>>>>>>>>>>>Summary<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+    
        cout << "Length of Trace: " << trace.size();
        cout << ", Score: " << trace.back().score;
        cout << endl;
        int numInsertion = 0, numDeletion = 0, numMatch = 0, numMismatch = 0, numUndefined = 0;
        for (int i = 0; i < trace.size(); i ++) {
-       switch (trace[i].action) {
-       case MATCH: ++numMatch; break;
-       case INSERTION: ++numInsertion; break;
-       case DELETION: ++numDeletion; break;
-       case MISMATCH: ++numMismatch; break;
-       case UNDEFINED: ++numUndefined; break;
-       }
+           switch (trace[i].action) {
+               case MATCH: ++numMatch; break;
+               case INSERTION: ++numInsertion; break;
+               case DELETION: ++numDeletion; break;
+               case MISMATCH: ++numMismatch; break;
+               case UNDEFINED: ++numUndefined; break;
+           }
        }
        cout << "numMatch: " << numMatch;
        cout << ", numInsertion: " << numInsertion;
@@ -467,21 +468,60 @@ int main (int argn, char** argv) {
        cout << ", numMismatch: " << numMismatch;
        cout << ", numUndefined: " << numUndefined;
        cout << endl;
+       */
     // a. tuple view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    for (int i = 0; i < trace.size(); i ++) 
-    cout << trace[i].toString() << endl;
+    for (int n = 0; n < numSeq; n ++) {
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++)
+                        if (W[n][i][j][d][m] > 0.0)
+                            cout << "(" << n 
+                                 << ", " << i
+                                 << ", " << j
+                                 << ", " << d
+                                 << ", " << m
+                                 << "): " << W[n][i][j][d][m]
+                                 << endl;
+    }
     // b. sequence view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    cout << "1st_aligned_DNA: ";
+    Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
+    for (int n = 0; n < numSeq; n ++) {
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++) { 
+            for (int j = 0; j < T2; j ++) {
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) {
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                        if (m == DELETION_A or m == MATCH_A)
+                            tensor[j][d][dna2T3idx('A')] += max(0.0, W[n][i][j][d][m]);
+                        else if (m == DELETION_T or m == MATCH_T)
+                            tensor[j][d][dna2T3idx('T')] += max(0.0, W[n][i][j][d][m]);
+                        else if (m == DELETION_C or m == MATCH_C)
+                            tensor[j][d][dna2T3idx('C')] += max(0.0, W[n][i][j][d][m]);
+                        else if (m == DELETION_G or m == MATCH_G)
+                            tensor[j][d][dna2T3idx('G')] += max(0.0, W[n][i][j][d][m]);
+                    }
+                }
+            }
+        }
+    }
+    Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
+    viterbi_algo (trace, tensor);
+    for (int n = 0; n < numSeq; n ++) {
+        char buffer [50];
+        sprintf (buffer, "Seq%5d", n);
+        cout << buffer << ": ";
+        for (int j = 0; j < allSeqs[n].size(); j ++) 
+            cout << allSeqs[n][j];
+        cout << endl;
+    }
+    cout << "SeqRecov: ";
     for (int i = 0; i < trace.size(); i ++) 
-    cout << trace[i].acidA;
+        cout <<  T3idx2dna(trace[i].location[1]);
     cout << endl;
-    cout << "2nd_aligned_DNA: ";
-    for (int i = 0; i < trace.size(); i ++) 
-    cout << trace[i].acidB;
-    cout << endl;
-    */
     cout << "#########################################################" << endl;
     return 0;
 }
