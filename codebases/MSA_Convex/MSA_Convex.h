@@ -16,6 +16,7 @@ using namespace std;
 #include <sstream> 
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*numeric_limits<double>::max();
@@ -23,11 +24,14 @@ const double MAX_DOUBLE = numeric_limits<double>::max();
 const int NUM_DNA_TYPE = 4; 
 const int NUM_MOVEMENT = 9;
 
-/* Algorithmic Seeting */
+/* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 100;
 const int MAX_2nd_FW_ITER = 100;
 const int MIN_ADMM_ITER = 15;
 const int MAX_ADMM_ITER = 1000;
+const double EPS_1st_FW = 1e-6;
+const double EPS_2nd_FW = 1e-6;
+const double EPS_ADMM_CoZ = 1e-6;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';

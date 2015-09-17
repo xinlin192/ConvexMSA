@@ -12,7 +12,7 @@
 
 /* Debugging option */
 //#define RECURSION_TRACE
-#define CUBE_SMITH_WATERMAN_DEBUG
+//#define CUBE_SMITH_WATERMAN_DEBUG
 //#define SECOND_SUBPROBLEM_DEBUG
 
 /* Programming Setting option */
@@ -172,11 +172,12 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         // 4. output iteration tracking info
         first_subproblem_log(fw_iter, W, Z, Y, C, mu);
         // 5. early stop condition
-        if (-10e-6 < gamma and gamma < 10e-6) {
+        // if (-1e-6 < gamma and gamma < 1e-6) {
+        if (fabs(gamma) < EPS_1st_FW) {
             cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
-        // TODO: remove this after debug the second subproblem
+        // NOTE: remove this after debug the second subproblem
         // if (fw_iter == 0) break;
     }
     return; 
@@ -317,7 +318,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         // 4. output iteration tracking info
         second_subproblem_log(fw_iter, W, Z, Y, mu);
         // 5. early stop condition
-        if (-10e-6 < gamma and gamma < 10e-6) {
+        if (fabs(gamma) < EPS_2nd_FW) {
             cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
@@ -394,7 +395,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         // 2f. stopping conditions
 #ifdef ADMM_EARLY_STOP
         if ( iter > MIN_ADMM_ITER)
-            if ( -1e-6 < prev_CoZ - CoZ and prev_CoZ - CoZ < 1e-6) {
+            if ( fabs(prev_CoZ - CoZ)  < EPS_ADMM_CoZ) {
                 cerr << "CoZ Converges. ADMM early stop!" << endl;
                 break;
             }
