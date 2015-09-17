@@ -405,8 +405,12 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         j = tmp_cell.location[1];
         k = tmp_cell.location[2];
         int m = tmp_cell.action;
-        // FIXME: k now should be the dna of j-1 position
-        S[i-1][j-1][k][m] = 1.0;
+        // NOTE: k now is the dna of j-1 position
+        // we set the first d to be 'G'
+        if (t == 0) 
+            S[i-1][j-1][3][m] = 1.0;
+        else
+            S[i-1][j-1][trace[t-1].location[2]][m] = 1.0;
     }
     /*}}}*/
 }
