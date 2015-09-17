@@ -14,6 +14,10 @@
 //#define RECURSION_TRACE
 #define CUBE_SMITH_WATERMAN_DEBUG
 //#define SECOND_SUBPROBLEM_DEBUG
+
+/* Programming Setting option */
+ #define ADMM_EARLY_STOP
+
 /* 
    The first sequence is observed. 
    The second sequence is the one to be aligned with the observed one.
@@ -349,6 +353,7 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     // 2. ADMM iteration
     int iter = 0;
     double mu = 0.1;
+    double prev_CoZ = MAX_DOUBLE;
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
@@ -382,13 +387,20 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
         cerr << "=============================================================================" << endl;
         cerr << "ADMM_iter = " << iter 
              << ", sub1_and_sub2_cost = " << sub1_cost + sub2_cost 
-             << ", C o Z =" << CoZ  
+             << ", C o Z = " << CoZ  
              << endl;
         cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
         cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
 
-        // 2f. TODO: stopping conditions?
-
+        // 2f. stopping conditions
+#ifdef ADMM_EARLY_STOP
+        if ( iter > MIN_ADMM_ITER)
+            if ( -1e-6 < prev_CoZ - CoZ and prev_CoZ - CoZ < 1e-6) {
+                cerr << "CoZ Converges. ADMM early stop!" << endl;
+                break;
+            }
+#endif
+        prev_CoZ = CoZ;
         iter ++;
     }
     return Z;

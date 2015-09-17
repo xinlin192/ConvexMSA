@@ -26,6 +26,7 @@ const int NUM_MOVEMENT = 9;
 /* Algorithmic Seeting */
 const int MAX_1st_FW_ITER = 100;
 const int MAX_2nd_FW_ITER = 100;
+const int MIN_ADMM_ITER = 15;
 const int MAX_ADMM_ITER = 1000;
 
 /* Define Scores and Other Constants */
