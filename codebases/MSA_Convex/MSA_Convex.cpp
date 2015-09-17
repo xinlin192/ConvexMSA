@@ -114,6 +114,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
     int T1 = W.size();
     int T2 = W[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
+    // reinitialize to all-zero matrix
     for (int i = 0; i < T1; i ++) 
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
@@ -133,8 +134,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         cube_smith_waterman (S, trace, M, C, data_seq);
 
         // 2. Exact Line search: determine the optimal step size \gamma
-        // gamma = [ ( C + Y_1 + mu*W_1 - mu*Z ) dot (W_1 - S) ] / || W_1 - S ||^2
-        //           ---------------combo------------------
+        // gamma = [ ( C + Y_1 + mu*W_1 - mu*Z ) dot (W_1 - S) ] / (mu* || W_1 - S ||^2)
         double numerator = 0.0, denominator = 0.0;
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
@@ -333,7 +333,7 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
     double mu = 1.0;
     while (iter < MAX_ADMM_ITER) {
         // FIXME: W_1 and W_2 reinitialize at the beginning? 
-
+        
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n++) {

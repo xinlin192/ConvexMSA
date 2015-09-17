@@ -12,7 +12,7 @@
 
 string seq_1 = "C";
 string seq_2 = "AGT";
-string seq_3 = "AGTCAGCCTTGACCCTAGCT";
+string seq_3 = "GAGTCAGCCTTGACCCTAGCT";
 
 /* This file aims at making test on cube_smith_waterman */
 int main (int argn, char** argv) {
@@ -45,7 +45,7 @@ int main (int argn, char** argv) {
                     else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) 
                         C[i][j][k][m] = C_D;
                     else if (MTH_BASE_IDX <= m and m < NUM_MOVEMENT) {
-                        if (k == dna2T3idx(data_dna[i]))
+                        if (m == MTH_BASE_IDX+dna2T3idx(data_dna[i]))
                             C[i][j][k][m] = C_M;
                         else
                             C[i][j][k][m] = C_MM;
