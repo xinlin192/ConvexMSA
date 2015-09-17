@@ -149,9 +149,7 @@ bool isMatch1 (char DNA1, char DNA2) {
         return true;
     else return false;
 }
-bool isMatch2 (char DNA1, char DNA2) {
-    return DNA1==DNA2;
-}
+bool isMatch2 (char DNA1, char DNA2) { return DNA1==DNA2; }
 
 void set_C (Tensor5D& C, SequenceSet allSeqs) {
     int T0 = C.size();

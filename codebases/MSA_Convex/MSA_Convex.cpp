@@ -13,6 +13,7 @@
 /* Debugging option */
 //#define RECURSION_TRACE
 #define CUBE_SMITH_WATERMAN_DEBUG
+//#define SECOND_SUBPROBLEM_DEBUG
 /* 
    The first sequence is observed. 
    The second sequence is the one to be aligned with the observed one.
@@ -82,8 +83,12 @@ double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y,
                     qua_term += 0.5*mu *sterm * sterm;
                 }
     cost = lin_term + qua_term;
-    cout << "[FW1] iter=" << fw_iter << ", cost=" << cost ; 
-    cout << ", ||W||^2: " << Ws << ", lin_term: " << lin_term <<  ", qua_sterm: " << qua_term<< endl;
+    cout << "[FW1] iter=" << fw_iter
+         << ", ||W||^2: " << Ws 
+         << ", lin_term: " << lin_term 
+         << ", qua_sterm: " << qua_term
+         << ", cost=" << cost 
+         << endl;
 }
 double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double mu) {
     double cost = 0.0,  qua_term = 0.0;
@@ -103,8 +108,11 @@ double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y
                     }
     }
     cost = qua_term;
-    cout << "[FW2] iter=" << fw_iter << ", cost=" << cost ; 
-    cout << ", ||W||^2: " << Ws  <<  ", qua_sterm: " << qua_term<< endl;
+    cout << "[FW2] iter=" << fw_iter 
+         << ", ||W||^2: " << Ws  
+         << ", qua_sterm: " << qua_term
+         << ", cost=" << cost  
+         << endl;
 }
 
 /* We resolve the first subproblem through the frank-wolfe algorithm */
@@ -164,8 +172,8 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
             cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
-        // TODO: remove this after debug
-        if (fw_iter == 0) break;
+        // TODO: remove this after debug the second subproblem
+        // if (fw_iter == 0) break;
     }
     return; 
     /*}}}*/
@@ -175,6 +183,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4D>& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     int numSeq = allSeqs.size();
     int T2 = W[0][0].size();
+    // reinitialize W_2 to all-zero matrix
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++)  
@@ -200,8 +209,11 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++) {
                             delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + (1.0/mu)*Y[n][i][j][d][m]);
+#ifdef SECOND_SUBPROBLEM_DEBUG
                             if (delta[n][i][j][d][m] > 0)
-                                cout << n << "," << i << "," << j << "," << d  << "," << m << ": " << delta[n][i][j][d][m] << endl;
+                                cout <<"delta: " << n << "," << i << "," << j << "," << d  << "," << m << ": "
+                                     << delta[n][i][j][d][m] << endl;
+#endif
                             if (m == DELETION_A or m == MATCH_A)
                                 tensor[j][d][dna2T3idx('A')] += max(0.0, delta[n][i][j][d][m]);
                             else if (m == DELETION_T or m == MATCH_T)
@@ -213,12 +225,15 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                         }
             }
         }
+#ifdef SECOND_SUBPROBLEM_DEBUG
+        cout << "tensor transition input list:" << endl;
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                 for (int k = 0; k < NUM_DNA_TYPE; k ++) {
                     if (tensor[j][d][k] > 0)
                     cout << "(" << j << ", " << d << ", " << k << ")=" << tensor[j][d][k] << endl;
                 }
+#endif
 
         double delta_square = 0.0;
         for (int n = 0; n < numSeq; n ++) 
@@ -238,7 +253,7 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
         // 3. recover values for S 
         for (int n = 0; n < numSeq; n ++) {
             int T1 = S[n].size();
-            for (int i = 0; i < T1; i ++) { 
+            for (int i = 0; i < T1; i ++) {
                 // 3b. set a number of selected elements to 1
                 for (int t = 0; t < trace.size(); t++) {
                     int sj = trace[t].location[0];
@@ -248,9 +263,12 @@ void second_subproblem (vector<Tensor4D>& W, vector<Tensor4D>& Z, vector<Tensor4
                             S[n][i][sj][sd][m] = 1.0;
                 }
             }
-        }   
+        }
+#ifdef SECOND_SUBPROBLEM_DEBUG
+       cout << "Result of viterbi:" << endl;
        for (int t = 0; t < trace.size(); t++) 
             cout << "(" <<  trace[t].location[0] << ", " << trace[t].acidA << ", "<< trace[t].acidB << ")=" << trace[t].score << endl;
+#endif
         double S_s = 0.0;
         for (int n = 0; n < numSeq; n ++) 
             S_s += tensor4D_frob_prod (S[n], S[n]);
@@ -330,10 +348,8 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
 
     // 2. ADMM iteration
     int iter = 0;
-    double mu = 1.0;
+    double mu = 0.1;
     while (iter < MAX_ADMM_ITER) {
-        // FIXME: W_1 and W_2 reinitialize at the beginning? 
-        
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n++) {
@@ -341,13 +357,12 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
         }
         double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
-        cerr << "Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
         cout << "=============================================================================" << endl;
         // 2b. Subprogram: 
         second_subproblem (W_2, Z, Y_2, mu, allSeqs, lenSeqs);
         double sub2_cost = get_sub2_cost (W_2, Z, Y_2, mu, allSeqs);
-        cerr << "Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
         cout << "=============================================================================" << endl;
+
         // 2c. update Z: Z = (W_1 + W_2) / 2
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++) 
@@ -355,11 +370,26 @@ vector<Tensor4D> CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs) {
         // 2d. update Y_1 and Y_2: Y_1 += mu * (W_1 - Z)
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n ++)
-            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], 0.1*mu);
+            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], mu);
         for (int n = 0; n < numSeq; n ++)
-            tensor4D_lin_update (Y_2[n], W_2[n], Z[n], 0.1*mu);
-        // 2e. TODO: stopping conditions?
+            tensor4D_lin_update (Y_2[n], W_2[n], Z[n], mu);
 
+        // 2e. print out tracking info
+        double CoZ = 0.0;
+        for (int n = 0; n < numSeq; n++) {
+            CoZ += tensor4D_frob_prod(C[n], Z[n]);
+        }
+        cerr << "=============================================================================" << endl;
+        cerr << "ADMM_iter = " << iter 
+             << ", sub1_and_sub2_cost = " << sub1_cost + sub2_cost 
+             << ", C o Z =" << CoZ  
+             << endl;
+        cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
+        cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
+
+        // 2f. TODO: stopping conditions?
+
+        iter ++;
     }
     return Z;
     /*}}}*/
