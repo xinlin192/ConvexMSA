@@ -352,7 +352,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
 
     // 2. ADMM iteration
     int iter = 0;
-    double mu = 0.1;
+    double mu = 0.01;
     double prev_CoZ = MAX_DOUBLE;
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
