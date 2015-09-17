@@ -267,12 +267,15 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 int dna_idx = dna2T3idx(data_dna);
                 vector<double> scores (NUM_MOVEMENT, 0.0); 
                 // 1a. get insertion score
+                // FIXME: no preference M for the insertion
                 double ins_score = cube[i-1][j][k].score + C[i-1][j-1][k][INS_BASE_IDX];
                 scores[INS_BASE_IDX] = ins_score;
                 // 1b. get deletion score
                 double del_score;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
-                    del_score = cube[i][j-1][d].score + M[i-1][j-1][k][DEL_BASE_IDX+d] + C[i-1][j-1][k][DEL_BASE_IDX+d];
+                    del_score = cube[i][j-1][d].score +
+                                  M[i-1][j-1][d][DEL_BASE_IDX+k] +
+                                  C[i-1][j-1][d][DEL_BASE_IDX+k];
                     scores[DEL_BASE_IDX+d] = del_score;
                 }
                 // 1c. get max matach/mismatch score
@@ -281,7 +284,9 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 // d is inheriter, FIXME: verify the semantics of M
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
                     // double mscore = (dna_idx==k)?C_M:C_MM;
-                    mth_score = cube[i-1][j-1][d].score + M[i-1][j-1][k][MTH_BASE_IDX+d] + C[i-1][j-1][k][MTH_BASE_IDX+d]; 
+                    mth_score = cube[i-1][j-1][d].score + 
+                                   M[i-1][j-1][d][MTH_BASE_IDX+k] +
+                                   C[i-1][j-1][d][MTH_BASE_IDX+k]; 
                     scores[MTH_BASE_IDX+d] = mth_score;
                 }
                 // 1d. get optimal action for the current cell
@@ -400,6 +405,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         j = tmp_cell.location[1];
         k = tmp_cell.location[2];
         int m = tmp_cell.action;
+        // FIXME: k now should be the dna of j-1 position
         S[i-1][j-1][k][m] = 1.0;
     }
     /*}}}*/
