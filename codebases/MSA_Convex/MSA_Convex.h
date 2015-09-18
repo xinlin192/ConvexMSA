@@ -270,8 +270,9 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 int dna_idx = dna2T3idx(data_dna);
                 vector<double> scores (NUM_MOVEMENT, 0.0); 
                 // 1a. get insertion score
-                // FIXME: no preference M for the insertion
-                double ins_score = cube[i-1][j][k].score + C[i-1][j-1][k][INS_BASE_IDX];
+                double ins_score = cube[i-1][j][k].score +
+                                   M[i-1][j-1][k][INS_BASE_IDX] +
+                                   C[i-1][j-1][k][INS_BASE_IDX];
                 scores[INS_BASE_IDX] = ins_score;
                 // 1b. get deletion score
                 double del_score;
