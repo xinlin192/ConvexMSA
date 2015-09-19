@@ -29,7 +29,7 @@ const int MAX_1st_FW_ITER = 300;
 const int MAX_2nd_FW_ITER = 300;
 const int MIN_ADMM_ITER = 15;
 const int MAX_ADMM_ITER = 10000;
-const double EPS_1st_FW = 1e-6;
+const double EPS_1st_FW = 1e-4;
 const double EPS_2nd_FW = 1e-6;
 const double EPS_ADMM_CoZ = 1e-6;
 
@@ -462,6 +462,55 @@ void viterbi_algo (Trace& trace, Tensor& transition) {
     for (j = J-1; j > 0; j--) {
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);   
+    }
+    // cout << "viterbi_max: " << trace[J-1].score << endl;
+    return ;
+}
+/*}}}*/
+
+/* 2-d viterbi algorithm */
+void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertion) {
+/*{{{*/
+    int J = transition.size();
+    int D1 = transition[0].size();
+    int D2 = transition[0][0].size();
+    Plane plane (J+1, Trace(D2, Cell(2)));
+    // 1. pass forward
+    for (int j = 0; j < J; j++) {
+        vector<double> max_score (D2, MIN_DOUBLE);
+        vector<int> max_d1 (D1, -1);
+        for (int d1 = 0; d1 < D1; d1 ++) {
+            for (int d2 = 0; d2 < D2; d2 ++) {
+                double score = plane[j][d1].score + transition[j][d1][d2] + mat_insertion[j][d1];
+                if (score > max_score[d2]) {
+                    max_score[d2] = score;
+                    max_d1[d2] = d1;
+                }
+            }
+        }
+        for (int d2 = 0; d2 < D2; d2 ++) {
+            int jp = j + 1;
+            plane[jp][d2].location[0] = j;
+            plane[jp][d2].location[1] = max_d1[d2];
+            plane[jp][d2].score = max_score[d2];
+            plane[jp][d2].acidA = T3idx2dna(max_d1[d2]);
+            plane[jp][d2].acidB = T3idx2dna(d2);
+        }
+    }
+    // 2. trace backward
+    int j = J;
+    double max_score = MIN_DOUBLE;
+    int max_d2 = -1;
+    for (int d2 = 0; d2 < D2; d2++) {
+        if (plane[j][d2].score > max_score) {
+            max_score = plane[j][d2].score;
+            max_d2 = d2;
+        }
+    }
+    trace.insert(trace.begin(), plane[j][max_d2]);
+    for (j = J-1; j > 0; j--) {
+        int last_d2 = dna2T3idx(trace[0].acidA);
+        trace.insert(trace.begin(), plane[j][last_d2]);
     }
     // cout << "viterbi_max: " << trace[J-1].score << endl;
     return ;

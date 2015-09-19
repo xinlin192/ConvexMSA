@@ -202,6 +202,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     tensor5D_init (delta, allSeqs, lenSeqs, T2);
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
+    Matrix mat_insertion (T2, vector<double>(NUM_DNA_TYPE, 0.0));
 
     int fw_iter = -1;
     while (fw_iter < MAX_2nd_FW_ITER) {
@@ -227,6 +228,9 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                                 tensor[j][d][dna2T3idx('C')] += max(0.0, delta[n][i][j][d][m]);
                             else if (m == DELETION_G or m == MATCH_G)
                                 tensor[j][d][dna2T3idx('G')] += max(0.0, delta[n][i][j][d][m]);
+                            else if (m == INSERTION) {
+                                mat_insertion[j][d] += max(0.0, delta[n][i][j][d][m]);
+                            }
                         }
             }
         }
@@ -251,7 +255,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         }
         // 2. determine the trace: run viterbi algorithm
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
-        viterbi_algo (trace, tensor);
+        refined_viterbi_algo (trace, tensor, mat_insertion);
         Tensor5D S (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0))))); 
         tensor5D_init (S, allSeqs, lenSeqs, T2);
 
@@ -490,6 +494,7 @@ int main (int argn, char** argv) {
     // b. sequence view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
+    Matrix mat_insertion (T2, vector<double> (NUM_DNA_TYPE, 0.0));
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
@@ -504,13 +509,15 @@ int main (int argn, char** argv) {
                             tensor[j][d][dna2T3idx('C')] += max(0.0, W[n][i][j][d][m]);
                         else if (m == DELETION_G or m == MATCH_G)
                             tensor[j][d][dna2T3idx('G')] += max(0.0, W[n][i][j][d][m]);
+                        else if (m == INSERTION) 
+                            mat_insertion[j][d] += max(0.0, W[n][i][j][d][m]);
                     }
                 }
             }
         }
     }
     Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
-    viterbi_algo (trace, tensor);
+    refined_viterbi_algo (trace, tensor, mat_insertion);
     for (int n = 0; n < numSeq; n ++) {
         char buffer [50];
         sprintf (buffer, "Seq%5d", n);
