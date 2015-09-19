@@ -8,7 +8,7 @@ all:
 	$(CC) -fopenmp -O3 MSA_Convex.cpp  -o $(exec)
 
 push:
-	git add $(cpps) $(hfiles) Makefile
+	git add $(cpps) $(hfiles) Makefile README
 	git commit -m "upgrade $(exec)"
 	git push
 
