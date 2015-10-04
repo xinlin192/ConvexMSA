@@ -160,7 +160,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         Trace trace (0, Cell(3));
         cube_smith_waterman (S, trace, M, C, data_seq);
-        tensor4D_dump(S);
+        // tensor4D_dump(S);
 
         // 2. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( C + Y_1 + mu*W_1 - mu*Z ) dot (W_1 - S) ] / (mu* || W_1 - S ||^2)
@@ -173,27 +173,32 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                         numerator += (C[i][j][d][m] + Y[i][j][d][m] + mu*W[i][j][d][m] - mu*Z[i][j][d][m]) * wms;
                         denominator += mu * wms * wms;
                     }
-        double gamma = numerator / denominator;
+        // 3a. early stop condition: neglible denominator
+        if (denominator < 1e-6) return; // early stop
+        double gamma;
+        // initially pre-set to Conv(A)
         if (fw_iter == 0) gamma = 1.0;
+        else gamma = numerator / denominator;
+        // 3b. early stop condition: neglible gamma
+        if (fabs(gamma) < EPS_1st_FW) {
+            cout << "gamma=" << gamma << ", early stop!" << endl;
+            break; 
+        }
+        // Gamma should be bounded by [0,1]
         gamma = max(gamma, 0.0);
         gamma = min(gamma, 1.0);
         cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
-        // 3. update W
+        // 4. update W
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         W[i][j][d][m] = (1-gamma) * W[i][j][d][m] + gamma* S[i][j][d][m];
 
-        // 4. output iteration tracking info
+        // 5. output iteration tracking info
         first_subproblem_log(fw_iter, W, Z, Y, C, mu);
-        // 5. early stop condition
-        // if (-1e-6 < gamma and gamma < 1e-6) {
-        if (fabs(gamma) < EPS_1st_FW) {
-            cout << "gamma=" << gamma << ", early stop!" << endl;
-            break; 
-        }
+
         // NOTE: remove this after debug the second subproblem
         // if (fw_iter == 0) break;
     }
@@ -381,7 +386,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         for (int n = 0; n < numSeq; n++) {
             cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
-            tensor4D_dump (W_1[n]);
+            // tensor4D_dump (W_1[n]);
         }
         double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
         cout << "=============================================================================" << endl;
@@ -506,21 +511,8 @@ int main (int argn, char** argv) {
        */
     // a. tuple view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    for (int n = 0; n < numSeq; n ++) {
-        int T1 = W[n].size();
-        for (int i = 0; i < T1; i ++) 
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        if (W[n][i][j][d][m] > 0.0)
-                            cout << "(" << n 
-                                 << ", " << i
-                                 << ", " << j
-                                 << ", " << d
-                                 << ", " << m
-                                 << "): " << W[n][i][j][d][m]
-                                 << endl;
-    }
+    for (int n = 0; n < numSeq; n ++) 
+        tensor4D_dump(W[n]);
     // b. sequence view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
@@ -548,6 +540,10 @@ int main (int argn, char** argv) {
     }
     Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
     refined_viterbi_algo (trace, tensor, mat_insertion);
+
+    for (int i = 0; i < trace.size(); i ++) 
+        cout << trace[i].toString() << endl;
+
     for (int n = 0; n < numSeq; n ++) {
         char buffer [50];
         sprintf (buffer, "Seq%5d", n);
@@ -556,9 +552,10 @@ int main (int argn, char** argv) {
             cout << allSeqs[n][j];
         cout << endl;
     }
+
     cout << "SeqRecov: ";
     for (int i = 0; i < trace.size(); i ++) 
-        cout <<  T3idx2dna(trace[i].location[1]);
+        cout << trace[i].acidB;
     cout << endl;
     cout << "#########################################################" << endl;
     return 0;

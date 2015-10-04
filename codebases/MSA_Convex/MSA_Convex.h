@@ -172,7 +172,7 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                         else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) 
                             C[n][i][j][k][m] = C_D;
                         else if (MTH_BASE_IDX <= m) {
-                            if (dna2T3idx(allSeqs[n][i]) == k)
+                            if (dna2T3idx(allSeqs[n][i]) == m-MTH_BASE_IDX)
                                 C[n][i][j][k][m] = C_M;
                             else
                                 C[n][i][j][k][m] = C_MM;
@@ -183,7 +183,6 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
             }
         }
     }
-   
 }
 
 
