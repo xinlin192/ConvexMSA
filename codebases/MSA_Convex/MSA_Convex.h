@@ -26,7 +26,7 @@ const int NUM_MOVEMENT = 9;
 
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 300;
-const int MAX_2nd_FW_ITER = 300;
+const int MAX_2nd_FW_ITER = 1000;
 const int MIN_ADMM_ITER = 15;
 const int MAX_ADMM_ITER = 10000;
 const double EPS_1st_FW = 1e-4;
@@ -377,7 +377,11 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             }
         }
     }
-    // cout << "min_i: " << gmin_i << ", min_j: " << gmin_j << ", min_k: " << gmin_k << endl;
+    cout << "min_i: " << gmin_i 
+        << ", min_j: " << gmin_j 
+        << ", min_k: " << gmin_k 
+        << ", min_score: " << cube[gmin_i][gmin_j][gmin_k].score
+        << endl;
     if (gmin_i == 0 or gmin_j == 0) {
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
@@ -399,6 +403,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             case UNDEFINED: cerr << "uncatched action." << endl; break;
         }
     }
+
     // if (i == 0 and j == 0) return;
     // else trace.insert(trace.begin(), cube[1][1][dna2T3idx(data_seq[0])]);
     // 4. reintepret it as 4-d data structure
@@ -411,6 +416,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         int m = tmp_cell.action;
         // NOTE: k now is the dna of j-1 position
         // we set the first d to be 'G'
+        cout << tmp_cell.toString() << endl;
         if (t == 0) 
             S[i-1][j-1][3][m] = 1.0;
         else

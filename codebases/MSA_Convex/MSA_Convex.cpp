@@ -37,6 +37,22 @@ int get_init_model_length (vector<int>& lenSeqs) {
     return max_seq_length;
 }
 
+void tensor4D_dump (Tensor4D& W) {
+    int T1 = W.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = W[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    if (W[i][j][d][m] > 0.0)
+                        cout << "(i="  << i
+                            << ", j=" << j
+                            << ", d=" << d
+                            << ", m=" << m
+                            << "): " << W[i][j][d][m]
+                            << endl;
+    }
+}
 
 double get_sub1_cost (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, Tensor5D& C, double& mu, SequenceSet& allSeqs) {
     int numSeq = W.size();
@@ -144,6 +160,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         Trace trace (0, Cell(3));
         cube_smith_waterman (S, trace, M, C, data_seq);
+        tensor4D_dump(S);
 
         // 2. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( C + Y_1 + mu*W_1 - mu*Z ) dot (W_1 - S) ] / (mu* || W_1 - S ||^2)
@@ -356,7 +373,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
 
     // 2. ADMM iteration
     int iter = 0;
-    double mu = 0.01;
+    double mu = 0.001;
     double prev_CoZ = MAX_DOUBLE;
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
@@ -364,6 +381,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         for (int n = 0; n < numSeq; n++) {
             cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
+            tensor4D_dump (W_1[n]);
         }
         double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
         cout << "=============================================================================" << endl;
@@ -388,18 +406,30 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         for (int n = 0; n < numSeq; n++) {
             CoZ += tensor4D_frob_prod(C[n], Z[n]);
         }
+        double W1mW2 = 0.0;
+        for (int n = 0; n < numSeq; n ++) {
+            int T1 = W_1[n].size();
+            for (int i = 0; i < T1; i ++) 
+                for (int j = 0; j < T2; j ++) 
+                    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                        for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                            double value = (W_1[n][i][j][d][m] - W_2[n][i][j][d][m]);
+                            W1mW2 += value * value;
+                        }
+        }
         cerr << "=============================================================================" << endl;
         cerr << "ADMM_iter = " << iter 
              << ", sub1_and_sub2_cost = " << sub1_cost + sub2_cost 
              << ", C o Z = " << CoZ  
+             << ", || W_1 - W_2 ||_2 = " << W1mW2
              << endl;
-        cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
-        cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
+        // cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
+        // cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
 
         // 2f. stopping conditions
 #ifdef ADMM_EARLY_STOP
         if ( iter > MIN_ADMM_ITER)
-            if ( fabs(prev_CoZ - CoZ)  < EPS_ADMM_CoZ) {
+            if ( fabs(prev_CoZ - CoZ)  < EPS_ADMM_CoZ  and W1mW2 < 10e-3) {
                 cerr << "CoZ Converges. ADMM early stop!" << endl;
                 break;
             }
