@@ -28,14 +28,14 @@ const int NUM_MOVEMENT = 9;
 const int MAX_1st_FW_ITER = 300;
 const int MAX_2nd_FW_ITER = 500;
 const int MIN_ADMM_ITER = 15;
-const int MAX_ADMM_ITER = 100000;
+const int MAX_ADMM_ITER = 10000;
 const double EPS_1st_FW = 1e-4;
 const double EPS_2nd_FW = 1e-6;
 const double EPS_ADMM_CoZ = 1e-6;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
-const double C_I = 1; // penalty of insertion
+const double C_I = 2; // penalty of insertion
 const double C_D = 1.5; // penalty of deletion
 const double C_MM = 1.8; // penalty of mismatch
 const double C_M = 0; // penalty of match
