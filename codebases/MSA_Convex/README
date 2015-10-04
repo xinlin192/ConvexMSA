@@ -1,5 +1,3 @@
 Bug Report: 
 
-1. check log2, for all x, the W[x][T1][T2][y][5-8] == 0.25, which is not desired
-The command to produce this bug is as follows:
-    ./MSA_Convex ../../datasets/2.msa > log2
+

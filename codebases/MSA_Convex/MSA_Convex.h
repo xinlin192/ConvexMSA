@@ -26,9 +26,9 @@ const int NUM_MOVEMENT = 9;
 
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 300;
-const int MAX_2nd_FW_ITER = 1000;
+const int MAX_2nd_FW_ITER = 500;
 const int MIN_ADMM_ITER = 15;
-const int MAX_ADMM_ITER = 10000;
+const int MAX_ADMM_ITER = 100000;
 const double EPS_1st_FW = 1e-4;
 const double EPS_2nd_FW = 1e-6;
 const double EPS_ADMM_CoZ = 1e-6;
@@ -252,11 +252,12 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     int T3 = S[0][0].size();
     Cube cube (T1, Plane (T2, Trace (T3, Cell(3))));
     // 2. fill in the tensor
-    double global_min_score = MAX_DOUBLE;
-    int gmin_i = -1, gmin_j = -1, gmin_k = -1;
     for (int i = 0; i < T1; i ++) 
         for (int k = 0; k < T3; k ++) 
             cube[i][0][k].score = i * C_I;
+    for (int j = 0; j < T2; j ++) 
+        for (int k = 0; k < T3; k ++) 
+            cube[0][j][k].score = j * C_D;
     for (int i = 0; i < T1; i ++) {
         for (int j = 0; j < T2; j ++) {
             for (int k = 0; k < T3; k ++) {
@@ -364,6 +365,8 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         }
     }
     // 3. trace back
+    double global_min_score = MAX_DOUBLE;
+    int gmin_i = -1, gmin_j = -1, gmin_k = -1;
     // 1f. keep track of the globally optimal cell
     for (int i = T1-1, j = 1; j < T2; j ++) {
         for (int k = 0; k < T3; k ++) {

@@ -175,18 +175,17 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                     }
         // 3a. early stop condition: neglible denominator
         if (denominator < 1e-6) return; // early stop
-        double gamma;
+        double gamma = numerator / denominator;
         // initially pre-set to Conv(A)
         if (fw_iter == 0) gamma = 1.0;
-        else gamma = numerator / denominator;
+        // Gamma should be bounded by [0,1]
+        gamma = max(gamma, 0.0);
+        gamma = min(gamma, 1.0);
         // 3b. early stop condition: neglible gamma
         if (fabs(gamma) < EPS_1st_FW) {
             cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
-        // Gamma should be bounded by [0,1]
-        gamma = max(gamma, 0.0);
-        gamma = min(gamma, 1.0);
         cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
         // 4. update W
@@ -386,7 +385,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         for (int n = 0; n < numSeq; n++) {
             cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
-            // tensor4D_dump (W_1[n]);
+            tensor4D_dump (W_1[n]);
         }
         double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
         cout << "=============================================================================" << endl;
@@ -424,7 +423,8 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         }
         cerr << "=============================================================================" << endl;
         cerr << "ADMM_iter = " << iter 
-             << ", sub1_and_sub2_cost = " << sub1_cost + sub2_cost 
+             << ", sub1_cost = " << sub1_cost 
+             << ", sub2_cost = " << sub2_cost 
              << ", C o Z = " << CoZ  
              << ", || W_1 - W_2 ||_2 = " << W1mW2
              << endl;
@@ -434,7 +434,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         // 2f. stopping conditions
 #ifdef ADMM_EARLY_STOP
         if ( iter > MIN_ADMM_ITER)
-            if ( fabs(prev_CoZ - CoZ)  < EPS_ADMM_CoZ  and W1mW2 < 10e-3) {
+            if ( fabs(prev_CoZ - CoZ) < EPS_ADMM_CoZ  and W1mW2 < 10e-3) {
                 cerr << "CoZ Converges. ADMM early stop!" << endl;
                 break;
             }
