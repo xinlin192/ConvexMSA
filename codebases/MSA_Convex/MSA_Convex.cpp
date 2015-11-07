@@ -13,10 +13,10 @@
 /* Debugging option */
 //#define RECURSION_TRACE
 //#define CUBE_SMITH_WATERMAN_DEBUG
-//#define SECOND_SUBPROBLEM_DEBUG
+#define SECOND_SUBPROBLEM_DEBUG
 
 /* Programming Setting option */
-#define ADMM_EARLY_STOP
+//#define ADMM_EARLY_STOP
 
 /* 
    The first sequence is observed. 
