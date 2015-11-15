@@ -16,7 +16,7 @@
 #define SECOND_SUBPROBLEM_DEBUG
 
 /* Programming Setting option */
-//#define ADMM_EARLY_STOP
+#define ADMM_EARLY_STOP
 
 /* 
    The first sequence is observed. 
@@ -143,11 +143,13 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
     int T2 = W[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
     // reinitialize to all-zero matrix
+    /*
     for (int i = 0; i < T1; i ++) 
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                 for (int m = 0; m < NUM_MOVEMENT; m ++)
                     W[i][j][d][m] = 0.0;
+                    */
     int fw_iter = -1;
     first_subproblem_log(fw_iter, W, Z, Y, C, mu);
     while (fw_iter < MAX_1st_FW_ITER) {
@@ -174,7 +176,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                         denominator += mu * wms * wms;
                     }
         // 3a. early stop condition: neglible denominator
-        if (denominator < 1e-6) return; // early stop
+        if (denominator < 1e-6) break; // early stop
         double gamma = numerator / denominator;
         // initially pre-set to Conv(A)
         if (fw_iter == 0) gamma = 1.0;
@@ -201,6 +203,10 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         // NOTE: remove this after debug the second subproblem
         // if (fw_iter == 0) break;
     }
+        cout << "M: " << endl;
+        tensor4D_dump(M);
+        cout << "W: " << endl;
+        tensor4D_dump(W);
     return; 
     /*}}}*/
 }
@@ -210,6 +216,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
     int numSeq = allSeqs.size();
     int T2 = W[0][0].size();
     // reinitialize W_2 to all-zero matrix
+    /*
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++)  
@@ -218,6 +225,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                     for (int m = 0; m < NUM_MOVEMENT; m ++) 
                         W[n][i][j][d][m] = 0.0;
     }
+    */
 
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
@@ -255,6 +263,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                         }
             }
         }
+        cout << "................." << delta[1][3][3][1][6] << endl;
 #ifdef SECOND_SUBPROBLEM_DEBUG
         cout << "tensor transition input list:" << endl;
         for (int j = 0; j < T2; j ++) 
@@ -269,11 +278,11 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         for (int n = 0; n < numSeq; n ++) 
             delta_square += tensor4D_frob_prod (delta[n], delta[n]);
         cout << "delta_square: " << delta_square << endl;
-        
-        if ( delta_square < 10e-6 ) {
+        if ( delta_square < 1e-12 ) {
             cout << "small delta. early stop." << endl;
             break;
         }
+
         // 2. determine the trace: run viterbi algorithm
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
         refined_viterbi_algo (trace, tensor, mat_insertion);
@@ -288,9 +297,12 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                 for (int t = 0; t < trace.size(); t++) {
                     int sj = trace[t].location[0];
                     int sd = trace[t].location[1];
+                    int sm = dna2T3idx(trace[t].acidB);
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        if (delta[n][i][sj][sd][m] > 0.0) 
-                            S[n][i][sj][sd][m] = 1.0;
+                        if (delta[n][i][sj][sd][m] > 0.0) { 
+                            if (m == DEL_BASE_IDX + sm or m == MTH_BASE_IDX+ sm)
+                                S[n][i][sj][sd][m] = 1.0;
+                        }
                 }
             }
         }
@@ -303,6 +315,8 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         for (int n = 0; n < numSeq; n ++) 
             S_s += tensor4D_frob_prod (S[n], S[n]);
         cout << "S_s: " << S_s << endl;
+        for (int n = 0; n < numSeq; n ++) 
+            tensor4D_dump(S[n]);
 
         // 4. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( Y_2 + mu*W_2 - mu*Z ) dot (W_2 - S) ] / || W_2 - S ||^2
@@ -377,7 +391,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
 
     // 2. ADMM iteration
     int iter = 0;
-    double mu = 0.001;
+    double mu = 0.01;
     double prev_CoZ = MAX_DOUBLE;
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
@@ -385,7 +399,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         for (int n = 0; n < numSeq; n++) {
             cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
-            tensor4D_dump (W_1[n]);
+            // tensor4D_dump (W_1[n]);
         }
         double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
         cout << "=============================================================================" << endl;
@@ -511,8 +525,7 @@ int main (int argn, char** argv) {
        */
     // a. tuple view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    for (int n = 0; n < numSeq; n ++) 
-        tensor4D_dump(W[n]);
+    for (int n = 0; n < numSeq; n ++) tensor4D_dump(W[n]);
     // b. sequence view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
