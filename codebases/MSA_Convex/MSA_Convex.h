@@ -17,6 +17,7 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#define CUBE_SMITH_WATERMAN_DEBUG
 
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*numeric_limits<double>::max();
@@ -26,12 +27,12 @@ const int NUM_MOVEMENT = 9;
 
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 300;
-const int MAX_2nd_FW_ITER = 500;
+const int MAX_2nd_FW_ITER = 1;
 const int MIN_ADMM_ITER = 15;
-const int MAX_ADMM_ITER = 20000;
-const double EPS_1st_FW = 1e-4;
-const double EPS_2nd_FW = 1e-6;
-const double EPS_ADMM_CoZ = 1e-6;
+const int MAX_ADMM_ITER = 10000;
+const double EPS_1st_FW = 1e-8;
+const double EPS_2nd_FW = 1e-8;
+const double EPS_ADMM_CoZ = 1e-8;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
@@ -269,6 +270,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 char data_dna = data_seq[i-1];
                 int dna_idx = dna2T3idx(data_dna);
                 vector<double> scores (NUM_MOVEMENT, 0.0); 
+
                 // 1a. get insertion score
                 double ins_score = cube[i-1][j][k].score +
                                    M[i-1][j-1][k][INS_BASE_IDX] +
@@ -286,13 +288,18 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 double mth_score;
                 // cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
                 // d is inheriter, FIXME: verify the semantics of M
+                double max_mth_score = -1;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
                     // double mscore = (dna_idx==k)?C_M:C_MM;
                     mth_score = cube[i-1][j-1][d].score + 
                                    M[i-1][j-1][d][MTH_BASE_IDX+k] +
                                    C[i-1][j-1][d][MTH_BASE_IDX+k]; 
                     scores[MTH_BASE_IDX+d] = mth_score;
+                    if (mth_score > max_mth_score) max_mth_score = mth_score;
                 }
+                if (i== 1 and j == 1) 
+                    for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
+                        scores[MTH_BASE_IDX+d] = max_mth_score;
                 // 1d. get optimal action for the current cell
                 double min_score = MAX_DOUBLE;
                 int min_ansid = -1;
@@ -379,11 +386,13 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             }
         }
     }
+    /*
     cout << "min_i: " << gmin_i 
         << ", min_j: " << gmin_j 
         << ", min_k: " << gmin_k 
         << ", min_score: " << cube[gmin_i][gmin_j][gmin_k].score
         << endl;
+        */
     if (gmin_i == 0 or gmin_j == 0) {
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
