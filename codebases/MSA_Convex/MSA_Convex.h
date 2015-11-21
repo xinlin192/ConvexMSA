@@ -26,10 +26,10 @@ const int NUM_DNA_TYPE = 4;
 const int NUM_MOVEMENT = 9;
 
 /* Algorithmic Setting */
-const int MAX_1st_FW_ITER = 300;
-const int MAX_2nd_FW_ITER = 1;
+const int MAX_1st_FW_ITER = 100;
+const int MAX_2nd_FW_ITER = 100;
 const int MIN_ADMM_ITER = 15;
-const int MAX_ADMM_ITER = 10000;
+const int MAX_ADMM_ITER = 2000;
 const double EPS_1st_FW = 1e-8;
 const double EPS_2nd_FW = 1e-8;
 const double EPS_ADMM_CoZ = 1e-8;
@@ -297,7 +297,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                     scores[MTH_BASE_IDX+d] = mth_score;
                     if (mth_score > max_mth_score) max_mth_score = mth_score;
                 }
-                if (i== 1 and j == 1) 
+                if (i== 1 or j == 1) 
                     for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
                         scores[MTH_BASE_IDX+d] = max_mth_score;
                 // 1d. get optimal action for the current cell

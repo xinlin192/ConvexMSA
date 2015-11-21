@@ -162,7 +162,9 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         M[i][j][d][m] = mu*(W[i][j][d][m] - Z[i][j][d][m]) + Y[i][j][d][m]; 
-        cout << "M[6]:" << M[0][0][3][6] << endl;
+        cout << "M[1036]:" << M[1][0][3][6] << endl;
+        cout << "W_1[1036]:" << W[1][0][3][6] << endl;
+        cout << "Y_1[1036]:" << Y[1][0][3][6] << endl;
         Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         Trace trace (0, Cell(3));
         cube_smith_waterman (S, trace, M, C, data_seq);
@@ -401,8 +403,6 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n++) {
             cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
-            cout << "Y_1[5]:" << Y_1[4][0][0][3][5] << endl;
-            cout << "Y_1[6]:" << Y_1[4][0][0][3][6] << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
             // tensor4D_dump (W_1[n]);
         }
@@ -550,7 +550,10 @@ int main (int argn, char** argv) {
        */
     // a. tuple view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    for (int n = 0; n < numSeq; n ++) tensor4D_dump(W[n]);
+    for (int n = 0; n < numSeq; n ++) {
+        cout << "n = " << n << endl;
+        tensor4D_dump(W[n]);
+    }
     // b. sequence view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
