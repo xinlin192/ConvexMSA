@@ -12,8 +12,7 @@
 
 /* Debugging option */
 //#define RECURSION_TRACE
-#define CUBE_SMITH_WATERMAN_DEBUG
-#define FIRST_SUBPROBLEM_DEBUG
+//#define FIRST_SUBPROBLEM_DEBUG
 // #define SECOND_SUBPROBLEM_DEBUG
 #define INIT_ZERO_W
 
@@ -162,9 +161,9 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         M[i][j][d][m] = mu*(W[i][j][d][m] - Z[i][j][d][m]) + Y[i][j][d][m]; 
-        cout << "M[1036]:" << M[1][0][3][6] << endl;
-        cout << "W_1[1036]:" << W[1][0][3][6] << endl;
-        cout << "Y_1[1036]:" << Y[1][0][3][6] << endl;
+        // cout << "M[1036]:" << M[1][0][3][6] << endl;
+        // cout << "W_1[1036]:" << W[1][0][3][6] << endl;
+        // cout << "Y_1[1036]:" << Y[1][0][3][6] << endl;
         Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         Trace trace (0, Cell(3));
         cube_smith_waterman (S, trace, M, C, data_seq);
@@ -402,31 +401,21 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
         for (int n = 0; n < numSeq; n++) {
-            cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
+            // cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
             // tensor4D_dump (W_1[n]);
         }
-        /*
-        if (W_1[4][1][1][3][5] > 0) {
-            cout << "sub1 make it" << endl;
-            exit(-1);
-        }
-        */
+        
 #ifdef FIRST_SUBPROBLEM_DEBUG
         cout << "W: " << endl;
         for (int n = 0; n < numSeq; n++) tensor4D_dump(W_1[n]);
 #endif
-        double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
+        // double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
         // cout << "=============================================================================" << endl;
         // 2b. Subprogram: 
         second_subproblem (W_2, Z, Y_2, mu, allSeqs, lenSeqs);
-        /*
-        if (W_2[4][1][1][3][5] > 0) {
-            cout << "sub2 make it" << endl;
-            exit(-1);
-        }
-        */
-        double sub2_cost = get_sub2_cost (W_2, Z, Y_2, mu, allSeqs);
+        
+        // double sub2_cost = get_sub2_cost (W_2, Z, Y_2, mu, allSeqs);
         // cout << "=============================================================================" << endl;
 
         // 2c. update Z: Z = (W_1 + W_2) / 2
@@ -442,9 +431,8 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
 
         // 2e. print out tracking info
         double CoZ = 0.0;
-        for (int n = 0; n < numSeq; n++) {
+        for (int n = 0; n < numSeq; n++) 
             CoZ += tensor4D_frob_prod(C[n], Z[n]);
-        }
         double W1mW2 = 0.0;
         for (int n = 0; n < numSeq; n ++) {
             int T1 = W_1[n].size();
@@ -456,12 +444,13 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
                             W1mW2 += value * value;
                         }
         }
-        cerr << "=============================================================================" << endl;
+        // cerr << "=============================================================================" << endl;
+        char COZ_val [50], w1mw2_val [50]; 
+        sprintf(COZ_val, "%6f", CoZ);
+        sprintf(w1mw2_val, "%6f", W1mW2);
         cerr << "ADMM_iter = " << iter 
-             << ", sub1_cost = " << sub1_cost 
-             << ", sub2_cost = " << sub2_cost 
-             << ", C o Z = " << CoZ  
-             << ", || W_1 - W_2 ||_2 = " << W1mW2
+             << ", C o Z = " << COZ_val
+             << ", || W_1 - W_2 ||_2 = " << w1mw2_val
              << endl;
         // cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
         // cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;

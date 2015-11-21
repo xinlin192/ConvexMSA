@@ -17,7 +17,7 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#define CUBE_SMITH_WATERMAN_DEBUG
+// #define CUBE_SMITH_WATERMAN_DEBUG
 
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*numeric_limits<double>::max();
@@ -26,10 +26,10 @@ const int NUM_DNA_TYPE = 4;
 const int NUM_MOVEMENT = 9;
 
 /* Algorithmic Setting */
-const int MAX_1st_FW_ITER = 100;
-const int MAX_2nd_FW_ITER = 100;
+const int MAX_1st_FW_ITER = 1;
+const int MAX_2nd_FW_ITER = 1;
 const int MIN_ADMM_ITER = 15;
-const int MAX_ADMM_ITER = 2000;
+const int MAX_ADMM_ITER = 20000;
 const double EPS_1st_FW = 1e-8;
 const double EPS_2nd_FW = 1e-8;
 const double EPS_ADMM_CoZ = 1e-8;
@@ -427,7 +427,9 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         int m = tmp_cell.action;
         // NOTE: k now is the dna of j-1 position
         // we set the first d to be 'G'
+#ifdef CUBE_SMITH_WATERMAN_DEBUG
         cout << tmp_cell.toString() << endl;
+#endif
         if (t == 0) 
             S[i-1][j-1][3][m] = 1.0;
         else
