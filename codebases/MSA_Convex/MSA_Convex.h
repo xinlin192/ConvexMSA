@@ -26,8 +26,8 @@ const int NUM_DNA_TYPE = 4;
 const int NUM_MOVEMENT = 9;
 
 /* Algorithmic Setting */
-const int MAX_1st_FW_ITER = 1;
-const int MAX_2nd_FW_ITER = 1;
+const int MAX_1st_FW_ITER = 10;
+const int MAX_2nd_FW_ITER = 10;
 const int MIN_ADMM_ITER = 15;
 const int MAX_ADMM_ITER = 20000;
 const double EPS_1st_FW = 1e-8;
@@ -38,7 +38,7 @@ const double EPS_ADMM_CoZ = 1e-8;
 const char GAP_NOTATION = '-';
 const double C_I = 2; // penalty of insertion
 const double C_D = 2; // penalty of deletion
-const double C_MM = 1.8; // penalty of mismatch
+const double C_MM = 2.2; // penalty of mismatch
 const double C_M = 0; // penalty of match
 
 /* Data Structure */
