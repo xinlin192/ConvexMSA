@@ -301,7 +301,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                     int sm = dna2T3idx(trace[t].acidB);
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         if (delta[n][i][sj][sd][m] > 0.0) { 
-                            if (m == DEL_BASE_IDX + sm or m == MTH_BASE_IDX+ sm)
+                            if (m == DEL_BASE_IDX + sm or m == MTH_BASE_IDX + sm)
                                 S[n][i][sj][sd][m] = 1.0;
                         }
                 }
