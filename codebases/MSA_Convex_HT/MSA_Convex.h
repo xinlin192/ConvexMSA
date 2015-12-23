@@ -354,13 +354,14 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                         if (ansid == INS_BASE_IDX) 
                             min_action = INSERTION;
                         else if (DEL_BASE_IDX <= ansid and ansid < MTH_BASE_IDX) 
-                            min_action = T4idx2Action[DEL_BASE_IDX+dna2T3idx(data_dna)];
+                           // min_action = T4idx2Action[DEL_BASE_IDX+dna2T3idx(data_dna)];
+                           min_action = T4idx2Action[DEL_BASE_IDX+k];
                         else if (MTH_BASE_IDX <= ansid and ansid < NUM_MOVEMENT) 
                             min_action = T4idx2Action[MTH_BASE_IDX + k];
                     }
                 }
 #ifdef CUBE_SMITH_WATERMAN_DEBUG
-                cout << endl;
+                    cout << endl;
 #endif
                 // 1e. assign the optimal score/action to the cell
                 cube[i][j][k].score = min_score;
@@ -373,6 +374,8 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 } else if (DEL_BASE_IDX <= act and act < MTH_BASE_IDX) {
                     cube[i][j][k].acidA = GAP_NOTATION; 
                     cube[i][j][k].acidB = T3idx2dna(act-DEL_BASE_IDX); 
+                   // for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
+                    //    M[i][j][d][act] += 1e-3;
                 } else if (MTH_BASE_IDX <= act < NUM_DNA_TYPE) {
                     cube[i][j][k].acidA = data_dna; 
                     cube[i][j][k].acidB = T3idx2dna(act-MTH_BASE_IDX); 
