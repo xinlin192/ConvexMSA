@@ -259,6 +259,8 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                                 tensor[j][d][dna2T3idx('C')] += max(0.0, delta[n][i][j][d][m]);
                             else if (m == DELETION_G or m == MATCH_G)
                                 tensor[j][d][dna2T3idx('G')] += max(0.0, delta[n][i][j][d][m]);
+                            else if (m == DELETION_START or m == MATCH_START)
+                                tensor[j][d][dna2T3idx('*')] += max(0.0, delta[n][i][j][d][m]);
                             else if (m == INSERTION) {
                                 mat_insertion[j][d] += max(0.0, delta[n][i][j][d][m]);
                             }
@@ -488,11 +490,11 @@ int main (int argn, char** argv) {
     int numSeq = 0;
     while (getline(seq_file, tmp_str)) {
         int seq_len = tmp_str.size();
-        Sequence ht_tmp_seq (seq_len+2, 0);
-        ht_tmp_seq[0] = 'T';
+        Sequence ht_tmp_seq (seq_len+1, 0);
+        ht_tmp_seq[0] = '*';
         for(int i = 0; i < seq_len; i ++) 
             ht_tmp_seq[i+1] = tmp_str.at(i);
-        ht_tmp_seq[seq_len+1] = 'T';
+        // ht_tmp_seq[seq_len+1] = 'T';
         allSeqs.push_back(ht_tmp_seq);
         ++ numSeq;
     }

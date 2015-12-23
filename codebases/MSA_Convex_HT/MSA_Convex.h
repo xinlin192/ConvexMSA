@@ -20,8 +20,8 @@ using namespace std;
 // #define CUBE_SMITH_WATERMAN_DEBUG
 
 /* Self-defined Constants and Global Variables */
-const double MIN_DOUBLE = -1*numeric_limits<double>::max();
-const double MAX_DOUBLE = numeric_limits<double>::max();
+const double MIN_DOUBLE = -1*1e99;
+const double MAX_DOUBLE = 1e99;
 const double MAX_INT = numeric_limits<int>::max();
 const int NUM_DNA_TYPE = 4 + 1; 
 const int NUM_MOVEMENT = 9 + 2;
@@ -52,13 +52,12 @@ enum Action {
     DELETION_T = 2, 
     DELETION_C = 3, 
     DELETION_G = 4,
-    DELETION_END = 5,
+    DELETION_START = 5,
     MATCH_A = 6,
     MATCH_T = 7, 
     MATCH_C = 8, 
     MATCH_G = 9, 
-
-    MATCH_END = 10,
+    MATCH_START = 10,
 
     // DELETION_START = -11,
     // MATCH_START = -1,
@@ -77,8 +76,8 @@ string action2str (Action action) {
         case MATCH_C: return "Match_C";
         case MATCH_G: return "Match_G";
 
-        case DELETION_END: return "DELETION_END";
-        case MATCH_END: return "MATCH_END";
+        case DELETION_START: return "DELETION_START";
+        case MATCH_START: return "MATCH_START";
 
         // case DELETION_START: return "DELETION_START";
         // case MATCH_START: return "MATCH_START";
@@ -97,8 +96,8 @@ class Cell {
         int ans_idx;
         Cell (int dim) {
             this->score = 0;
-            this->action = UNDEFINED; this->dim = dim; for (int i = 0; i < dim; i ++) 
-                location.push_back(-1);
+            this->action = UNDEFINED; this->dim = dim; 
+            for (int i = 0; i < dim; i ++) location.push_back(-1);
             this->acidA = '?';
             this->acidB = '?';
             this->ans_idx = -1;
@@ -109,7 +108,7 @@ class Cell {
             stringstream s;
             s << "[(";
             for (int i = 0 ; i < this->dim; i ++) {
-                s << location[i];
+                s << (this->location)[i];
                 if (i < this->dim - 1) s << ",";
             }
             s << "), ";
@@ -135,16 +134,16 @@ typedef vector<Tensor4D > Tensor5D;  // 5-d double Tensor
 
 /* T4 architecture */
 const int INS_BASE_IDX = 0;
-const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G 5-#
-const int MTH_BASE_IDX = 6; // 6-A, 7-T, 8-C, 9-G 10-#
-Action T4idx2Action [11] = {INSERTION, DELETION_A, DELETION_T, DELETION_C, DELETION_G, DELETION_END, MATCH_A, MATCH_T, MATCH_C, MATCH_G, MATCH_END};
+const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G 5-*
+const int MTH_BASE_IDX = 6; // 6-A, 7-T, 8-C, 9-G 10-*
+Action T4idx2Action [11] = {INSERTION, DELETION_A, DELETION_T, DELETION_C, DELETION_G, DELETION_START, MATCH_A, MATCH_T, MATCH_C, MATCH_G, MATCH_START};
 int dna2T3idx (char dna) {
         if (dna == 'A') return 0;
         else if (dna == 'T') return 1;
         else if (dna == 'C') return 2;
         else if (dna == 'G') return 3;
-        else if (dna == '#') return 4; // terminating label of a sequence
-        else if (dna == '*') return 5; // starting label of a sequence
+        else if (dna == '*') return 4; // starting label of a sequence
+        else if (dna == '#') return 5; // terminating label of a sequence
         else { 
             cerr << "dna2T3idx issue: " << dna << endl;
             exit(1);
@@ -156,8 +155,8 @@ char T3idx2dna (int idx) {
     else if (idx == 1) return 'T';
     else if (idx == 2) return 'C';
     else if (idx == 3) return 'G';
-    else if (idx == 4) return '#';
-    // else if (idx == 5) return '*';
+    else if (idx == 4) return '*';
+    // else if (idx == 5) return '#';
     else {
         cerr << "T3idx2dna issue: " << idx << endl;
         exit(1);
@@ -172,7 +171,7 @@ bool isMatch1 (char DNA1, char DNA2) {
         DNA1 = DNA2;
         DNA2 = temp;
     }
-    if ((DNA1 == 'A' and DNA2 == 'T') or (DNA1 == 'C' and DNA2 == 'G')) 
+    if ((DNA1 == 'A' and DNA2 == 'T') or (DNA1 == 'C' and DNA2 == 'G'))
         return true;
     else return false;
 }
@@ -189,14 +188,26 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
             for (int j = 0; j < T2; j ++) {
                 for (int k = 0; k < T3; k ++) {
                     for (int m = 0; m < T4; m ++) {
-                        if (m == INS_BASE_IDX) 
+                        if (m == INS_BASE_IDX) {
+                            if (allSeqs[n][i] == '*') {
+                                C[n][i][j][k][m] = 9999;
+                                continue;
+                            }
                             C[n][i][j][k][m] = C_I;
-                        else if (m == 5) 
+                        }
+                        else if (m==5) 
                             C[n][i][j][k][m] = 9999;
-                        else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) 
+                        else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) {
+                            if (allSeqs[n][i] == '*') {
+                                C[n][i][j][k][m] = 9999;
+                                continue;
+                            }
                             C[n][i][j][k][m] = C_D;
-                        else if (m == 10) 
-                            C[n][i][j][k][m] = (allSeqs[n][i] == '#')?C_MATCH_END:C_MISMATCH_END;
+                        }
+                        else if (m == 10)
+                            C[n][i][j][k][m] = (allSeqs[n][i] == '*')?0:9999;
+                        // else if (m == _MISMATCH) 
+                        //    C[n][i][j][k][m] = (allSeqs[n][i] == '*')?C_MATCH_END:C_MISMATCH_END;
                         else if (MTH_BASE_IDX <= m) 
                             C[n][i][j][k][m] = (dna2T3idx(allSeqs[n][i]) == m-MTH_BASE_IDX)?C_M:C_MM;
                     }
@@ -268,17 +279,20 @@ void tensor4D_copy (Tensor4D& dest, Tensor4D& src1) {
 void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, Sequence& data_seq) {
     /*{{{*/
     // 1. set up 3-d model
-    int T1 = S.size() + 1;
-    int T2 = S[0].size() + 1;
+    int T1 = S.size();
+    int T2 = S[0].size();
     int T3 = S[0][0].size();
+    // cout << T1 << T2 << T3 << endl;
     Cube cube (T1, Plane (T2, Trace (T3, Cell(3))));
     // 2. fill in the tensor
-    for (int i = 0; i < T1; i ++) 
-        for (int k = 0; k < T3; k ++) 
-            cube[i][0][k].score = i * C_I;
-    for (int j = 0; j < T2; j ++) 
-        for (int k = 0; k < T3; k ++) 
-            cube[0][j][k].score = j * C_D;
+    for (int i = 0; i < T1; i ++) for (int k = 0; k < T3; k ++) cube[i][0][k].score = MAX_DOUBLE;
+    for (int j = 0; j < T2; j ++) for (int k = 0; k < T3; k ++) cube[0][j][k].score = MAX_DOUBLE;
+    for (int i = 0; i < T1; i ++) for (int j = 0; j < T2; j ++) cube[i][j][4].score = MAX_DOUBLE;
+    cube[0][0][4].score = 0.0;
+    cube[0][0][4].ans_idx = MATCH_START;
+    cube[0][0][4].action = MATCH_START;
+    cube[0][0][4].acidA = '*';
+    cube[0][0][4].acidB = '*';
     for (int i = 0; i < T1; i ++) {
         for (int j = 0; j < T2; j ++) {
             for (int k = 0; k < T3; k ++) {
@@ -286,40 +300,43 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 cube[i][j][k].location[0] = i;
                 cube[i][j][k].location[1] = j;
                 cube[i][j][k].location[2] = k;
-                if (i == 0 or j == 0) continue;
-                char data_dna = data_seq[i-1];
+                // cout << cube[i][j][k].toString() << endl;
+                if ((i == 0 or j == 0) or k == 4) continue;
+                char data_dna = data_seq[i];
                 int dna_idx = dna2T3idx(data_dna);
                 vector<double> scores (NUM_MOVEMENT, 0.0); 
 
                 // 1a. get insertion score
                 double ins_score = cube[i-1][j][k].score +
-                                   M[i-1][j-1][k][INS_BASE_IDX] +
-                                   C[i-1][j-1][k][INS_BASE_IDX];
+                                   M[i][j][k][INS_BASE_IDX] +
+                                   C[i][j][k][INS_BASE_IDX];
                 scores[INS_BASE_IDX] = ins_score;
                 // 1b. get deletion score
                 double del_score;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
                     del_score = cube[i][j-1][d].score +
-                                  M[i-1][j-1][d][DEL_BASE_IDX+k] +
-                                  C[i-1][j-1][d][DEL_BASE_IDX+k];
+                                  M[i][j][d][DEL_BASE_IDX+k] +
+                                  C[i][j][d][DEL_BASE_IDX+k];
                     scores[DEL_BASE_IDX+d] = del_score;
                 }
                 // 1c. get max matach/mismatch score
                 double mth_score;
                 // cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
                 // d is inheriter, FIXME: verify the semantics of M
-                double max_mth_score = -1;
+                // double max_mth_score = -1;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
                     // double mscore = (dna_idx==k)?C_M:C_MM;
                     mth_score = cube[i-1][j-1][d].score + 
-                                   M[i-1][j-1][d][MTH_BASE_IDX+k] +
-                                   C[i-1][j-1][d][MTH_BASE_IDX+k]; 
+                                   M[i][j][d][MTH_BASE_IDX+k] +
+                                   C[i][j][d][MTH_BASE_IDX+k]; 
                     scores[MTH_BASE_IDX+d] = mth_score;
-                    if (mth_score > max_mth_score) max_mth_score = mth_score;
+                    // if (mth_score > max_mth_score) max_mth_score = mth_score;
                 }
-                if (i== 1 or j == 1) 
+                /*
+                if (i == 1 or j == 1) 
                     for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
                         scores[MTH_BASE_IDX+d] = max_mth_score;
+                        */
                 // 1d. get optimal action for the current cell
                 double min_score = MAX_DOUBLE;
                 int min_ansid = -1;
@@ -349,55 +366,23 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 cube[i][j][k].score = min_score;
                 cube[i][j][k].action = min_action;
                 cube[i][j][k].ans_idx = min_ansid;
-                switch (cube[i][j][k].action) {
-                    case INSERTION: 
-                        cube[i][j][k].acidA = data_dna; // data dna
-                        cube[i][j][k].acidB = GAP_NOTATION; // model dna
-                        break;
-                    case DELETION_A: 
-                        cube[i][j][k].acidA = GAP_NOTATION; 
-                        cube[i][j][k].acidB = 'A'; 
-                        break;
-                    case DELETION_T: 
-                        cube[i][j][k].acidA = GAP_NOTATION; 
-                        cube[i][j][k].acidB = 'T'; 
-                        break;
-                    case DELETION_C: 
-                        cube[i][j][k].acidA = GAP_NOTATION; 
-                        cube[i][j][k].acidB = 'C'; 
-                        break;
-                    case DELETION_G: 
-                        cube[i][j][k].acidA = GAP_NOTATION; 
-                        cube[i][j][k].acidB = 'G'; 
-                        break;
-                    case DELETION_END:
-                        cube[i][j][k].acidA = GAP_NOTATION; 
-                        cube[i][j][k].acidB = '#'; 
-                    case MATCH_A:
-                        cube[i][j][k].acidA = data_dna; 
-                        cube[i][j][k].acidB = 'A'; 
-                        break;
-                    case MATCH_T: 
-                        cube[i][j][k].acidA = data_dna; 
-                        cube[i][j][k].acidB = 'T'; 
-                        break;
-                    case MATCH_C: 
-                        cube[i][j][k].acidA = data_dna; 
-                        cube[i][j][k].acidB = 'C'; 
-                        break;
-                    case MATCH_G:
-                        cube[i][j][k].acidA = data_dna; 
-                        cube[i][j][k].acidB = 'G'; 
-                        break;
-                    case MATCH_END:
-                        cube[i][j][k].acidA = data_dna; 
-                        cube[i][j][k].acidB = '#'; 
-                        break;
-                    case UNDEFINED: cerr << "uncatched action." << endl; break;
+                Action act = cube[i][j][k].action;
+                if (act == INSERTION) {
+                    cube[i][j][k].acidA = data_dna; // data dna
+                    cube[i][j][k].acidB = GAP_NOTATION; // model dna
+                } else if (DEL_BASE_IDX <= act and act < MTH_BASE_IDX) {
+                    cube[i][j][k].acidA = GAP_NOTATION; 
+                    cube[i][j][k].acidB = T3idx2dna(act-DEL_BASE_IDX); 
+                } else if (MTH_BASE_IDX <= act < NUM_DNA_TYPE) {
+                    cube[i][j][k].acidA = data_dna; 
+                    cube[i][j][k].acidB = T3idx2dna(act-MTH_BASE_IDX); 
+                } else {
+                    cerr << "uncatched action." << endl;
                 }
             }
         }
     }
+
     // 3. trace back
     double global_min_score = MAX_DOUBLE;
     int gmin_i = -1, gmin_j = -1, gmin_k = -1;
@@ -425,22 +410,23 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         return; 
     }
     int i,j,k;
-    for (i = gmin_i, j = gmin_j, k = gmin_k; i > 0 and j > 0; ) {
+    for (i = gmin_i, j = gmin_j, k = gmin_k; i >= 0 and j >= 0; ) {
+        // cout << i << j << k << endl;
         trace.insert(trace.begin(), cube[i][j][k]);
-        // cout << cube[i][j][k].toString() << endl;
+        // cout << cube[i][j][k].toString()<< "," << action2str(T4idx2Action[cube[i][j][k].ans_idx]) << endl;
         switch (cube[i][j][k].ans_idx) {
             case INSERTION: i--; break;
             case DELETION_A: j--; k = dna2T3idx('A'); break;
             case DELETION_T: j--; k = dna2T3idx('T'); break;
             case DELETION_C: j--; k = dna2T3idx('C'); break;
             case DELETION_G: j--; k = dna2T3idx('G'); break;
-            case DELETION_END: j--; k = dna2T3idx('#'); break;
+            case DELETION_START: j--; k = dna2T3idx('*'); break;
             case MATCH_A: i--; j--; k = dna2T3idx('A'); break;
             case MATCH_T: i--; j--; k = dna2T3idx('T'); break;
             case MATCH_C: i--; j--; k = dna2T3idx('C'); break;
             case MATCH_G: i--; j--; k = dna2T3idx('G'); break;
-            case MATCH_END: i--; j--; k = dna2T3idx('#'); break;
-            case UNDEFINED: cerr << "uncatched action." << endl; break;
+            case MATCH_START: i--; j--; k = dna2T3idx('*'); break;
+            case UNDEFINED: cerr << "uncatched action." << endl; exit(-1); break;
         }
     }
 
@@ -448,22 +434,23 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     // else trace.insert(trace.begin(), cube[1][1][dna2T3idx(data_seq[0])]);
     // 4. reintepret it as 4-d data structure
     int ntr = trace.size();
+    cout << ntr << endl;
     for (int t = 0; t < ntr; t ++) {
         Cell tmp_cell = trace[t];
+#ifdef CUBE_SMITH_WATERMAN_DEBUG
+        cout << tmp_cell.toString() << endl;
+#endif
         i = tmp_cell.location[0];
         j = tmp_cell.location[1];
         k = tmp_cell.location[2];
         int m = tmp_cell.action;
         // NOTE: k now is the dna of j-1 position
-        // we set the first d to be 'G'
-#ifdef CUBE_SMITH_WATERMAN_DEBUG
-        cout << tmp_cell.toString() << endl;
-#endif
         if (t == 0) 
-            S[i-1][j-1][3][m] = 1.0;
+            S[i][j][4][m] = 1.0;
         else
-            S[i-1][j-1][trace[t-1].location[2]][m] = 1.0;
+            S[i][j][trace[t-1].location[2]][m] = 1.0;
     }
+    // S[0][0][4][10] = 1.0;
     /*}}}*/
 }
 
