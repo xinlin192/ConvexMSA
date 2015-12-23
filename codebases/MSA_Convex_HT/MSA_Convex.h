@@ -37,8 +37,8 @@ const double EPS_ADMM_CoZ = 1e-8;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
-const double C_I = 2; // penalty of insertion
-const double C_D = 2; // penalty of deletion
+const double C_I = 1.5; // penalty of insertion
+const double C_D = 1.5; // penalty of deletion
 const double C_MM = 2.2; // penalty of mismatch
 const double C_M = 0; // penalty of match
 // const double C_MISMATCH_END = 9999;
@@ -142,6 +142,7 @@ int dna2T3idx (char dna) {
         else if (dna == 'G') return 3;
         else if (dna == '*') return 4; // starting label of a sequence
         else if (dna == '#') return 5; // terminating label of a sequence
+        else if (dna == GAP_NOTATION) return -1;
         else { 
             cerr << "dna2T3idx issue: " << dna << endl;
             exit(1);
@@ -210,8 +211,13 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                             C[n][i][j][k][m] = (allSeqs[n][i] == '*')?0:9999; // disallow mismatch *
                         else if (m == MATCH_END) 
                             C[n][i][j][k][m] = (allSeqs[n][i] == '#')?0:9999; // disallow mismatch #
-                        else if (MTH_BASE_IDX <= m) 
+                        else if (MTH_BASE_IDX <= m) {
+                            if (allSeqs[n][i] == '#') {
+                                C[n][i][j][k][m] = 9999;
+                                continue;
+                            }
                             C[n][i][j][k][m] = (dna2T3idx(allSeqs[n][i]) == m-MTH_BASE_IDX)?C_M:C_MM;
+                        }
                     }
                 }
             }
@@ -545,6 +551,22 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
     for (j = J-1; j > 0; j--) {
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);
+    }
+    // 3. consider insertion
+    for (int j = trace.size()-1; j >= 0; j --) {
+        for (int d1 = 0; d1 < NUM_DNA_TYPE; d1 ++) {
+            if (mat_insertion[j][d1] > 0) {
+                Cell ins_cell(2);
+                ins_cell.score = trace[j].score;
+                ins_cell.action = INSERTION; 
+                ins_cell.location[0] = trace[j].location[0];
+                ins_cell.location[1] = dna2T3idx(trace[j].acidB);
+                ins_cell.acidA = trace[j].acidB;
+                ins_cell.acidB = GAP_NOTATION;
+                trace.insert(trace.begin()+j+1, ins_cell);
+                break;
+            }
+        }
     }
     // cout << "viterbi_max: " << trace[J-1].score << endl;
     return ;

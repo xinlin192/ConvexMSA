@@ -12,7 +12,7 @@
 
 /* Debugging option */
 //#define RECURSION_TRACE
-//#define FIRST_SUBPROBLEM_DEBUG
+ #define FIRST_SUBPROBLEM_DEBUG
 // #define SECOND_SUBPROBLEM_DEBUG
 #define INIT_ZERO_W
 
@@ -216,7 +216,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 /* We resolve the second subproblem through sky-plane projection */
 void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     int numSeq = allSeqs.size();
-    int T2 = W[0][0].size();
+    int T2 = W[0][0].size()-1;
     // reinitialize W_2 to all-zero matrix
 #ifdef INIT_ZERO_W
     for (int n = 0; n < numSeq; n ++) {
@@ -295,26 +295,27 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         tensor5D_init (S, allSeqs, lenSeqs, T2);
 
         // 3. recover values for S 
-        for (int n = 0; n < numSeq; n ++) {
-            int T1 = S[n].size();
-            for (int i = 0; i < T1; i ++) {
-                // 3b. set a number of selected elements to 1
-                for (int t = 0; t < trace.size(); t++) {
-                    int sj = trace[t].location[0];
-                    int sd = trace[t].location[1];
-                    int sm = dna2T3idx(trace[t].acidB);
+        // 3b. set a number of selected elements to 1
+        for (int t = 0; t < trace.size(); t++) {
+            int sj = trace[t].location[0];
+            int sd = trace[t].location[1];
+            int sm = dna2T3idx(trace[t].acidB);
+            cout << trace[t].toString() << endl;
+            for (int n = 0; n < numSeq; n ++) {
+                int T1 = S[n].size();
+                for (int i = 0; i < T1; i ++) {
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         if (delta[n][i][sj][sd][m] > 0.0) { 
-                            if (m == DEL_BASE_IDX + sm or m == MTH_BASE_IDX + sm)
+                            if (m == INSERTION or m == DEL_BASE_IDX + sm or m == MTH_BASE_IDX + sm)
                                 S[n][i][sj][sd][m] = 1.0;
                         }
                 }
             }
         }
-        for (int n = 0; n < numSeq; n ++) tensor4D_dump(S[n]);
+
 #ifdef SECOND_SUBPROBLEM_DEBUG
-       cout << "Result of viterbi:" << endl;
-       for (int t = 0; t < trace.size(); t++) 
+        cout << "Result of viterbi:" << endl;
+        for (int t = 0; t < trace.size(); t++) 
             cout << "(" <<  trace[t].location[0] << ", " << trace[t].acidA << ", "<< trace[t].acidB << ")=" << trace[t].score << endl;
         double S_s = 0.0;
         for (int n = 0; n < numSeq; n ++) 
@@ -361,6 +362,11 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                         for (int m = 0; m < NUM_MOVEMENT; m ++)
                             W[n][i][j][d][m] = (1-gamma) * W[n][i][j][d][m] + gamma* S[n][i][j][d][m];
         }
+        // dumping
+        for (int n = 0; n < numSeq; n ++) {
+            cout << "W2, n = " << n << endl;
+            tensor4D_dump(W[n]);
+        }
 
         // 4. output iteration tracking info
         second_subproblem_log(fw_iter, W, Z, Y, mu);
@@ -399,7 +405,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
 
     // 2. ADMM iteration
     int iter = 0;
-    double mu = 0.01;
+    double mu = 1;
     double prev_CoZ = MAX_DOUBLE;
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
@@ -409,16 +415,19 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
             // tensor4D_dump (W_1[n]);
         }
-        
+
 #ifdef FIRST_SUBPROBLEM_DEBUG
-        cout << "W: " << endl;
-        for (int n = 0; n < numSeq; n++) tensor4D_dump(W_1[n]);
+        cout << "W_1: " << endl;
+        for (int n = 0; n < numSeq; n++) { 
+            cout << "n = " << n << endl;
+            tensor4D_dump(W_1[n]);
+        }
 #endif
         // double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
         // cout << "=============================================================================" << endl;
         // 2b. Subprogram: 
         second_subproblem (W_2, Z, Y_2, mu, allSeqs, lenSeqs);
-        
+
         // double sub2_cost = get_sub2_cost (W_2, Z, Y_2, mu, allSeqs);
         // cout << "=============================================================================" << endl;
 
@@ -453,9 +462,9 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         sprintf(COZ_val, "%6f", CoZ);
         sprintf(w1mw2_val, "%6f", W1mW2);
         cerr << "ADMM_iter = " << iter 
-             << ", C o Z = " << COZ_val
-             << ", || W_1 - W_2 ||_2 = " << w1mw2_val
-             << endl;
+            << ", C o Z = " << COZ_val
+            << ", || W_1 - W_2 ||_2 = " << w1mw2_val
+            << endl;
         // cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
         // cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
 
@@ -554,12 +563,13 @@ int main (int argn, char** argv) {
     }
     // b. sequence view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
-    Matrix mat_insertion (T2, vector<double> (NUM_DNA_TYPE, 0.0));
+    int T2m = T2-1;
+    Tensor tensor (T2m, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
+    Matrix mat_insertion (T2m, vector<double> (NUM_DNA_TYPE, 0.0));
     for (int n = 0; n < numSeq; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++) { 
-            for (int j = 0; j < T2; j ++) {
+            for (int j = 0; j < T2m; j ++) {
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) {
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
                         if (m == DELETION_A or m == MATCH_A)
@@ -598,7 +608,8 @@ int main (int argn, char** argv) {
 
     cout << "SeqRecov: ";
     for (int i = 0; i < trace.size(); i ++) 
-        cout << trace[i].acidB;
+        if (trace[i].action != INSERTION)
+            cout << trace[i].acidB;
     cout << endl;
     cout << "#########################################################" << endl;
     return 0;
