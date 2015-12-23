@@ -37,7 +37,7 @@ const double EPS_ADMM_CoZ = 1e-8;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
-const double C_I = 1.5; // penalty of insertion
+const double C_I = 1.8; // penalty of insertion
 const double C_D = 1.5; // penalty of deletion
 const double C_MM = 2.2; // penalty of mismatch
 const double C_M = 0; // penalty of match
