@@ -30,7 +30,7 @@ const int NUM_MOVEMENT = 9 + 2;
 const int MAX_1st_FW_ITER = 10;
 const int MAX_2nd_FW_ITER = 10;
 const int MIN_ADMM_ITER = 15;
-const int MAX_ADMM_ITER = 20000;
+const int MAX_ADMM_ITER = 50000;
 const double EPS_1st_FW = 1e-8;
 const double EPS_2nd_FW = 1e-8;
 const double EPS_ADMM_CoZ = 1e-8;
@@ -414,6 +414,17 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         // cout << i << j << k << endl;
         trace.insert(trace.begin(), cube[i][j][k]);
         // cout << cube[i][j][k].toString()<< "," << action2str(T4idx2Action[cube[i][j][k].ans_idx]) << endl;
+        Action act = cube[i][j][k].action;
+        int ans_idx = cube[i][j][k].ans_idx;
+        if (act == INS_BASE_IDX) i--;
+        else if (DEL_BASE_IDX <= act and act < MTH_BASE_IDX) {
+            j--; 
+            k = (ans_idx>=MTH_BASE_IDX)?(ans_idx-MTH_BASE_IDX):(ans_idx-DEL_BASE_IDX);
+        } else if (MTH_BASE_IDX <= act and act < NUM_MOVEMENT) {
+            i--; j--; 
+            k = (ans_idx>=MTH_BASE_IDX)?(ans_idx-MTH_BASE_IDX):(ans_idx-DEL_BASE_IDX);
+        }
+        /*
         switch (cube[i][j][k].ans_idx) {
             case INSERTION: i--; break;
             case DELETION_A: j--; k = dna2T3idx('A'); break;
@@ -428,13 +439,13 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             case MATCH_START: i--; j--; k = dna2T3idx('*'); break;
             case UNDEFINED: cerr << "uncatched action." << endl; exit(-1); break;
         }
+        */
     }
 
     // if (i == 0 and j == 0) return;
     // else trace.insert(trace.begin(), cube[1][1][dna2T3idx(data_seq[0])]);
     // 4. reintepret it as 4-d data structure
     int ntr = trace.size();
-    cout << ntr << endl;
     for (int t = 0; t < ntr; t ++) {
         Cell tmp_cell = trace[t];
 #ifdef CUBE_SMITH_WATERMAN_DEBUG
