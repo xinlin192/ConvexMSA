@@ -487,8 +487,13 @@ int main (int argn, char** argv) {
     string tmp_str;
     int numSeq = 0;
     while (getline(seq_file, tmp_str)) {
-        Sequence tmp_seq (tmp_str.begin(), tmp_str.end());
-        allSeqs.push_back(tmp_seq);
+        int seq_len = tmp_str.size();
+        Sequence ht_tmp_seq (seq_len, 0);
+        // ht_tmp_seq[0] = '*';
+        for(int i = 0; i < seq_len; i ++) 
+            ht_tmp_seq[i] = tmp_str.at(i);
+        // ht_tmp_seq[seq_len+1] = '#';
+        allSeqs.push_back(ht_tmp_seq);
         ++ numSeq;
     }
     seq_file.close();

@@ -53,7 +53,13 @@ enum Action {
     MATCH_T = 6, 
     MATCH_C = 7, 
     MATCH_G = 8, 
-    UNDEFINED = 9
+
+    DELETION_START = -11,
+    MATCH_START = -1,
+    DELETION_END = 99,
+    MATCH_END = 999,
+
+    UNDEFINED = 9999
 };
 string action2str (Action action) {
     switch (action) {
@@ -66,6 +72,12 @@ string action2str (Action action) {
         case MATCH_T: return "Match_T";
         case MATCH_C: return "Match_C";
         case MATCH_G: return "Match_G";
+
+        case DELETION_START: return "DELETION_START";
+        case DELETION_END: return "DELETION_END";
+        case MATCH_START: return "MATCH_START";
+        case MATCH_END: return "MATCH_END";
+
         case UNDEFINED: return "Undefined";
     }
     return "";
@@ -126,6 +138,8 @@ int dna2T3idx (char dna) {
         else if (dna == 'T') return 1;
         else if (dna == 'C') return 2;
         else if (dna == 'G') return 3;
+        else if (dna == '*') return -1; // starting label of a sequence
+        else if (dna == '#') return 9; // terminating label of a sequence
         else { 
             cerr << "dna2T3idx issue: " << dna << endl;
             exit(1);
@@ -137,6 +151,8 @@ char T3idx2dna (int idx) {
     else if (idx == 1) return 'T';
     else if (idx == 2) return 'C';
     else if (idx == 3) return 'G';
+    else if (idx == -1) return '*';
+    else if (idx == 9) return '#';
     else {
         cerr << "T3idx2dna issue: " << idx << endl;
         exit(1);
