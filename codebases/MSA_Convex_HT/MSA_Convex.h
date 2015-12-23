@@ -23,8 +23,8 @@ using namespace std;
 const double MIN_DOUBLE = -1*1e99;
 const double MAX_DOUBLE = 1e99;
 const double MAX_INT = numeric_limits<int>::max();
-const int NUM_DNA_TYPE = 4 + 1; 
-const int NUM_MOVEMENT = 9 + 2;
+const int NUM_DNA_TYPE = 4 + 1 + 1; 
+const int NUM_MOVEMENT = 9 + 2 + 2;
 
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 10;
@@ -41,8 +41,8 @@ const double C_I = 2; // penalty of insertion
 const double C_D = 2; // penalty of deletion
 const double C_MM = 2.2; // penalty of mismatch
 const double C_M = 0; // penalty of match
-const double C_MISMATCH_END = 9999;
-const double C_MATCH_END = 0;
+// const double C_MISMATCH_END = 9999;
+// const double C_MATCH_END = 0;
 
 /* Data Structure */
 /*{{{*/
@@ -53,15 +53,13 @@ enum Action {
     DELETION_C = 3, 
     DELETION_G = 4,
     DELETION_START = 5,
-    MATCH_A = 6,
-    MATCH_T = 7, 
-    MATCH_C = 8, 
-    MATCH_G = 9, 
-    MATCH_START = 10,
-
-    // DELETION_START = -11,
-    // MATCH_START = -1,
-
+    DELETION_END = 6,
+    MATCH_A = 7,
+    MATCH_T = 8, 
+    MATCH_C = 9, 
+    MATCH_G = 10, 
+    MATCH_START = 11,
+    MATCH_END = 12,
     UNDEFINED = 9999
 };
 string action2str (Action action) {
@@ -134,9 +132,9 @@ typedef vector<Tensor4D > Tensor5D;  // 5-d double Tensor
 
 /* T4 architecture */
 const int INS_BASE_IDX = 0;
-const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G 5-*
-const int MTH_BASE_IDX = 6; // 6-A, 7-T, 8-C, 9-G 10-*
-Action T4idx2Action [11] = {INSERTION, DELETION_A, DELETION_T, DELETION_C, DELETION_G, DELETION_START, MATCH_A, MATCH_T, MATCH_C, MATCH_G, MATCH_START};
+const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G 5-* 6-#
+const int MTH_BASE_IDX = 7; // 7-A, 8-T, 9-C, 10-G 11-* 12-#
+Action T4idx2Action [NUM_MOVEMENT] = {INSERTION, DELETION_A, DELETION_T, DELETION_C, DELETION_G, DELETION_START, DELETION_END, MATCH_A, MATCH_T, MATCH_C, MATCH_G, MATCH_START, MATCH_END};
 int dna2T3idx (char dna) {
         if (dna == 'A') return 0;
         else if (dna == 'T') return 1;
@@ -156,7 +154,7 @@ char T3idx2dna (int idx) {
     else if (idx == 2) return 'C';
     else if (idx == 3) return 'G';
     else if (idx == 4) return '*';
-    // else if (idx == 5) return '#';
+    else if (idx == 5) return '#';
     else {
         cerr << "T3idx2dna issue: " << idx << endl;
         exit(1);
@@ -195,19 +193,23 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                             }
                             C[n][i][j][k][m] = C_I;
                         }
-                        else if (m==5) 
+
+                        else if (m == DELETION_START) // disallow delete *
+                            C[n][i][j][k][m] = 9999;
+                        else if (m == DELETION_END) // disallow delete #
                             C[n][i][j][k][m] = 9999;
                         else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) {
-                            if (allSeqs[n][i] == '*') {
+                            if (allSeqs[n][i] == '*') { // disallow delete any model dna when seq_dna is *
                                 C[n][i][j][k][m] = 9999;
                                 continue;
                             }
                             C[n][i][j][k][m] = C_D;
                         }
-                        else if (m == 10)
-                            C[n][i][j][k][m] = (allSeqs[n][i] == '*')?0:9999;
-                        // else if (m == _MISMATCH) 
-                        //    C[n][i][j][k][m] = (allSeqs[n][i] == '*')?C_MATCH_END:C_MISMATCH_END;
+
+                        else if (m == MATCH_START)
+                            C[n][i][j][k][m] = (allSeqs[n][i] == '*')?0:9999; // disallow mismatch *
+                        else if (m == MATCH_END) 
+                            C[n][i][j][k][m] = (allSeqs[n][i] == '#')?0:9999; // disallow mismatch #
                         else if (MTH_BASE_IDX <= m) 
                             C[n][i][j][k][m] = (dna2T3idx(allSeqs[n][i]) == m-MTH_BASE_IDX)?C_M:C_MM;
                     }
@@ -427,22 +429,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             i--; j--; 
             k = (ans_idx>=MTH_BASE_IDX)?(ans_idx-MTH_BASE_IDX):(ans_idx-DEL_BASE_IDX);
         }
-        /*
-        switch (cube[i][j][k].ans_idx) {
-            case INSERTION: i--; break;
-            case DELETION_A: j--; k = dna2T3idx('A'); break;
-            case DELETION_T: j--; k = dna2T3idx('T'); break;
-            case DELETION_C: j--; k = dna2T3idx('C'); break;
-            case DELETION_G: j--; k = dna2T3idx('G'); break;
-            case DELETION_START: j--; k = dna2T3idx('*'); break;
-            case MATCH_A: i--; j--; k = dna2T3idx('A'); break;
-            case MATCH_T: i--; j--; k = dna2T3idx('T'); break;
-            case MATCH_C: i--; j--; k = dna2T3idx('C'); break;
-            case MATCH_G: i--; j--; k = dna2T3idx('G'); break;
-            case MATCH_START: i--; j--; k = dna2T3idx('*'); break;
-            case UNDEFINED: cerr << "uncatched action." << endl; exit(-1); break;
-        }
-        */
     }
 
     // if (i == 0 and j == 0) return;
@@ -464,7 +450,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         else
             S[i][j][trace[t-1].location[2]][m] = 1.0;
     }
-    // S[0][0][4][10] = 1.0;
     /*}}}*/
 }
 
