@@ -38,7 +38,7 @@ const double EPS_ADMM_CoZ = 1e-8;
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
 const double C_I = 1.8; // penalty of insertion
-const double C_D = 1.5; // penalty of deletion
+const double C_D = 1.8; // penalty of deletion
 const double C_MM = 2.2; // penalty of mismatch
 const double C_M = 0; // penalty of match
 // const double C_MISMATCH_END = 9999;
@@ -552,6 +552,13 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);
     }
+    vector<Cell> tmp_vec;
+    for (int j = 0; j < trace.size(); j++) 
+        if (trace[j].acidA != '#')
+            tmp_vec.push_back(trace[j]);
+    trace = tmp_vec;
+    
+
     // 3. consider insertion
     for (int j = trace.size()-1; j >= 0; j --) {
         for (int d1 = 0; d1 < NUM_DNA_TYPE; d1 ++) {

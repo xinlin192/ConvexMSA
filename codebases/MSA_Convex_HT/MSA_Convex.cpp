@@ -216,7 +216,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 /* We resolve the second subproblem through sky-plane projection */
 void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     int numSeq = allSeqs.size();
-    int T2 = W[0][0].size()-1;
+    int T2 = W[0][0].size();
     // reinitialize W_2 to all-zero matrix
 #ifdef INIT_ZERO_W
     for (int n = 0; n < numSeq; n ++) {
@@ -565,7 +565,7 @@ int main (int argn, char** argv) {
     }
     // b. sequence view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    int T2m = T2-1;
+    int T2m = T2;
     Tensor tensor (T2m, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
     Matrix mat_insertion (T2m, vector<double> (NUM_DNA_TYPE, 0.0));
     for (int n = 0; n < numSeq; n ++) {
