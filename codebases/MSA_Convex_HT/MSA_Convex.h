@@ -22,8 +22,9 @@ using namespace std;
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*numeric_limits<double>::max();
 const double MAX_DOUBLE = numeric_limits<double>::max();
-const int NUM_DNA_TYPE = 4; 
-const int NUM_MOVEMENT = 9;
+const double MAX_INT = numeric_limits<int>::max();
+const int NUM_DNA_TYPE = 4 + 1; 
+const int NUM_MOVEMENT = 9 + 2;
 
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 10;
@@ -40,6 +41,8 @@ const double C_I = 2; // penalty of insertion
 const double C_D = 2; // penalty of deletion
 const double C_MM = 2.2; // penalty of mismatch
 const double C_M = 0; // penalty of match
+const double C_MISMATCH_END = 9999;
+const double C_MATCH_END = 0;
 
 /* Data Structure */
 /*{{{*/
@@ -49,15 +52,16 @@ enum Action {
     DELETION_T = 2, 
     DELETION_C = 3, 
     DELETION_G = 4,
-    MATCH_A = 5,
-    MATCH_T = 6, 
-    MATCH_C = 7, 
-    MATCH_G = 8, 
+    DELETION_END = 5,
+    MATCH_A = 6,
+    MATCH_T = 7, 
+    MATCH_C = 8, 
+    MATCH_G = 9, 
 
-    DELETION_START = -11,
-    MATCH_START = -1,
-    DELETION_END = 99,
-    MATCH_END = 999,
+    MATCH_END = 10,
+
+    // DELETION_START = -11,
+    // MATCH_START = -1,
 
     UNDEFINED = 9999
 };
@@ -73,10 +77,11 @@ string action2str (Action action) {
         case MATCH_C: return "Match_C";
         case MATCH_G: return "Match_G";
 
-        case DELETION_START: return "DELETION_START";
         case DELETION_END: return "DELETION_END";
-        case MATCH_START: return "MATCH_START";
         case MATCH_END: return "MATCH_END";
+
+        // case DELETION_START: return "DELETION_START";
+        // case MATCH_START: return "MATCH_START";
 
         case UNDEFINED: return "Undefined";
     }
@@ -130,16 +135,16 @@ typedef vector<Tensor4D > Tensor5D;  // 5-d double Tensor
 
 /* T4 architecture */
 const int INS_BASE_IDX = 0;
-const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G
-const int MTH_BASE_IDX = 5; // 5-A, 6-T, 7-C, 8-G
-Action T4idx2Action [9] = {INSERTION, DELETION_A, DELETION_T, DELETION_C, DELETION_G, MATCH_A, MATCH_T, MATCH_C, MATCH_G};
+const int DEL_BASE_IDX = 1; // 1-A, 2-T, 3-C, 4-G 5-#
+const int MTH_BASE_IDX = 6; // 6-A, 7-T, 8-C, 9-G 10-#
+Action T4idx2Action [11] = {INSERTION, DELETION_A, DELETION_T, DELETION_C, DELETION_G, DELETION_END, MATCH_A, MATCH_T, MATCH_C, MATCH_G, MATCH_END};
 int dna2T3idx (char dna) {
         if (dna == 'A') return 0;
         else if (dna == 'T') return 1;
         else if (dna == 'C') return 2;
         else if (dna == 'G') return 3;
-        else if (dna == '*') return -1; // starting label of a sequence
-        else if (dna == '#') return 9; // terminating label of a sequence
+        else if (dna == '#') return 4; // terminating label of a sequence
+        else if (dna == '*') return 5; // starting label of a sequence
         else { 
             cerr << "dna2T3idx issue: " << dna << endl;
             exit(1);
@@ -151,8 +156,8 @@ char T3idx2dna (int idx) {
     else if (idx == 1) return 'T';
     else if (idx == 2) return 'C';
     else if (idx == 3) return 'G';
-    else if (idx == -1) return '*';
-    else if (idx == 9) return '#';
+    else if (idx == 4) return '#';
+    // else if (idx == 5) return '*';
     else {
         cerr << "T3idx2dna issue: " << idx << endl;
         exit(1);
@@ -186,15 +191,14 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                     for (int m = 0; m < T4; m ++) {
                         if (m == INS_BASE_IDX) 
                             C[n][i][j][k][m] = C_I;
+                        else if (m == 5) 
+                            C[n][i][j][k][m] = 9999;
                         else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) 
                             C[n][i][j][k][m] = C_D;
-                        else if (MTH_BASE_IDX <= m) {
-                            if (dna2T3idx(allSeqs[n][i]) == m-MTH_BASE_IDX)
-                                C[n][i][j][k][m] = C_M;
-                            else
-                                C[n][i][j][k][m] = C_MM;
-                        }
-                        
+                        else if (m == 10) 
+                            C[n][i][j][k][m] = (allSeqs[n][i] == '#')?C_MATCH_END:C_MISMATCH_END;
+                        else if (MTH_BASE_IDX <= m) 
+                            C[n][i][j][k][m] = (dna2T3idx(allSeqs[n][i]) == m-MTH_BASE_IDX)?C_M:C_MM;
                     }
                 }
             }
@@ -366,6 +370,9 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                         cube[i][j][k].acidA = GAP_NOTATION; 
                         cube[i][j][k].acidB = 'G'; 
                         break;
+                    case DELETION_END:
+                        cube[i][j][k].acidA = GAP_NOTATION; 
+                        cube[i][j][k].acidB = '#'; 
                     case MATCH_A:
                         cube[i][j][k].acidA = data_dna; 
                         cube[i][j][k].acidB = 'A'; 
@@ -381,6 +388,10 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                     case MATCH_G:
                         cube[i][j][k].acidA = data_dna; 
                         cube[i][j][k].acidB = 'G'; 
+                        break;
+                    case MATCH_END:
+                        cube[i][j][k].acidA = data_dna; 
+                        cube[i][j][k].acidB = '#'; 
                         break;
                     case UNDEFINED: cerr << "uncatched action." << endl; break;
                 }
@@ -423,10 +434,12 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             case DELETION_T: j--; k = dna2T3idx('T'); break;
             case DELETION_C: j--; k = dna2T3idx('C'); break;
             case DELETION_G: j--; k = dna2T3idx('G'); break;
+            case DELETION_END: j--; k = dna2T3idx('#'); break;
             case MATCH_A: i--; j--; k = dna2T3idx('A'); break;
             case MATCH_T: i--; j--; k = dna2T3idx('T'); break;
             case MATCH_C: i--; j--; k = dna2T3idx('C'); break;
             case MATCH_G: i--; j--; k = dna2T3idx('G'); break;
+            case MATCH_END: i--; j--; k = dna2T3idx('#'); break;
             case UNDEFINED: cerr << "uncatched action." << endl; break;
         }
     }
