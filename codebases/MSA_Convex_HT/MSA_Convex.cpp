@@ -12,7 +12,7 @@
 
 /* Debugging option */
 //#define RECURSION_TRACE
- #define FIRST_SUBPROBLEM_DEBUG
+// #define FIRST_SUBPROBLEM_DEBUG
 // #define SECOND_SUBPROBLEM_DEBUG
 #define INIT_ZERO_W
 
@@ -111,6 +111,7 @@ double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y,
          << ", cost=" << cost 
          << endl;
 }
+
 double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double mu) {
     double cost = 0.0,  qua_term = 0.0;
     int numSeq = W.size();
@@ -215,6 +216,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
 
 /* We resolve the second subproblem through sky-plane projection */
 void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
+/*{{{*/
     int numSeq = allSeqs.size();
     int T2 = W[0][0].size();
     // reinitialize W_2 to all-zero matrix
@@ -364,11 +366,12 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                         for (int m = 0; m < NUM_MOVEMENT; m ++)
                             W[n][i][j][d][m] = (1-gamma) * W[n][i][j][d][m] + gamma* S[n][i][j][d][m];
         }
-        // dumping
+        /* dumping
         for (int n = 0; n < numSeq; n ++) {
             cout << "W2, n = " << n << endl;
             tensor4D_dump(W[n]);
         }
+        */
 
         // 4. output iteration tracking info
         second_subproblem_log(fw_iter, W, Z, Y, mu);
@@ -379,6 +382,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         }
     }
     return;
+/*}}}*/
 }
 
 Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
@@ -536,7 +540,6 @@ int main (int argn, char** argv) {
     // 4. output the result
     /*
     cout << ">>>>>>>>>>>>>>>>>>>>>>>Summary<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    
        cout << "Length of Trace: " << trace.size();
        cout << ", Score: " << trace.back().score;
        cout << endl;
@@ -595,10 +598,8 @@ int main (int argn, char** argv) {
     }
     Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
     refined_viterbi_algo (trace, tensor, mat_insertion);
-
-    for (int i = 0; i < trace.size(); i ++) 
-        cout << trace[i].toString() << endl;
-
+    // for (int i = 0; i < trace.size(); i ++) 
+    //    cout << trace[i].toString() << endl;
     for (int n = 0; n < numSeq; n ++) {
         char buffer [50];
         sprintf (buffer, "Seq%5d", n);
@@ -607,12 +608,50 @@ int main (int argn, char** argv) {
             cout << allSeqs[n][j];
         cout << endl;
     }
-
+    Sequence recSeq;
     cout << "SeqRecov: ";
     for (int i = 0; i < trace.size(); i ++) 
-        if (trace[i].action != INSERTION)
+        if (trace[i].action != INSERTION) {
             cout << trace[i].acidB;
+            recSeq.push_back(trace[i].acidB);
+        }
     cout << endl;
+    cout << ">>>>>>>>>>>>>>>>>>>>>>>MatchingView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+    for (int n = 0; n < numSeq; n ++) {
+        Sequence model_seq;
+        Sequence data_seq;
+        int T1 = W[n].size();
+        for (int i = 0; i < T1; i ++) { 
+            for (int j = 0; j < T2m; j ++) {
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) {
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                        if (W[n][i][j][d][m] > 0.0) {
+                            if (m == INSERTION) {
+                                data_seq.push_back(allSeqs[n][i]);
+                                model_seq.push_back(GAP_NOTATION);
+                            } else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) { 
+                                data_seq.push_back(GAP_NOTATION);
+                                model_seq.push_back(T3idx2dna(m-DEL_BASE_IDX));
+                            } else if (MTH_BASE_IDX <= m and m < NUM_MOVEMENT) {
+                                data_seq.push_back(allSeqs[n][i]);
+                                model_seq.push_back(T3idx2dna(m-MTH_BASE_IDX));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        cout << "SeqRecov: ";
+        for (int i = 0; i < model_seq.size(); i ++) 
+            cout << model_seq[i];
+        cout << endl;
+        char buffer [50];
+        sprintf (buffer, "Seq%5d", n);
+        cout << buffer << ": ";
+        for (int i = 0; i < data_seq.size(); i ++) 
+            cout << data_seq[i];
+        cout << endl;
+    }
     cout << "#########################################################" << endl;
     return 0;
 }
