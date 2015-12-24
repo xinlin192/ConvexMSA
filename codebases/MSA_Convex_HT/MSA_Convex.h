@@ -284,6 +284,13 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     // for (int j = 0; j < T2; j ++) for (int k = 0; k < T3; k ++) cube[0][j][k].score = MAX_DOUBLE;
     for (int i = 0; i < T1; i ++) for (int j = 0; j < T2; j ++) cube[i][j][4].score = MAX_DOUBLE;
     for (int k = 0; k < T3; k ++) cube[0][0][k].score = MAX_DOUBLE;
+    for (int i = 1; i < T1; i ++) {
+        cube[i][0][4].score = i * C_I; 
+        cube[i][0][4].ans_idx = INSERTION; 
+        cube[i][0][4].action = INSERTION; 
+        cube[i][0][4].acidA = data_seq[i]; 
+        cube[i][0][4].acidB = GAP_NOTATION; 
+    }
     cube[0][0][4].score = 0.0;
     cube[0][0][4].ans_idx = MATCH_START;
     cube[0][0][4].action = MATCH_START;
