@@ -1,0 +1,2 @@
+#########################################################
+ScoreMatch: 0, ScoreInsertion: 1.8, ScoreDeletion: 1.8, ScoreMismatch: 2.2
