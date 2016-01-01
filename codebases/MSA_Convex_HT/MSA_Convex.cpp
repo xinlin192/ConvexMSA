@@ -615,6 +615,7 @@ int main (int argn, char** argv) {
         if (trace[i].action != INSERTION) {
             cout << trace[i].acidB;
             recSeq.push_back(trace[i].acidB);
+            if (trace[i].acidB == '#') break;
         }
     cout << endl;
     cout << ">>>>>>>>>>>>>>>>>>>>>>>MatchingView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
