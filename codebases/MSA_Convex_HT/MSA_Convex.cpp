@@ -310,8 +310,9 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                         if (delta[n][i][sj][sd][m] > 0.0) { 
                             if (m == DEL_BASE_IDX + sm or m == MTH_BASE_IDX + sm)
                                 S[n][i][sj][sd][m] = 1.0;
-                            else if (m == INSERTION and trace[t].action == INSERTION)
+                            else if (m == INSERTION and trace[t].action == INSERTION) {
                                 S[n][i][sj][sd][m] = 1.0;
+                            }
                         }
                 }
             }

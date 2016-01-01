@@ -1,0 +1,705 @@
+#########################################################
+ScoreMatch: 0, ScoreInsertion: 1.8, ScoreDeletion: 1.8, ScoreMismatch: 2.2
+Seq    0: *TAAT#
+Seq    1: *TAAT#
+Seq    2: *TAAT#
+Seq    3: *TAAT#
+Seq    4: *TAAT#
+Seq    5: *TAAT#
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+delta_square: 0
+small delta. early stop.
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.3, cost=0.3
+delta_square: 0.36
+[(0,4), Undefined, *, *, 0.6) 
+[(1,4), Undefined, *, T, 1.2) 
+[(2,1), Undefined, T, A, 1.8) 
+[(3,0), Undefined, A, A, 2.4) 
+[(4,0), Undefined, A, T, 3) 
+[(5,1), Undefined, T, #, 3.6) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0, cost=0
+delta_square: 0
+small delta. early stop.
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.075, cost=0.075
+gamma: 1, mu*||W-S||^2: 0.6
+[FW1] iter=0, ||W||^2: 6, lin_term: 0, qua_sterm: 0.075, cost=0.075
+delta_square: 0.81
+[(0,4), Undefined, *, *, 0.9) 
+[(1,4), Undefined, *, T, 1.8) 
+[(2,1), Undefined, T, A, 2.7) 
+[(3,0), Undefined, A, A, 3.6) 
+[(4,0), Undefined, A, T, 4.5) 
+[(5,1), Undefined, T, #, 5.4) 
+[FW2] iter=0, ||W||^2: 36, qua_sterm: 0.45, cost=0.45
+delta_square: 0.09
+[(0,4), Undefined, *, *, 1.2) 
+[(1,4), Undefined, *, T, 2.4) 
+[(2,1), Undefined, T, A, 3.6) 
+[(3,0), Undefined, A, A, 4.8) 
+[(4,0), Undefined, A, T, 6) 
+[(5,1), Undefined, T, #, 7.2) 
+small denominator: 0
+W_1: 
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+W_2: 
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+>>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<
+n = 0
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+n = 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+n = 2
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+n = 3
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+n = 4
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+n = 5
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=8): 1
+(i=2, j=2, d=1, m=7): 1
+(i=3, j=3, d=0, m=7): 1
+(i=4, j=4, d=0, m=8): 1
+(i=5, j=5, d=1, m=12): 1
+>>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<
+Seq    0: *TAAT#
+Seq    1: *TAAT#
+Seq    2: *TAAT#
+Seq    3: *TAAT#
+Seq    4: *TAAT#
+Seq    5: *TAAT#
+SeqRecov: *TAAT#
+>>>>>>>>>>>>>>>>>>>>>>>MatchingView<<<<<<<<<<<<<<<<<<<<<<<<
+SeqRecov: *TAAT#
+Seq    0: *TAAT#
+SeqRecov: *TAAT#
+Seq    1: *TAAT#
+SeqRecov: *TAAT#
+Seq    2: *TAAT#
+SeqRecov: *TAAT#
+Seq    3: *TAAT#
+SeqRecov: *TAAT#
+Seq    4: *TAAT#
+SeqRecov: *TAAT#
+Seq    5: *TAAT#
+#########################################################

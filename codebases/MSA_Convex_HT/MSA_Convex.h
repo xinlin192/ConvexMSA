@@ -179,7 +179,7 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                 for (int k = 0; k < T3; k ++) {
                     for (int m = 0; m < T4; m ++) {
                         if (m == INS_BASE_IDX) {
-                            if (allSeqs[n][i] == '*') {
+                            if (allSeqs[n][i] == '#') {
                                 C[n][i][j][k][m] = HIGH_COST;
                                 continue;
                             }
@@ -191,10 +191,6 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                         else if (m == DELETION_END) // disallow delete #
                             C[n][i][j][k][m] = HIGH_COST;
                         else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) {
-                            if (allSeqs[n][i] == '*') { // disallow delete any model dna when seq_dna is *
-                                C[n][i][j][k][m] = HIGH_COST;
-                                continue;
-                            }
                             C[n][i][j][k][m] = C_D;
                         }
                         // MATCH PENALTIES
@@ -203,7 +199,7 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                         else if (m == MATCH_END) 
                             C[n][i][j][k][m] = (allSeqs[n][i] == '#')?NO_COST:HIGH_COST; // disallow mismatch #
                         else if (MTH_BASE_IDX <= m) {
-                            if (allSeqs[n][i] == '#') {
+                            if (allSeqs[n][i] == '#' and m != MATCH_END) {
                                 C[n][i][j][k][m] = HIGH_COST;
                                 continue;
                             }
@@ -284,9 +280,17 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     // cout << T1 << T2 << T3 << endl;
     Cube cube (T1, Plane (T2, Trace (T3, Cell(3))));
     // 2. fill in the tensor
-    for (int i = 0; i < T1; i ++) for (int k = 0; k < T3; k ++) cube[i][0][k].score = MAX_DOUBLE;
-    for (int j = 0; j < T2; j ++) for (int k = 0; k < T3; k ++) cube[0][j][k].score = MAX_DOUBLE;
+    // for (int i = 0; i < T1; i ++) for (int k = 0; k < T3; k ++) cube[i][0][k].score = MAX_DOUBLE;
+    // for (int j = 0; j < T2; j ++) for (int k = 0; k < T3; k ++) cube[0][j][k].score = MAX_DOUBLE;
     for (int i = 0; i < T1; i ++) for (int j = 0; j < T2; j ++) cube[i][j][4].score = MAX_DOUBLE;
+    for (int k = 0; k < T3; k ++) cube[0][0][k].score = MAX_DOUBLE;
+    for (int i = 1; i < T1; i ++) {
+        cube[i][0][4].score = i * C_I; 
+        cube[i][0][4].ans_idx = INSERTION; 
+        cube[i][0][4].action = INSERTION; 
+        cube[i][0][4].acidA = data_seq[i]; 
+        cube[i][0][4].acidB = GAP_NOTATION; 
+    }
     cube[0][0][4].score = 0.0;
     cube[0][0][4].ans_idx = MATCH_START;
     cube[0][0][4].action = MATCH_START;
@@ -300,20 +304,19 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 cube[i][j][k].location[1] = j;
                 cube[i][j][k].location[2] = k;
                 // cout << cube[i][j][k].toString() << endl;
-                if ((i == 0 or j == 0) or k == 4) continue;
+                if ((i == 0 and j == 0) or k == 4) continue;
                 char data_dna = data_seq[i];
                 int dna_idx = dna2T3idx(data_dna);
                 vector<double> scores (NUM_MOVEMENT, 0.0); 
-
                 // 1a. get insertion score
-                double ins_score = cube[i-1][j][k].score +
+                double ins_score = (i==0?MAX_DOUBLE:cube[i-1][j][k].score) +
                                    M[i][j][k][INS_BASE_IDX] +
                                    C[i][j][k][INS_BASE_IDX];
                 scores[INS_BASE_IDX] = ins_score;
                 // 1b. get deletion score
                 double del_score;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
-                    del_score = cube[i][j-1][d].score +
+                    del_score = j==0?MAX_DOUBLE:cube[i][j-1][d].score +
                                   M[i][j][d][DEL_BASE_IDX+k] +
                                   C[i][j][d][DEL_BASE_IDX+k];
                     scores[DEL_BASE_IDX+d] = del_score;
@@ -325,7 +328,7 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 // double max_mth_score = -1;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
                     // double mscore = (dna_idx==k)?C_M:C_MM;
-                    mth_score = cube[i-1][j-1][d].score + 
+                    mth_score = (i==0 or j == 0)?MAX_DOUBLE:cube[i-1][j-1][d].score + 
                                    M[i][j][d][MTH_BASE_IDX+k] +
                                    C[i][j][d][MTH_BASE_IDX+k]; 
                     scores[MTH_BASE_IDX+d] = mth_score;

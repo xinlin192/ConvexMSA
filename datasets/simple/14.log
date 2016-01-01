@@ -1,0 +1,3210 @@
+#########################################################
+ScoreMatch: 0, ScoreInsertion: 1.8, ScoreDeletion: 1.8, ScoreMismatch: 2.2
+Seq    0: *A#
+Seq    1: *T#
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.15, cost=0.15
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.15, cost=0.15
+delta_square: 0
+small delta. early stop.
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.15, cost=0.15
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0, cost=0
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.15, cost=0.15
+delta_square: 0.06
+[(0,4), Undefined, *, *, 0.2) 
+[(1,4), Undefined, *, A, 0.3) 
+[(2,0), Undefined, A, #, 0.4) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 0.1, cost=0.1
+delta_square: 0.02
+[(0,4), Undefined, *, *, 0.2) 
+[(1,4), Undefined, *, T, 0.4) 
+[(2,1), Undefined, T, #, 0.6) 
+[FW2] iter=1, ||W||^2: 2, qua_sterm: 0.0666667, cost=0.0666667
+delta_square: 0.0133333
+[(0,4), Undefined, *, *, 0.266667) 
+[(1,4), Undefined, *, T, 0.533333) 
+[(2,1), Undefined, T, #, 0.8) 
+[FW2] iter=2, ||W||^2: 2.22222, qua_sterm: 0.0555556, cost=0.0555556
+delta_square: 0.0111111
+[(0,4), Undefined, *, *, 0.311111) 
+[(1,4), Undefined, *, T, 0.622222) 
+[(2,1), Undefined, T, #, 0.933333) 
+[FW2] iter=3, ||W||^2: 2.22222, qua_sterm: 0.0555556, cost=0.0555556
+gamma=7.80626e-17, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.00416667, cost=0.00416667
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.1375, cost=0.1375
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.00416667, cost=0.00416667
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.115278, cost=0.115278
+delta_square: 0.135
+[(0,4), Undefined, *, *, 0.3) 
+[(1,4), Undefined, *, A, 0.45) 
+[(2,0), Undefined, A, #, 0.6) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 0.275, cost=0.275
+delta_square: 0.055
+[(0,4), Undefined, *, *, 0.4) 
+[(1,4), Undefined, *, T, 0.7) 
+[(2,1), Undefined, T, #, 1) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 0.225, cost=0.225
+delta_square: 0.045
+[(0,4), Undefined, *, *, 0.5) 
+[(1,4), Undefined, *, T, 0.9) 
+[(2,1), Undefined, T, #, 1.3) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 0.225, cost=0.225
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.0152778, cost=0.0152778
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.181944, cost=0.181944
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.0125, cost=0.0125
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.168056, cost=0.168056
+delta_square: 0.174444
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.5) 
+[(2,0), Undefined, A, #, 0.677778) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 0.394444, cost=0.394444
+delta_square: 0.0788889
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 0.788889) 
+[(2,1), Undefined, T, #, 1.13333) 
+[FW2] iter=1, ||W||^2: 3.00309, qua_sterm: 0.349846, cost=0.349846
+delta_square: 0.0699691
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.03611) 
+[(2,1), Undefined, T, #, 1.50556) 
+[FW2] iter=2, ||W||^2: 3.00309, qua_sterm: 0.349846, cost=0.349846
+gamma=2.49108e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.0325617, cost=0.0325617
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.243673, cost=0.243673
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.0325617, cost=0.0325617
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.243673, cost=0.243673
+delta_square: 0.211944
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.525) 
+[(2,0), Undefined, A, #, 0.727778) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 0.531944, cost=0.531944
+delta_square: 0.106389
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 0.838889) 
+[(2,1), Undefined, T, #, 1.23333) 
+[FW2] iter=1, ||W||^2: 3.00309, qua_sterm: 0.487346, cost=0.487346
+delta_square: 0.0974691
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.11111) 
+[(2,1), Undefined, T, #, 1.65556) 
+[FW2] iter=2, ||W||^2: 3.00309, qua_sterm: 0.487346, cost=0.487346
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.0617477, cost=0.0617477
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.320081, cost=0.320081
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.0659144, cost=0.0659144
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.329803, cost=0.329803
+delta_square: 0.254421
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.548611) 
+[(2,0), Undefined, A, #, 0.775) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 0.697106, cost=0.697106
+delta_square: 0.139421
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 0.891667) 
+[(2,1), Undefined, T, #, 1.33889) 
+[FW2] iter=1, ||W||^2: 3.00077, qua_sterm: 0.649846, cost=0.649846
+delta_square: 0.129969
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.18889) 
+[(2,1), Undefined, T, #, 1.81111) 
+[FW2] iter=2, ||W||^2: 3.00077, qua_sterm: 0.649846, cost=0.649846
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.104803, cost=0.104803
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.413137, cost=0.413137
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.110359, cost=0.110359
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.424248, cost=0.424248
+delta_square: 0.301914
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.572222) 
+[(2,0), Undefined, A, #, 0.822222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 0.887346, cost=0.887346
+delta_square: 0.177469
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 0.944444) 
+[(2,1), Undefined, T, #, 1.44444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 0.837346, cost=0.837346
+delta_square: 0.167469
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.26667) 
+[(2,1), Undefined, T, #, 1.96667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 0.837346, cost=0.837346
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.16208, cost=0.16208
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.521803, cost=0.521803
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.165553, cost=0.165553
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.528053, cost=0.528053
+delta_square: 0.354416
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.597917) 
+[(2,1), Undefined, T, #, 0.873611) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 1.09847, cost=1.09847
+delta_square: 0.219693
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 0.993056) 
+[(2,0), Undefined, A, #, 1.54167) 
+[FW2] iter=1, ||W||^2: 3.00019, qua_sterm: 1.04985, cost=1.04985
+delta_square: 0.209969
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 1.34028) 
+[(2,0), Undefined, A, #, 2.11389) 
+[FW2] iter=2, ||W||^2: 3.00019, qua_sterm: 1.04985, cost=1.04985
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.232562, cost=0.232562
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.643673, cost=0.643673
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.232562, cost=0.232562
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.643673, cost=0.643673
+delta_square: 0.411916
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.622917) 
+[(2,1), Undefined, T, #, 0.923611) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 1.33597, cost=1.33597
+delta_square: 0.267193
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.04306) 
+[(2,0), Undefined, A, #, 1.64167) 
+[FW2] iter=1, ||W||^2: 3.00019, qua_sterm: 1.28735, cost=1.28735
+delta_square: 0.257469
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 1.41528) 
+[(2,0), Undefined, A, #, 2.26389) 
+[FW2] iter=2, ||W||^2: 3.00019, qua_sterm: 1.28735, cost=1.28735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.315028, cost=0.315028
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.776834, cost=0.776834
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.312598, cost=0.312598
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.773014, cost=0.773014
+delta_square: 0.474414
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.647569) 
+[(2,1), Undefined, T, #, 0.972917) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 1.59915, cost=1.59915
+delta_square: 0.319831
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.09375) 
+[(2,0), Undefined, A, #, 1.74306) 
+[FW2] iter=1, ||W||^2: 3.00005, qua_sterm: 1.54985, cost=1.54985
+delta_square: 0.309969
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 1.49097) 
+[(2,0), Undefined, A, #, 2.41528) 
+[FW2] iter=2, ||W||^2: 3.00005, qua_sterm: 1.54985, cost=1.54985
+gamma=5.47481e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.408952, cost=0.408952
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.920757, cost=0.920757
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.406174, cost=0.406174
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 0.916591, cost=0.916591
+delta_square: 0.541914
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.672222) 
+[(2,0), Undefined, A, #, 1.02222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 1.88735, cost=1.88735
+delta_square: 0.377469
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.14444) 
+[(2,1), Undefined, T, #, 1.84444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 1.83735, cost=1.83735
+delta_square: 0.367469
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.56667) 
+[(2,1), Undefined, T, #, 2.56667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 1.83735, cost=1.83735
+gamma=5.55112e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.514593, cost=0.514593
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.07605, cost=1.07605
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.513031, cost=0.513031
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.07379, cost=1.07379
+delta_square: 0.614414
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.697396) 
+[(2,0), Undefined, A, #, 1.07257) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 2.1995, cost=2.1995
+delta_square: 0.4399
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.1941) 
+[(2,1), Undefined, T, #, 1.94375) 
+[FW2] iter=1, ||W||^2: 3.00001, qua_sterm: 2.14985, cost=2.14985
+delta_square: 0.429969
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.64132) 
+[(2,1), Undefined, T, #, 2.71597) 
+[FW2] iter=2, ||W||^2: 3.00001, qua_sterm: 2.14985, cost=2.14985
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.632562, cost=0.632562
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.24367, cost=1.24367
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.632562, cost=0.632562
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.24367, cost=1.24367
+delta_square: 0.691914
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.722396) 
+[(2,0), Undefined, A, #, 1.12257) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 2.537, cost=2.537
+delta_square: 0.5074
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.2441) 
+[(2,1), Undefined, T, #, 2.04375) 
+[FW2] iter=1, ||W||^2: 3.00001, qua_sterm: 2.48735, cost=2.48735
+delta_square: 0.497469
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.71632) 
+[(2,1), Undefined, T, #, 2.86597) 
+[FW2] iter=2, ||W||^2: 3.00001, qua_sterm: 2.48735, cost=2.48735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.763334, cost=0.763334
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.42427, cost=1.42427
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.764289, cost=0.764289
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.42557, cost=1.42557
+delta_square: 0.774414
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.747309) 
+[(2,0), Undefined, A, #, 1.1724) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 2.89967, cost=2.89967
+delta_square: 0.579934
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.29427) 
+[(2,1), Undefined, T, #, 2.1441) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 2.84985, cost=2.84985
+delta_square: 0.569969
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.79149) 
+[(2,1), Undefined, T, #, 3.01632) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 2.84985, cost=2.84985
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.907041, cost=0.907041
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.61798, cost=1.61798
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 0.908083, cost=0.908083
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.61937, cost=1.61937
+delta_square: 0.861914
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.772222) 
+[(2,0), Undefined, A, #, 1.22222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 3.28735, cost=3.28735
+delta_square: 0.657469
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.34444) 
+[(2,1), Undefined, T, #, 2.24444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 3.23735, cost=3.23735
+delta_square: 0.647469
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 1.86667) 
+[(2,1), Undefined, T, #, 3.16667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 3.23735, cost=3.23735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.06353, cost=1.06353
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.82455, cost=1.82455
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.06409, cost=1.06409
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 1.82529, cost=1.82529
+delta_square: 0.954414
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.797266) 
+[(2,1), Undefined, T, #, 1.27231) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 3.69976, cost=3.69976
+delta_square: 0.739952
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.39436) 
+[(2,0), Undefined, A, #, 2.34427) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 3.64985, cost=3.64985
+delta_square: 0.729969
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 1.94158) 
+[(2,0), Undefined, A, #, 3.31649) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 3.64985, cost=3.64985
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.23256, cost=1.23256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 2.04367, cost=2.04367
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.23256, cost=1.23256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 2.04367, cost=2.04367
+delta_square: 1.05191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.822266) 
+[(2,1), Undefined, T, #, 1.32231) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 4.13726, cost=4.13726
+delta_square: 0.827452
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.44436) 
+[(2,0), Undefined, A, #, 2.44427) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 4.08735, cost=4.08735
+delta_square: 0.817469
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 2.01658) 
+[(2,0), Undefined, A, #, 3.46649) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 4.08735, cost=4.08735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.41397, cost=1.41397
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 2.27513, cost=2.27513
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.41365, cost=1.41365
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 2.27472, cost=2.27472
+delta_square: 1.15441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.847244) 
+[(2,1), Undefined, T, #, 1.37227) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 4.5998, cost=4.5998
+delta_square: 0.91996
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.4944) 
+[(2,0), Undefined, A, #, 2.54436) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 4.54985, cost=4.54985
+delta_square: 0.909969
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 2.09162) 
+[(2,0), Undefined, A, #, 3.61658) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 4.54985, cost=4.54985
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.60774, cost=1.60774
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 2.51889, cost=2.51889
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.60739, cost=1.60739
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 2.51846, cost=2.51846
+delta_square: 1.26191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.872222) 
+[(2,1), Undefined, T, #, 1.42222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 5.08735, cost=5.08735
+delta_square: 1.01747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.54444) 
+[(2,0), Undefined, A, #, 2.64444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 5.03735, cost=5.03735
+delta_square: 1.00747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 2.16667) 
+[(2,0), Undefined, A, #, 3.76667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 5.03735, cost=5.03735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.8139, cost=1.8139
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 2.77504, cost=2.77504
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 1.81372, cost=1.81372
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 2.77481, cost=2.77481
+delta_square: 1.37441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.897233) 
+[(2,0), Undefined, A, #, 1.47224) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 5.59982, cost=5.59982
+delta_square: 1.11996
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.59442) 
+[(2,1), Undefined, T, #, 2.7444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 5.54985, cost=5.54985
+delta_square: 1.10997
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 2.24164) 
+[(2,1), Undefined, T, #, 3.91662) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 5.54985, cost=5.54985
+gamma=1.10974e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 2.03256, cost=2.03256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 3.04367, cost=3.04367
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 2.03256, cost=2.03256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 3.04367, cost=3.04367
+delta_square: 1.49191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.922233) 
+[(2,0), Undefined, A, #, 1.52224) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 6.13732, cost=6.13732
+delta_square: 1.22746
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.64442) 
+[(2,1), Undefined, T, #, 2.8444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 6.08735, cost=6.08735
+delta_square: 1.21747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 2.31664) 
+[(2,1), Undefined, T, #, 4.06662) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 6.08735, cost=6.08735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 2.26376, cost=2.26376
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 3.32486, cost=3.32486
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 2.26386, cost=2.26386
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 3.32499, cost=3.32499
+delta_square: 1.61441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 0.947228) 
+[(2,0), Undefined, A, #, 1.57223) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 6.69983, cost=6.69983
+delta_square: 1.33997
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.69443) 
+[(2,1), Undefined, T, #, 2.94442) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 6.64985, cost=6.64985
+delta_square: 1.32997
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 2.39166) 
+[(2,1), Undefined, T, #, 4.21664) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 6.64985, cost=6.64985
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 2.50751, cost=2.50751
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 3.61861, cost=3.61861
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 2.50762, cost=2.50762
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 3.61874, cost=3.61874
+delta_square: 1.74191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.972222) 
+[(2,1), Undefined, T, #, 1.62222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 7.28735, cost=7.28735
+delta_square: 1.45747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.74444) 
+[(2,0), Undefined, A, #, 3.04444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 7.23735, cost=7.23735
+delta_square: 1.44747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 2.46667) 
+[(2,0), Undefined, A, #, 4.36667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 7.23735, cost=7.23735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 2.76378, cost=2.76378
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 3.92489, cost=3.92489
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 2.76384, cost=2.76384
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 3.92496, cost=3.92496
+delta_square: 1.87441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 0.997225) 
+[(2,1), Undefined, T, #, 1.67223) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 7.89984, cost=7.89984
+delta_square: 1.57997
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.79444) 
+[(2,0), Undefined, A, #, 3.14443) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 7.84985, cost=7.84985
+delta_square: 1.56997
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 2.54166) 
+[(2,0), Undefined, A, #, 4.51666) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 7.84985, cost=7.84985
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 3.03256, cost=3.03256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 4.24367, cost=4.24367
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 3.03256, cost=3.03256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 4.24367, cost=4.24367
+delta_square: 2.01191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 1.02222) 
+[(2,1), Undefined, T, #, 1.72223) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 8.53734, cost=8.53734
+delta_square: 1.70747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.84444) 
+[(2,0), Undefined, A, #, 3.24443) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 8.48735, cost=8.48735
+delta_square: 1.69747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 2.61666) 
+[(2,0), Undefined, A, #, 4.66666) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 8.48735, cost=8.48735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 3.31383, cost=3.31383
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 4.57494, cost=4.57494
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 3.3138, cost=3.3138
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 4.5749, cost=4.5749
+delta_square: 2.15441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 1.04722) 
+[(2,1), Undefined, T, #, 1.77222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 9.19984, cost=9.19984
+delta_square: 1.83997
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 1.89444) 
+[(2,0), Undefined, A, #, 3.34444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 9.14985, cost=9.14985
+delta_square: 1.82997
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 2.69166) 
+[(2,0), Undefined, A, #, 4.81666) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 9.14985, cost=9.14985
+gamma=1.11016e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 3.60758, cost=3.60758
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 4.91869, cost=4.91869
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 3.60755, cost=3.60755
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 4.91865, cost=4.91865
+delta_square: 2.30191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.07222) 
+[(2,0), Undefined, A, #, 1.82222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 9.88735, cost=9.88735
+delta_square: 1.97747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.94444) 
+[(2,1), Undefined, T, #, 3.44444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 9.83735, cost=9.83735
+delta_square: 1.96747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 2.76667) 
+[(2,1), Undefined, T, #, 4.96667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 9.83735, cost=9.83735
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 3.91382, cost=3.91382
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 5.27493, cost=5.27493
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 3.9138, cost=3.9138
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 5.27491, cost=5.27491
+delta_square: 2.45441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.09722) 
+[(2,0), Undefined, A, #, 1.87222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 10.5998, cost=10.5998
+delta_square: 2.11997
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 1.99444) 
+[(2,1), Undefined, T, #, 3.54444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 10.5498, cost=10.5498
+delta_square: 2.10997
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 2.84167) 
+[(2,1), Undefined, T, #, 5.11666) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 10.5498, cost=10.5498
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 4.23256, cost=4.23256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 5.64367, cost=5.64367
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 4.23256, cost=4.23256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 5.64367, cost=5.64367
+delta_square: 2.61191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.12222) 
+[(2,0), Undefined, A, #, 1.92222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 11.3373, cost=11.3373
+delta_square: 2.26747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.04444) 
+[(2,1), Undefined, T, #, 3.64444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 11.2873, cost=11.2873
+delta_square: 2.25747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 2.91667) 
+[(2,1), Undefined, T, #, 5.26666) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 11.2873, cost=11.2873
+gamma=2.22039e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 4.56381, cost=4.56381
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 6.02492, cost=6.02492
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 4.56382, cost=4.56382
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 6.02493, cost=6.02493
+delta_square: 2.77441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.14722) 
+[(2,0), Undefined, A, #, 1.97222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 12.0998, cost=12.0998
+delta_square: 2.41997
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.09444) 
+[(2,1), Undefined, T, #, 3.74444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 12.0498, cost=12.0498
+delta_square: 2.40997
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 2.99167) 
+[(2,1), Undefined, T, #, 5.41667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 12.0498, cost=12.0498
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 4.90756, cost=4.90756
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 6.41867, cost=6.41867
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 4.90757, cost=4.90757
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 6.41868, cost=6.41868
+delta_square: 2.94191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.17222) 
+[(2,0), Undefined, A, #, 2.02222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 12.8873, cost=12.8873
+delta_square: 2.57747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.14444) 
+[(2,1), Undefined, T, #, 3.84444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 12.8373, cost=12.8373
+delta_square: 2.56747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 3.06667) 
+[(2,1), Undefined, T, #, 5.56667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 12.8373, cost=12.8373
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 5.26381, cost=5.26381
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 6.82492, cost=6.82492
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 5.26381, cost=5.26381
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 6.82493, cost=6.82493
+delta_square: 3.11441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 1.19722) 
+[(2,1), Undefined, T, #, 2.07222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 13.6998, cost=13.6998
+delta_square: 2.73997
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 2.19444) 
+[(2,0), Undefined, A, #, 3.94444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 13.6498, cost=13.6498
+delta_square: 2.72997
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 3.14167) 
+[(2,0), Undefined, A, #, 5.71667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 13.6498, cost=13.6498
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 5.63256, cost=5.63256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 7.24367, cost=7.24367
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 5.63256, cost=5.63256
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 7.24367, cost=7.24367
+delta_square: 3.29191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 1.22222) 
+[(2,1), Undefined, T, #, 2.12222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 14.5373, cost=14.5373
+delta_square: 2.90747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 2.24444) 
+[(2,0), Undefined, A, #, 4.04444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 14.4873, cost=14.4873
+delta_square: 2.89747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 3.21667) 
+[(2,0), Undefined, A, #, 5.86667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 14.4873, cost=14.4873
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 6.01381, cost=6.01381
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 7.67492, cost=7.67492
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 6.01381, cost=6.01381
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 7.67492, cost=7.67492
+delta_square: 3.47441
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, T, 1.24722) 
+[(2,1), Undefined, T, #, 2.17222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 15.3998, cost=15.3998
+delta_square: 3.07997
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, A, 2.29444) 
+[(2,0), Undefined, A, #, 4.14444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 15.3498, cost=15.3498
+delta_square: 3.06997
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, A, 3.29167) 
+[(2,0), Undefined, A, #, 6.01667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 15.3498, cost=15.3498
+gamma=1.11022e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 6.40756, cost=6.40756
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 8.11867, cost=8.11867
+gamma: 4.23855e-07, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 3, lin_term: 7.62939e-07, qua_sterm: 8.11867, cost=8.11867
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 6.40756, cost=6.40756
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 8.11867, cost=8.11867
+delta_square: 3.66191
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.27222) 
+[(2,0), Undefined, A, #, 2.22222) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 16.2873, cost=16.2873
+delta_square: 3.25747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.34444) 
+[(2,1), Undefined, T, #, 4.24444) 
+[FW2] iter=1, ||W||^2: 3, qua_sterm: 16.2373, cost=16.2373
+delta_square: 3.24747
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 3.36667) 
+[(2,1), Undefined, T, #, 6.16667) 
+[FW2] iter=2, ||W||^2: 3, qua_sterm: 16.2373, cost=16.2373
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 6.81381, cost=6.81381
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 8.57492, cost=8.57492
+gamma: 0.125, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.5625, lin_term: 0.225, qua_sterm: 8.3468, cost=8.5718
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 6.81381, cost=6.81381
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 8.57492, cost=8.57492
+gamma: 0.125, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.5625, lin_term: 0.225, qua_sterm: 8.3468, cost=8.5718
+gamma=7.25043e-16, early stop!
+delta_square: 3.85441
+[(0,4), Undefined, *, *, 0.322222) 
+[(0,4), Insertion, *, -, 0.322222) 
+[(1,4), Undefined, *, A, 1.29722) 
+[(2,0), Undefined, A, #, 2.27222) 
+[FW2] iter=0, ||W||^2: 5, qua_sterm: 17.2498, cost=17.2498
+delta_square: 3.44997
+[(0,4), Undefined, *, *, 0.444444) 
+[(0,4), Insertion, *, -, 0.444444) 
+[(1,4), Undefined, *, T, 2.39444) 
+[(2,1), Undefined, T, #, 4.34444) 
+[FW2] iter=1, ||W||^2: 3.2, qua_sterm: 17.1598, cost=17.1598
+delta_square: 3.43197
+[(0,4), Undefined, *, *, 0.566667) 
+[(0,4), Insertion, *, -, 0.566667) 
+[(1,4), Undefined, *, T, 3.43167) 
+[(2,1), Undefined, T, #, 6.29667) 
+[FW2] iter=2, ||W||^2: 3.2, qua_sterm: 17.1598, cost=17.1598
+gamma=1.38778e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.41156, cost=7.41156
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.24267, cost=9.24267
+gamma: 0.4, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.04, lin_term: 0.72, qua_sterm: 8.49067, cost=9.21067
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.06356, cost=7.06356
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 8.85467, cost=8.85467
+gamma: 0.2, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.36, lin_term: 0.36, qua_sterm: 8.48667, cost=8.84667
+gamma=0, early stop!
+delta_square: 3.95316
+[(0,4), Undefined, *, *, 0.347222) 
+[(0,4), Insertion, *, -, 0.347222) 
+[(1,4), Undefined, *, A, 1.33472) 
+[(2,0), Undefined, A, #, 2.32222) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 17.7436, cost=17.7436
+delta_square: 3.54872
+[(0,4), Undefined, *, *, 0.469444) 
+[(0,4), Insertion, *, -, 0.469444) 
+[(1,4), Undefined, *, T, 2.44444) 
+[(2,1), Undefined, T, #, 4.41944) 
+[FW2] iter=1, ||W||^2: 3.34375, qua_sterm: 17.6264, cost=17.6264
+delta_square: 3.52528
+[(0,4), Undefined, *, *, 0.591667) 
+[(0,4), Insertion, *, -, 0.591667) 
+[(1,4), Undefined, *, T, 3.49167) 
+[(2,1), Undefined, T, #, 6.39167) 
+[FW2] iter=2, ||W||^2: 3.34375, qua_sterm: 17.6264, cost=17.6264
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.87528, cost=7.87528
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.75889, cost=9.75889
+gamma: 0.54375, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00766, lin_term: 0.97875, qua_sterm: 8.72101, cost=9.69976
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.25891, cost=7.25891
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.07252, cost=9.07252
+gamma: 0.31875, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.13141, lin_term: 0.57375, qua_sterm: 8.47845, cost=9.0522
+gamma=0, early stop!
+delta_square: 3.96673
+[(0,4), Undefined, *, *, 0.374722) 
+[(0,4), Insertion, *, -, 0.374722) 
+[(1,4), Undefined, *, T, 1.36847) 
+[(2,1), Undefined, T, #, 2.36222) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 17.7714, cost=17.7714
+delta_square: 3.55428
+[(0,4), Undefined, *, *, 0.496944) 
+[(0,4), Insertion, *, -, 0.496944) 
+[(1,4), Undefined, *, A, 2.46444) 
+[(2,0), Undefined, A, #, 4.43194) 
+[FW2] iter=1, ||W||^2: 3.42094, qua_sterm: 17.682, cost=17.682
+delta_square: 3.53641
+[(0,4), Undefined, *, *, 0.619167) 
+[(0,4), Insertion, *, -, 0.619167) 
+[(1,4), Undefined, *, A, 3.51583) 
+[(2,0), Undefined, A, #, 6.4125) 
+[FW2] iter=2, ||W||^2: 3.42094, qua_sterm: 17.682, cost=17.682
+gamma=1.79415e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.77911, cost=7.77911
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.65106, cost=9.65106
+gamma: 0.48125, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00141, lin_term: 0.86625, qua_sterm: 8.73849, cost=9.60474
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.71311, cost=7.71311
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.57839, cost=9.57839
+gamma: 0.464583, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00502, lin_term: 0.83625, qua_sterm: 8.69897, cost=9.53522
+gamma=0, early stop!
+delta_square: 3.94927
+[(0,4), Undefined, *, *, 0.393472) 
+[(0,4), Insertion, *, -, 0.393472) 
+[(1,4), Undefined, *, T, 1.3841) 
+[(2,1), Undefined, T, #, 2.37472) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 17.6716, cost=17.6716
+delta_square: 3.53433
+[(0,4), Undefined, *, *, 0.515694) 
+[(0,4), Insertion, *, -, 0.515694) 
+[(1,4), Undefined, *, A, 2.47694) 
+[(2,0), Undefined, A, #, 4.43819) 
+[FW2] iter=1, ||W||^2: 3.47211, qua_sterm: 17.5922, cost=17.5922
+delta_square: 3.51844
+[(0,4), Undefined, *, *, 0.637917) 
+[(0,4), Insertion, *, -, 0.637917) 
+[(1,4), Undefined, *, A, 3.52833) 
+[(2,0), Undefined, A, #, 6.41875) 
+[FW2] iter=2, ||W||^2: 3.47211, qua_sterm: 17.5922, cost=17.5922
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.76534, cost=7.76534
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.63458, cost=9.63458
+gamma: 0.403125, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.03754, lin_term: 0.725625, qua_sterm: 8.87645, cost=9.60208
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.86724, cost=7.86724
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.74897, cost=9.74897
+gamma: 0.490625, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00035, lin_term: 0.883125, qua_sterm: 8.8177, cost=9.70083
+gamma=0, early stop!
+delta_square: 3.95151
+[(0,4), Undefined, *, *, 0.399514) 
+[(0,4), Insertion, *, -, 0.399514) 
+[(1,4), Undefined, *, T, 1.38691) 
+[(2,1), Undefined, T, #, 2.37431) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 17.6832, cost=17.6832
+delta_square: 3.53665
+[(0,4), Undefined, *, *, 0.521736) 
+[(0,4), Insertion, *, -, 0.521736) 
+[(1,4), Undefined, *, A, 2.48653) 
+[(2,0), Undefined, A, #, 4.45132) 
+[FW2] iter=1, ||W||^2: 3.46033, qua_sterm: 17.6018, cost=17.6018
+delta_square: 3.52035
+[(0,4), Undefined, *, *, 0.643958) 
+[(0,4), Insertion, *, -, 0.643958) 
+[(1,4), Undefined, *, A, 3.53903) 
+[(2,0), Undefined, A, #, 6.4341) 
+[FW2] iter=2, ||W||^2: 3.46033, qua_sterm: 17.6018, cost=17.6018
+gamma=8.07078e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.77291, cost=7.77291
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.64124, cost=9.64124
+gamma: 0.339583, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.10293, lin_term: 0.61125, qua_sterm: 9.00693, cost=9.61818
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.93368, cost=7.93368
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.82173, cost=9.82173
+gamma: 0.449306, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.01028, lin_term: 0.80875, qua_sterm: 8.97261, cost=9.78136
+gamma=2.74977e-15, early stop!
+delta_square: 3.99058
+[(0,4), Undefined, *, *, 0.393056) 
+[(0,4), Insertion, *, -, 0.393056) 
+[(1,4), Undefined, *, A, 1.38347) 
+[(2,0), Undefined, A, #, 2.37389) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 17.879, cost=17.879
+delta_square: 3.5758
+[(0,4), Undefined, *, *, 0.515278) 
+[(0,4), Insertion, *, -, 0.515278) 
+[(1,4), Undefined, *, T, 2.48986) 
+[(2,1), Undefined, T, #, 4.46444) 
+[FW2] iter=1, ||W||^2: 3.43236, qua_sterm: 17.7921, cost=17.7921
+delta_square: 3.55842
+[(0,4), Undefined, *, *, 0.6375) 
+[(0,4), Insertion, *, -, 0.6375) 
+[(1,4), Undefined, *, T, 3.54556) 
+[(2,1), Undefined, T, #, 6.45361) 
+[FW2] iter=2, ||W||^2: 3.43236, qua_sterm: 17.7921, cost=17.7921
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.96354, cost=7.96354
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.85132, cost=9.85132
+gamma: 0.343012, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.09858, lin_term: 0.617422, qua_sterm: 9.21036, cost=9.82779
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.87081, cost=7.87081
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.75005, cost=9.75005
+gamma: 0.3602, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.07818, lin_term: 0.648359, qua_sterm: 9.07574, cost=9.7241
+gamma=1.06963e-15, early stop!
+delta_square: 4.06068
+[(0,4), Undefined, *, *, 0.379375) 
+[(0,4), Insertion, *, -, 0.379375) 
+[(1,4), Undefined, *, A, 1.37993) 
+[(2,0), Undefined, A, #, 2.38049) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 18.2229, cost=18.2229
+delta_square: 3.64458
+[(0,4), Undefined, *, *, 0.501597) 
+[(0,4), Insertion, *, -, 0.501597) 
+[(1,4), Undefined, *, T, 2.4875) 
+[(2,1), Undefined, T, #, 4.4734) 
+[FW2] iter=1, ||W||^2: 3.4206, qua_sterm: 18.1335, cost=18.1335
+delta_square: 3.62669
+[(0,4), Undefined, *, *, 0.623819) 
+[(0,4), Insertion, *, -, 0.623819) 
+[(1,4), Undefined, *, T, 3.54807) 
+[(2,1), Undefined, T, #, 6.47231) 
+[FW2] iter=2, ||W||^2: 3.4206, qua_sterm: 18.1335, cost=18.1335
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.17637, cost=8.17637
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 10.0856, cost=10.0856
+gamma: 0.367462, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.07026, lin_term: 0.661432, qua_sterm: 9.39714, cost=10.0586
+gamma=4.11107e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.88834, cost=7.88834
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.76725, cost=9.76725
+gamma: 0.302821, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.15552, lin_term: 0.545078, qua_sterm: 9.20383, cost=9.74891
+gamma=0, early stop!
+delta_square: 4.14492
+[(0,4), Undefined, *, *, 0.364071) 
+[(0,4), Insertion, *, -, 0.364071) 
+[(1,4), Undefined, *, A, 1.37421) 
+[(2,0), Undefined, A, #, 2.38436) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 18.6402, cost=18.6402
+delta_square: 3.72805
+[(0,4), Undefined, *, *, 0.486293) 
+[(0,4), Insertion, *, -, 0.486293) 
+[(1,4), Undefined, *, T, 2.49127) 
+[(2,1), Undefined, T, #, 4.49624) 
+[FW2] iter=1, ||W||^2: 3.38779, qua_sterm: 18.5423, cost=18.5423
+delta_square: 3.70846
+[(0,4), Undefined, *, *, 0.608516) 
+[(0,4), Insertion, *, -, 0.608516) 
+[(1,4), Undefined, *, T, 3.55884) 
+[(2,1), Undefined, T, #, 6.50916) 
+[FW2] iter=2, ||W||^2: 3.38779, qua_sterm: 18.5423, cost=18.5423
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.42917, cost=8.42917
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 10.3638, cost=10.3638
+gamma: 0.395548, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.04364, lin_term: 0.711986, qua_sterm: 9.62048, cost=10.3325
+gamma=2.66099e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 7.94775, cost=7.94775
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.83096, cost=9.83096
+gamma: 0.273948, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.2044, lin_term: 0.493106, qua_sterm: 9.32285, cost=9.81596
+gamma=7.39683e-15, early stop!
+delta_square: 4.22745
+[(0,4), Undefined, *, *, 0.350545) 
+[(0,4), Insertion, *, -, 0.350545) 
+[(1,4), Undefined, *, A, 1.3684) 
+[(2,0), Undefined, A, #, 2.38625) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 19.051, cost=19.051
+delta_square: 3.8102
+[(0,4), Undefined, *, *, 0.472768) 
+[(0,4), Insertion, *, -, 0.472768) 
+[(1,4), Undefined, *, T, 2.49859) 
+[(2,1), Undefined, T, #, 4.52441) 
+[FW2] iter=1, ||W||^2: 3.35766, qua_sterm: 18.9419, cost=18.9419
+delta_square: 3.78839
+[(0,4), Undefined, *, *, 0.59499) 
+[(0,4), Insertion, *, -, 0.59499) 
+[(1,4), Undefined, *, T, 3.57342) 
+[(2,1), Undefined, T, #, 6.55186) 
+[FW2] iter=2, ||W||^2: 3.35766, qua_sterm: 18.9419, cost=18.9419
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.70035, cost=8.70035
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 10.6616, cost=10.6616
+gamma: 0.416141, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02813, lin_term: 0.749054, qua_sterm: 9.87795, cost=10.627
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.02453, cost=8.02453
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 9.91401, cost=9.91401
+gamma: 0.259563, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.23124, lin_term: 0.467214, qua_sterm: 9.43332, cost=9.90054
+gamma=0, early stop!
+delta_square: 4.30622
+[(0,4), Undefined, *, *, 0.341121) 
+[(0,4), Insertion, *, -, 0.341121) 
+[(1,4), Undefined, *, A, 1.36636) 
+[(2,0), Undefined, A, #, 2.3916) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 19.4395, cost=19.4395
+delta_square: 3.8879
+[(0,4), Undefined, *, *, 0.463343) 
+[(0,4), Insertion, *, -, 0.463343) 
+[(1,4), Undefined, *, T, 2.50752) 
+[(2,1), Undefined, T, #, 4.55169) 
+[FW2] iter=1, ||W||^2: 3.34392, qua_sterm: 19.3224, cost=19.3224
+delta_square: 3.86449
+[(0,4), Undefined, *, *, 0.585565) 
+[(0,4), Insertion, *, -, 0.585565) 
+[(1,4), Undefined, *, T, 3.58936) 
+[(2,1), Undefined, T, #, 6.59316) 
+[FW2] iter=2, ||W||^2: 3.34392, qua_sterm: 19.3224, cost=19.3224
+gamma=1.31348e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.9642, cost=8.9642
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 10.9506, cost=10.9506
+gamma: 0.424159, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02301, lin_term: 0.763486, qua_sterm: 10.1511, cost=10.9146
+gamma=1.54274e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.1176, cost=8.1176
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 10.015, cost=10.015
+gamma: 0.255214, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.23968, lin_term: 0.459385, qua_sterm: 9.54263, cost=10.002
+gamma=0, early stop!
+delta_square: 4.38453
+[(0,4), Undefined, *, *, 0.337035) 
+[(0,4), Insertion, *, -, 0.337035) 
+[(1,4), Undefined, *, A, 1.37059) 
+[(2,0), Undefined, A, #, 2.40414) 
+[FW2] iter=0, ||W||^2: 5, qua_sterm: 19.7685, cost=19.7685
+delta_square: 3.9537
+[(0,4), Undefined, *, *, 0.459258) 
+[(0,4), Insertion, *, -, 0.459258) 
+[(1,4), Undefined, *, T, 2.51862) 
+[(2,1), Undefined, T, #, 4.57797) 
+[FW2] iter=1, ||W||^2: 3.21018, qua_sterm: 19.6915, cost=19.6915
+delta_square: 3.93831
+[(0,4), Undefined, *, *, 0.58148) 
+[(0,4), Insertion, *, -, 0.58148) 
+[(1,4), Undefined, *, T, 3.61503) 
+[(2,1), Undefined, T, #, 6.64858) 
+[FW2] iter=2, ||W||^2: 3.21018, qua_sterm: 19.6915, cost=19.6915
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.0698, cost=9.0698
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.0631, cost=11.0631
+gamma: 0.401726, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.03863, lin_term: 0.723106, qua_sterm: 10.3077, cost=11.0308
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.3519, cost=8.3519
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 10.2749, cost=10.2749
+gamma: 0.207241, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.34283, lin_term: 0.373034, qua_sterm: 9.89326, cost=10.2663
+gamma=8.07809e-15, early stop!
+delta_square: 4.46453
+[(0,4), Undefined, *, *, 0.339878) 
+[(0,4), Insertion, *, -, 0.339878) 
+[(1,4), Undefined, *, A, 1.38305) 
+[(2,0), Undefined, A, #, 2.42623) 
+[FW2] iter=0, ||W||^2: 5, qua_sterm: 20.1464, cost=20.1464
+delta_square: 4.02928
+[(0,4), Undefined, *, *, 0.4621) 
+[(0,4), Insertion, *, -, 0.4621) 
+[(1,4), Undefined, *, T, 2.53391) 
+[(2,1), Undefined, T, #, 4.60571) 
+[FW2] iter=1, ||W||^2: 3.22074, qua_sterm: 20.0747, cost=20.0747
+delta_square: 4.01494
+[(0,4), Undefined, *, *, 0.584322) 
+[(0,4), Insertion, *, -, 0.584322) 
+[(1,4), Undefined, *, T, 3.63847) 
+[(2,1), Undefined, T, #, 6.69262) 
+[FW2] iter=2, ||W||^2: 3.22074, qua_sterm: 20.0747, cost=20.0747
+gamma=1.02954e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.20154, cost=9.20154
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.204, cost=11.204
+gamma: 0.379184, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.05839, lin_term: 0.682532, qua_sterm: 10.4927, cost=11.1753
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.57828, cost=8.57828
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 10.5241, cost=10.5241
+gamma: 0.200558, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.35866, lin_term: 0.361004, qua_sterm: 10.1551, cost=10.5161
+gamma=0, early stop!
+delta_square: 4.57304
+[(0,4), Undefined, *, *, 0.336807) 
+[(0,4), Insertion, *, -, 0.336807) 
+[(1,4), Undefined, *, A, 1.38876) 
+[(2,0), Undefined, A, #, 2.44072) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 20.7245, cost=20.7245
+delta_square: 4.14489
+[(0,4), Undefined, *, *, 0.459029) 
+[(0,4), Insertion, *, -, 0.459029) 
+[(1,4), Undefined, *, T, 2.55942) 
+[(2,1), Undefined, T, #, 4.65981) 
+[FW2] iter=1, ||W||^2: 3.3388, qua_sterm: 20.6029, cost=20.6029
+delta_square: 4.12059
+[(0,4), Undefined, *, *, 0.581251) 
+[(0,4), Insertion, *, -, 0.581251) 
+[(1,4), Undefined, *, T, 3.66819) 
+[(2,1), Undefined, T, #, 6.75512) 
+[FW2] iter=2, ||W||^2: 3.3388, qua_sterm: 20.6029, cost=20.6029
+gamma=1.40031e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.56159, cost=9.56159
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.5976, cost=11.5976
+gamma: 0.395495, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.04369, lin_term: 0.71189, qua_sterm: 10.8545, cost=11.5664
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 8.65653, cost=8.65653
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 10.6079, cost=10.6079
+gamma: 0.253469, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.24311, lin_term: 0.456243, qua_sterm: 10.1388, cost=10.5951
+gamma=0, early stop!
+delta_square: 4.68121
+[(0,4), Undefined, *, *, 0.341112) 
+[(0,4), Insertion, *, -, 0.341112) 
+[(1,4), Undefined, *, T, 1.40483) 
+[(2,1), Undefined, T, #, 2.46856) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 21.2375, cost=21.2375
+delta_square: 4.2475
+[(0,4), Undefined, *, *, 0.463334) 
+[(0,4), Insertion, *, -, 0.463334) 
+[(1,4), Undefined, *, A, 2.58514) 
+[(2,0), Undefined, A, #, 4.70695) 
+[FW2] iter=1, ||W||^2: 3.34336, qua_sterm: 21.12, cost=21.12
+delta_square: 4.224
+[(0,4), Undefined, *, *, 0.585557) 
+[(0,4), Insertion, *, -, 0.585557) 
+[(1,4), Undefined, *, A, 3.70569) 
+[(2,0), Undefined, A, #, 6.82582) 
+[FW2] iter=2, ||W||^2: 3.34336, qua_sterm: 21.12, cost=21.12
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.35213, cost=9.35213
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.3615, cost=11.3615
+gamma: 0.281999, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.1901, lin_term: 0.507599, qua_sterm: 10.838, cost=11.3456
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.32475, cost=9.32475
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.3449, cost=11.3449
+gamma: 0.423321, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02352, lin_term: 0.761977, qua_sterm: 10.5471, cost=11.309
+gamma=7.74429e-16, early stop!
+delta_square: 4.75937
+[(0,4), Undefined, *, *, 0.34067) 
+[(0,4), Insertion, *, -, 0.34067) 
+[(1,4), Undefined, *, A, 1.41281) 
+[(2,0), Undefined, A, #, 2.48495) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 21.6119, cost=21.6119
+delta_square: 4.32238
+[(0,4), Undefined, *, *, 0.462893) 
+[(0,4), Insertion, *, -, 0.462893) 
+[(1,4), Undefined, *, T, 2.59605) 
+[(2,1), Undefined, T, #, 4.72921) 
+[FW2] iter=1, ||W||^2: 3.3479, qua_sterm: 21.4976, cost=21.4976
+delta_square: 4.29951
+[(0,4), Undefined, *, *, 0.585115) 
+[(0,4), Insertion, *, -, 0.585115) 
+[(1,4), Undefined, *, T, 3.72311) 
+[(2,1), Undefined, T, #, 6.86111) 
+[FW2] iter=2, ||W||^2: 3.3479, qua_sterm: 21.4976, cost=21.4976
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.85038, cost=9.85038
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.9062, cost=11.9062
+gamma: 0.34827, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.09209, lin_term: 0.626886, qua_sterm: 11.2551, cost=11.882
+gamma=1.14416e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.24586, cost=9.24586
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.2546, cost=11.2546
+gamma: 0.380322, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.05729, lin_term: 0.684579, qua_sterm: 10.5411, cost=11.2256
+gamma=0, early stop!
+delta_square: 4.82974
+[(0,4), Undefined, *, *, 0.341333) 
+[(0,4), Insertion, *, -, 0.341333) 
+[(1,4), Undefined, *, A, 1.42376) 
+[(2,0), Undefined, A, #, 2.50618) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 21.9425, cost=21.9425
+delta_square: 4.38851
+[(0,4), Undefined, *, *, 0.463555) 
+[(0,4), Insertion, *, -, 0.463555) 
+[(1,4), Undefined, *, T, 2.59997) 
+[(2,1), Undefined, T, #, 4.73639) 
+[FW2] iter=1, ||W||^2: 3.371, qua_sterm: 21.839, cost=21.839
+delta_square: 4.3678
+[(0,4), Undefined, *, *, 0.585778) 
+[(0,4), Insertion, *, -, 0.585778) 
+[(1,4), Undefined, *, T, 3.73166) 
+[(2,1), Undefined, T, #, 6.87755) 
+[FW2] iter=2, ||W||^2: 3.371, qua_sterm: 21.839, cost=21.839
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 10.1649, cost=10.1649
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 12.2483, cost=12.2483
+gamma: 0.401956, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.03845, lin_term: 0.72352, qua_sterm: 11.4924, cost=12.216
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.31097, cost=9.31097
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.3216, cost=11.3216
+gamma: 0.334606, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.10942, lin_term: 0.60229, qua_sterm: 10.6969, cost=11.2992
+gamma=0, early stop!
+delta_square: 4.90503
+[(0,4), Undefined, *, *, 0.340665) 
+[(0,4), Insertion, *, -, 0.340665) 
+[(1,4), Undefined, *, A, 1.43323) 
+[(2,0), Undefined, A, #, 2.5258) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 22.2994, cost=22.2994
+delta_square: 4.45987
+[(0,4), Undefined, *, *, 0.462887) 
+[(0,4), Insertion, *, -, 0.462887) 
+[(1,4), Undefined, *, T, 2.60383) 
+[(2,1), Undefined, T, #, 4.74478) 
+[FW2] iter=1, ||W||^2: 3.3987, qua_sterm: 22.2045, cost=22.2045
+delta_square: 4.4409
+[(0,4), Undefined, *, *, 0.58511) 
+[(0,4), Insertion, *, -, 0.58511) 
+[(1,4), Undefined, *, T, 3.7403) 
+[(2,1), Undefined, T, #, 6.89549) 
+[FW2] iter=2, ||W||^2: 3.3987, qua_sterm: 22.2045, cost=22.2045
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 10.4075, cost=10.4075
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 12.5098, cost=12.5098
+gamma: 0.419963, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02562, lin_term: 0.755934, qua_sterm: 11.7186, cost=12.4745
+gamma=1.57372e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.43764, cost=9.43764
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.4565, cost=11.4565
+gamma: 0.318016, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.13247, lin_term: 0.572429, qua_sterm: 10.8639, cost=11.4363
+gamma=0, early stop!
+delta_square: 4.98335
+[(0,4), Undefined, *, *, 0.336635) 
+[(0,4), Insertion, *, -, 0.336635) 
+[(1,4), Undefined, *, A, 1.43579) 
+[(2,0), Undefined, A, #, 2.53495) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 22.6818, cost=22.6818
+delta_square: 4.53636
+[(0,4), Undefined, *, *, 0.458857) 
+[(0,4), Insertion, *, -, 0.458857) 
+[(1,4), Undefined, *, T, 2.61217) 
+[(2,1), Undefined, T, #, 4.76549) 
+[FW2] iter=1, ||W||^2: 3.39216, qua_sterm: 22.5851, cost=22.5851
+delta_square: 4.51702
+[(0,4), Undefined, *, *, 0.58108) 
+[(0,4), Insertion, *, -, 0.58108) 
+[(1,4), Undefined, *, T, 3.75429) 
+[(2,1), Undefined, T, #, 6.92749) 
+[FW2] iter=2, ||W||^2: 3.39216, qua_sterm: 22.5851, cost=22.5851
+gamma=9.89903e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 10.6423, cost=10.6423
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 12.7617, cost=12.7617
+gamma: 0.415613, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02848, lin_term: 0.748103, qua_sterm: 11.9791, cost=12.7272
+gamma=8.0342e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.57213, cost=9.57213
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.6003, cost=11.6003
+gamma: 0.310833, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.14314, lin_term: 0.559499, qua_sterm: 11.0214, cost=11.5809
+gamma=0, early stop!
+delta_square: 5.06431
+[(0,4), Undefined, *, *, 0.329834) 
+[(0,4), Insertion, *, -, 0.329834) 
+[(1,4), Undefined, *, A, 1.43521) 
+[(2,0), Undefined, A, #, 2.54058) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 23.081, cost=23.081
+delta_square: 4.61619
+[(0,4), Undefined, *, *, 0.452056) 
+[(0,4), Insertion, *, -, 0.452056) 
+[(1,4), Undefined, *, T, 2.619) 
+[(2,1), Undefined, T, #, 4.78594) 
+[FW2] iter=1, ||W||^2: 3.37738, qua_sterm: 22.9797, cost=22.9797
+delta_square: 4.59594
+[(0,4), Undefined, *, *, 0.574278) 
+[(0,4), Insertion, *, -, 0.574278) 
+[(1,4), Undefined, *, T, 3.7666) 
+[(2,1), Undefined, T, #, 6.95891) 
+[FW2] iter=2, ||W||^2: 3.37738, qua_sterm: 22.9797, cost=22.9797
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 10.8875, cost=10.8875
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.0243, cost=13.0243
+gamma: 0.40492, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.03616, lin_term: 0.728856, qua_sterm: 12.2627, cost=12.9915
+gamma=1.69282e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.70302, cost=9.70302
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 11.7399, cost=11.7399
+gamma: 0.303957, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.15373, lin_term: 0.547123, qua_sterm: 11.1743, cost=11.7214
+gamma=0, early stop!
+delta_square: 5.15162
+[(0,4), Undefined, *, *, 0.326036) 
+[(0,4), Insertion, *, -, 0.326036) 
+[(1,4), Undefined, *, A, 1.43923) 
+[(2,0), Undefined, A, #, 2.55242) 
+[FW2] iter=0, ||W||^2: 5, qua_sterm: 23.4557, cost=23.4557
+delta_square: 4.69114
+[(0,4), Undefined, *, *, 0.448259) 
+[(0,4), Insertion, *, -, 0.448259) 
+[(1,4), Undefined, *, T, 2.62807) 
+[(2,1), Undefined, T, #, 4.80789) 
+[FW2] iter=1, ||W||^2: 3.25077, qua_sterm: 23.3934, cost=23.3934
+delta_square: 4.67868
+[(0,4), Undefined, *, *, 0.570481) 
+[(0,4), Insertion, *, -, 0.570481) 
+[(1,4), Undefined, *, T, 3.79028) 
+[(2,1), Undefined, T, #, 7.01007) 
+[FW2] iter=2, ||W||^2: 3.25077, qua_sterm: 23.3934, cost=23.3934
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 10.9699, cost=10.9699
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.1069, cost=13.1069
+gamma: 0.3743, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.0632, lin_term: 0.673739, qua_sterm: 12.4051, cost=13.0789
+gamma=9.90561e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 9.99, cost=9.99
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 12.0541, cost=12.0541
+gamma: 0.241792, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.26669, lin_term: 0.435225, qua_sterm: 11.6071, cost=12.0424
+gamma=0, early stop!
+delta_square: 5.24516
+[(0,4), Undefined, *, *, 0.324797) 
+[(0,4), Insertion, *, -, 0.324797) 
+[(1,4), Undefined, *, A, 1.44733) 
+[(2,0), Undefined, A, #, 2.56985) 
+[FW2] iter=0, ||W||^2: 5, qua_sterm: 23.9059, cost=23.9059
+delta_square: 4.78118
+[(0,4), Undefined, *, *, 0.447019) 
+[(0,4), Insertion, *, -, 0.447019) 
+[(1,4), Undefined, *, T, 2.63903) 
+[(2,1), Undefined, T, #, 4.83103) 
+[FW2] iter=1, ||W||^2: 3.26188, qua_sterm: 23.8462, cost=23.8462
+delta_square: 4.76924
+[(0,4), Undefined, *, *, 0.569241) 
+[(0,4), Insertion, *, -, 0.569241) 
+[(1,4), Undefined, *, T, 3.80838) 
+[(2,1), Undefined, T, #, 7.04751) 
+[FW2] iter=2, ||W||^2: 3.26188, qua_sterm: 23.8462, cost=23.8462
+gamma=1.69904e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.1254, cost=11.1254
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.2698, cost=13.2698
+gamma: 0.356623, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.08223, lin_term: 0.641921, qua_sterm: 12.6024, cost=13.2443
+gamma=5.45597e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 10.2451, cost=10.2451
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 12.3309, cost=12.3309
+gamma: 0.220247, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.31305, lin_term: 0.396444, qua_sterm: 11.9248, cost=12.3212
+gamma=0, early stop!
+delta_square: 5.37119
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.45253) 
+[(2,0), Undefined, A, #, 2.58283) 
+[FW2] iter=0, ||W||^2: 4, qua_sterm: 24.4731, cost=24.4731
+delta_square: 4.89462
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.66857) 
+[(2,1), Undefined, T, #, 4.89269) 
+[FW2] iter=1, ||W||^2: 3.03329, qua_sterm: 24.4397, cost=24.4397
+delta_square: 4.88794
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 3.86197) 
+[(2,1), Undefined, T, #, 7.15727) 
+[FW2] iter=2, ||W||^2: 3.03329, qua_sterm: 24.4397, cost=24.4397
+gamma=1.58806e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.1212, cost=11.1212
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.2609, cost=13.2609
+gamma: 0.0716788, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.73384, lin_term: 0.157693, qua_sterm: 13.1022, cost=13.2599
+gamma: 0.0383942, mu*||W-S||^2: 0.373384
+[FW1] iter=2, ||W||^2: 2.6062, lin_term: 0.236106, qua_sterm: 13.0235, cost=13.2596
+gamma: 0.0212934, mu*||W-S||^2: 0.36062
+[FW1] iter=3, ||W||^2: 2.53943, lin_term: 0.277924, qua_sterm: 12.9816, cost=13.2595
+gamma: 0.143223, mu*||W-S||^2: 0.353943
+[FW1] iter=4, ||W||^2: 2.17107, lin_term: 0.495921, qua_sterm: 12.76, cost=13.2559
+gamma: 0.216536, mu*||W-S||^2: 0.0176909
+[FW1] iter=5, ||W||^2: 2.32055, lin_term: 0.388536, qua_sterm: 12.867, cost=13.2555
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 10.7098, cost=10.7098
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 12.8386, cost=12.8386
+gamma: 0.267153, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.21687, lin_term: 0.480876, qua_sterm: 12.3434, cost=12.8243
+gamma=0, early stop!
+delta_square: 5.49677
+[(0,4), Undefined, *, *, 0.33135) 
+[(0,4), Insertion, *, -, 0.33135) 
+[(1,4), Undefined, *, A, 1.46915) 
+[(2,0), Undefined, A, #, 2.60694) 
+[FW2] iter=0, ||W||^2: 5, qua_sterm: 25.1269, cost=25.1269
+delta_square: 5.02538
+[(0,4), Undefined, *, *, 0.453572) 
+[(0,4), Insertion, *, -, 0.453572) 
+[(1,4), Undefined, *, T, 2.70895) 
+[(2,1), Undefined, T, #, 4.96432) 
+[FW2] iter=1, ||W||^2: 3.21722, qua_sterm: 25.0537, cost=25.0537
+delta_square: 5.01073
+[(0,4), Undefined, *, *, 0.575795) 
+[(0,4), Insertion, *, -, 0.575795) 
+[(1,4), Undefined, *, T, 3.90473) 
+[(2,1), Undefined, T, #, 7.23366) 
+[FW2] iter=2, ||W||^2: 3.21722, qua_sterm: 25.0537, cost=25.0537
+gamma=1.05536e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.5117, cost=11.5117
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.6832, cost=13.6832
+gamma: 0.150985, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.48725, lin_term: 0.332167, qua_sterm: 13.3464, cost=13.6786
+gamma: 0.0865928, mu*||W-S||^2: 0.348725
+[FW1] iter=2, ||W||^2: 2.25582, lin_term: 0.493908, qua_sterm: 13.1834, cost=13.6773
+gamma: 0.0531925, mu*||W-S||^2: 0.325582
+[FW1] iter=3, ||W||^2: 2.13144, lin_term: 0.584659, qua_sterm: 13.0922, cost=13.6768
+gamma: 0.174608, mu*||W-S||^2: 0.0194453
+[FW1] iter=4, ||W||^2: 2.25507, lin_term: 0.482573, qua_sterm: 13.194, cost=13.6765
+gamma: 0.0251436, mu*||W-S||^2: 0.307945
+[FW1] iter=5, ||W||^2: 2.19832, lin_term: 0.525755, qua_sterm: 13.1507, cost=13.6764
+gamma: 0.0642356, mu*||W-S||^2: 0.0154237
+[FW1] iter=6, ||W||^2: 2.24054, lin_term: 0.491983, qua_sterm: 13.1844, cost=13.6764
+gamma: 0.0110967, mu*||W-S||^2: 0.299362
+[FW1] iter=7, ||W||^2: 2.21612, lin_term: 0.510936, qua_sterm: 13.1655, cost=13.6764
+gamma: 0.00625327, mu*||W-S||^2: 0.296462
+[FW1] iter=8, ||W||^2: 2.2026, lin_term: 0.521498, qua_sterm: 13.1549, cost=13.6764
+gamma: 0.0505242, mu*||W-S||^2: 0.0150779
+[FW1] iter=9, ||W||^2: 2.23565, lin_term: 0.49515, qua_sterm: 13.1812, cost=13.6764
+gamma: 0.00782642, mu*||W-S||^2: 0.297461
+[FW1] iter=10, ||W||^2: 2.21854, lin_term: 0.508493, qua_sterm: 13.1679, cost=13.6764
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 10.8638, cost=10.8638
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.0031, cost=13.0031
+gamma: 0.35324, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.08615, lin_term: 0.635833, qua_sterm: 12.3423, cost=12.9782
+gamma=3.33657e-15, early stop!
+delta_square: 5.65103
+[(0,4), Undefined, *, *, 0.347053) 
+[(0,4), Insertion, *, -, 0.347053) 
+[(1,4), Undefined, *, A, 1.50342) 
+[(2,0), Undefined, A, #, 2.65978) 
+[FW2] iter=0, ||W||^2: 5, qua_sterm: 25.8454, cost=25.8454
+delta_square: 5.16908
+[(0,4), Undefined, *, *, 0.469275) 
+[(0,4), Insertion, *, -, 0.469275) 
+[(1,4), Undefined, *, T, 2.76142) 
+[(2,1), Undefined, T, #, 5.05357) 
+[FW2] iter=1, ||W||^2: 3.74375, qua_sterm: 25.7991, cost=25.7991
+delta_square: 5.15982
+[(0,4), Undefined, *, *, 0.591498) 
+[(0,4), Insertion, *, -, 0.591498) 
+[(1,4), Undefined, *, T, 3.98882) 
+[(2,1), Undefined, T, #, 7.38615) 
+[FW2] iter=2, ||W||^2: 3.35539, qua_sterm: 25.7902, cost=25.7902
+delta_square: 5.15805
+[(0,4), Undefined, *, *, 0.71372) 
+[(0,4), Insertion, *, -, 0.71372) 
+[(1,4), Undefined, *, T, 5.19852) 
+[(2,1), Undefined, T, #, 9.68332) 
+[FW2] iter=3, ||W||^2: 3.35539, qua_sterm: 25.7902, cost=25.7902
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.896, cost=11.896
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1019, cost=14.1019
+gamma: 0.356703, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.08214, lin_term: 0.784748, qua_sterm: 13.2917, cost=14.0764
+gamma: 0.0711767, mu*||W-S||^2: 0.308214
+[FW1] iter=2, ||W||^2: 1.9437, lin_term: 0.885481, qua_sterm: 13.1901, cost=14.0756
+gamma: 0.0446455, mu*||W-S||^2: 0.29437
+[FW1] iter=3, ||W||^2: 1.86531, lin_term: 0.944168, qua_sterm: 13.1312, cost=14.0753
+gamma: 0.0442846, mu*||W-S||^2: 0.0581977
+[FW1] iter=4, ||W||^2: 1.89093, lin_term: 0.902356, qua_sterm: 13.1729, cost=14.0753
+gamma: 0.00595262, mu*||W-S||^2: 0.272025
+[FW1] iter=5, ||W||^2: 1.88143, lin_term: 0.91008, qua_sterm: 13.1652, cost=14.0753
+gamma: 0.00415353, mu*||W-S||^2: 0.0536123
+[FW1] iter=6, ||W||^2: 1.88386, lin_term: 0.9063, qua_sterm: 13.169, cost=14.0753
+gamma: 0.00236802, mu*||W-S||^2: 0.168604
+[FW1] iter=7, ||W||^2: 1.88252, lin_term: 0.909364, qua_sterm: 13.1659, cost=14.0753
+gamma: 0.0039377, mu*||W-S||^2: 0.0535908
+[FW1] iter=8, ||W||^2: 1.88482, lin_term: 0.905783, qua_sterm: 13.1695, cost=14.0753
+gamma: 0.00208677, mu*||W-S||^2: 0.16851
+[FW1] iter=9, ||W||^2: 1.88364, lin_term: 0.908484, qua_sterm: 13.1668, cost=14.0753
+gamma: 0.000851714, mu*||W-S||^2: 0.269258
+[FW1] iter=10, ||W||^2: 1.8823, lin_term: 0.909584, qua_sterm: 13.1657, cost=14.0753
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.1108, cost=11.1108
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.2694, cost=13.2694
+gamma: 0.392109, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.04656, lin_term: 0.705797, qua_sterm: 12.5329, cost=13.2387
+gamma=9.02621e-16, early stop!
+delta_square: 5.7319
+[(0,4), Undefined, *, *, 0.346085) 
+[(0,4), Insertion, *, -, 0.346085) 
+[(1,4), Undefined, *, A, 1.51625) 
+[(2,0), Undefined, A, #, 2.68642) 
+[FW2] iter=0, ||W||^2: 5, qua_sterm: 26.2231, cost=26.2231
+delta_square: 5.24461
+[(0,4), Undefined, *, *, 0.468307) 
+[(0,4), Insertion, *, -, 0.468307) 
+[(1,4), Undefined, *, T, 2.77607) 
+[(2,1), Undefined, T, #, 5.08383) 
+[FW2] iter=1, ||W||^2: 3.75979, qua_sterm: 26.1807, cost=26.1807
+delta_square: 5.23614
+[(0,4), Undefined, *, *, 0.590529) 
+[(0,4), Insertion, *, -, 0.590529) 
+[(1,4), Undefined, *, T, 4.00601) 
+[(2,1), Undefined, T, #, 7.42149) 
+[FW2] iter=2, ||W||^2: 3.43147, qua_sterm: 26.176, cost=26.176
+delta_square: 5.23521
+[(0,4), Undefined, *, *, 0.712752) 
+[(0,4), Insertion, *, -, 0.712752) 
+[(1,4), Undefined, *, T, 5.22305) 
+[(2,1), Undefined, T, #, 9.73335) 
+[FW2] iter=3, ||W||^2: 3.43147, qua_sterm: 26.176, cost=26.176
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.0939, cost=12.0939
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.3179, cost=14.3179
+gamma: 0.45339, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00869, lin_term: 0.997459, qua_sterm: 13.2794, cost=14.2768
+gamma: 0.0450394, mu*||W-S||^2: 0.300869
+[FW1] iter=2, ||W||^2: 1.92393, lin_term: 1.05162, qua_sterm: 13.2249, cost=14.2765
+gamma: 0.0287929, mu*||W-S||^2: 0.292393
+[FW1] iter=3, ||W||^2: 1.87315, lin_term: 1.08469, qua_sterm: 13.1917, cost=14.2764
+gamma: 0.00859302, mu*||W-S||^2: 0.0845306
+[FW1] iter=4, ||W||^2: 1.87563, lin_term: 1.07536, qua_sterm: 13.201, cost=14.2764
+gamma: 0.00180186, mu*||W-S||^2: 0.120807
+[FW1] iter=5, ||W||^2: 1.87549, lin_term: 1.07739, qua_sterm: 13.199, cost=14.2764
+gamma: 0.00211751, mu*||W-S||^2: 0.0834379
+[FW1] iter=6, ||W||^2: 1.8761, lin_term: 1.07511, qua_sterm: 13.2013, cost=14.2764
+gamma: 0.000781867, mu*||W-S||^2: 0.276237
+[FW1] iter=7, ||W||^2: 1.87482, lin_term: 1.07599, qua_sterm: 13.2004, cost=14.2764
+gamma: 0.00172927, mu*||W-S||^2: 0.12079
+[FW1] iter=8, ||W||^2: 1.87468, lin_term: 1.07793, qua_sterm: 13.1985, cost=14.2764
+gamma: 0.00222214, mu*||W-S||^2: 0.0834563
+[FW1] iter=9, ||W||^2: 1.87533, lin_term: 1.07554, qua_sterm: 13.2009, cost=14.2764
+gamma: 0.00180416, mu*||W-S||^2: 0.120809
+[FW1] iter=10, ||W||^2: 1.87519, lin_term: 1.07757, qua_sterm: 13.1988, cost=14.2764
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.4217, cost=11.4217
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.6036, cost=13.6036
+gamma: 0.435533, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.01662, lin_term: 0.783959, qua_sterm: 12.7818, cost=13.5657
+gamma=1.46322e-15, early stop!
+delta_square: 5.74345
+[(0,4), Undefined, *, *, 0.34467) 
+[(0,4), Insertion, *, -, 0.34467) 
+[(1,4), Undefined, *, T, 1.5124) 
+[(2,1), Undefined, T, #, 2.68013) 
+[FW2] iter=0, ||W||^2: 7, qua_sterm: 26.3871, cost=26.3871
+delta_square: 5.27742
+[(0,4), Undefined, *, *, 0.466892) 
+[(0,4), Insertion, *, -, 0.466892) 
+[(1,4), Undefined, *, A, 2.80172) 
+[(2,0), Undefined, A, #, 5.13656) 
+[FW2] iter=1, ||W||^2: 3.43618, qua_sterm: 26.2247, cost=26.2247
+delta_square: 5.24493
+[(0,4), Undefined, *, *, 0.589115) 
+[(0,4), Insertion, *, -, 0.589115) 
+[(1,4), Undefined, *, A, 4.02323) 
+[(2,0), Undefined, A, #, 7.45735) 
+[FW2] iter=2, ||W||^2: 3.43618, qua_sterm: 26.2247, cost=26.2247
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.8309, cost=11.8309
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.0296, cost=14.0296
+gamma: 0.404414, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.03655, lin_term: 0.88971, qua_sterm: 13.1072, cost=13.9969
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.955, cost=11.955
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1818, cost=14.1818
+gamma: 0.463671, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00528, lin_term: 0.834608, qua_sterm: 13.3041, cost=14.1388
+gamma: 0.0762009, mu*||W-S||^2: 0.300528
+[FW1] iter=2, ||W||^2: 1.86952, lin_term: 0.938652, qua_sterm: 13.1992, cost=14.1379
+gamma: 0.0531105, mu*||W-S||^2: 0.286952
+[FW1] iter=3, ||W||^2: 1.78526, lin_term: 1.00564, qua_sterm: 13.1318, cost=14.1375
+gamma: 0.0381369, mu*||W-S||^2: 0.278526
+[FW1] iter=4, ||W||^2: 1.72941, lin_term: 1.05119, qua_sterm: 13.0861, cost=14.1373
+gamma: 0.0188427, mu*||W-S||^2: 0.0924396
+[FW1] iter=5, ||W||^2: 1.73626, lin_term: 1.03138, qua_sterm: 13.1059, cost=14.1373
+gamma: 0.0018166, mu*||W-S||^2: 0.258659
+[FW1] iter=6, ||W||^2: 1.73387, lin_term: 1.03351, qua_sterm: 13.1038, cost=14.1373
+gamma: 0.000533779, mu*||W-S||^2: 0.0890847
+[FW1] iter=7, ||W||^2: 1.73407, lin_term: 1.03296, qua_sterm: 13.1043, cost=14.1373
+gamma: 5.50817e-05, mu*||W-S||^2: 0.257749
+[FW1] iter=8, ||W||^2: 1.734, lin_term: 1.03302, qua_sterm: 13.1042, cost=14.1373
+gamma: 1.64831e-05, mu*||W-S||^2: 0.0889926
+[FW1] iter=9, ||W||^2: 1.734, lin_term: 1.033, qua_sterm: 13.1043, cost=14.1373
+gamma: 1.70405e-06, mu*||W-S||^2: 0.257721
+[FW1] iter=10, ||W||^2: 1.734, lin_term: 1.03301, qua_sterm: 13.1043, cost=14.1373
+delta_square: 5.75425
+[(0,4), Undefined, *, *, 0.342467) 
+[(0,4), Insertion, *, -, 0.342467) 
+[(1,4), Undefined, *, T, 1.52518) 
+[(2,1), Undefined, T, #, 2.70789) 
+[FW2] iter=0, ||W||^2: 7, qua_sterm: 26.4133, cost=26.4133
+delta_square: 5.28267
+[(0,4), Undefined, *, *, 0.464689) 
+[(0,4), Insertion, *, -, 0.464689) 
+[(1,4), Undefined, *, A, 2.7906) 
+[(2,0), Undefined, A, #, 5.11652) 
+[FW2] iter=1, ||W||^2: 3.47957, qua_sterm: 26.2749, cost=26.2749
+delta_square: 5.25498
+[(0,4), Undefined, *, *, 0.586911) 
+[(0,4), Insertion, *, -, 0.586911) 
+[(1,4), Undefined, *, A, 4.01289) 
+[(2,0), Undefined, A, #, 7.43887) 
+[FW2] iter=2, ||W||^2: 3.47957, qua_sterm: 26.2749, cost=26.2749
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.7625, cost=11.7625
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.9546, cost=13.9546
+gamma: 0.389228, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.04908, lin_term: 0.856302, qua_sterm: 13.068, cost=13.9243
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.1906, cost=12.1906
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.4315, cost=14.4315
+gamma: 0.324338, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.12343, lin_term: 0.713544, qua_sterm: 13.6969, cost=14.4104
+gamma: 0.207681, mu*||W-S||^2: 0.312343
+[FW1] iter=2, ||W||^2: 1.79152, lin_term: 1.02225, qua_sterm: 13.3814, cost=14.4037
+gamma: 0.148794, mu*||W-S||^2: 0.279152
+[FW1] iter=3, ||W||^2: 1.61777, lin_term: 1.19749, qua_sterm: 13.2031, cost=14.4006
+gamma: 0.294955, mu*||W-S||^2: 0.261777
+[FW1] iter=4, ||W||^2: 1.48108, lin_term: 1.37521, qua_sterm: 13.014, cost=14.3892
+gamma: 0.146713, mu*||W-S||^2: 0.119597
+[FW1] iter=5, ||W||^2: 1.55421, lin_term: 1.17345, qua_sterm: 13.2145, cost=14.3879
+gamma=0, early stop!
+delta_square: 5.77804
+[(0,4), Undefined, *, *, 0.34294) 
+[(0,4), Insertion, *, -, 0.34294) 
+[(1,4), Undefined, *, T, 1.53121) 
+[(2,1), Undefined, T, #, 2.71948) 
+[FW2] iter=0, ||W||^2: 7, qua_sterm: 26.5207, cost=26.5207
+delta_square: 5.30414
+[(0,4), Undefined, *, *, 0.465162) 
+[(0,4), Insertion, *, -, 0.465162) 
+[(1,4), Undefined, *, A, 2.80463) 
+[(2,0), Undefined, A, #, 5.14409) 
+[FW2] iter=1, ||W||^2: 4.25933, qua_sterm: 26.4121, cost=26.4121
+delta_square: 5.28241
+[(0,4), Undefined, *, *, 0.587385) 
+[(0,4), Insertion, *, -, 0.587385) 
+[(1,4), Undefined, *, A, 4.04066) 
+[(2,0), Undefined, A, #, 7.49393) 
+[FW2] iter=2, ||W||^2: 3.62938, qua_sterm: 26.3964, cost=26.3964
+delta_square: 5.27929
+[(0,4), Undefined, *, *, 0.709607) 
+[(0,4), Insertion, *, -, 0.709607) 
+[(1,4), Undefined, *, A, 5.25791) 
+[(2,0), Undefined, A, #, 9.80621) 
+[FW2] iter=3, ||W||^2: 3.62938, qua_sterm: 26.3964, cost=26.3964
+gamma=1.8242e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.6193, cost=11.6193
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.798, cost=13.798
+gamma: 0.322367, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.12621, lin_term: 0.709208, qua_sterm: 13.068, cost=13.7772
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.4786, cost=12.4786
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.5345, cost=14.7345
+gamma: 0.49008, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00039, lin_term: 1.12182, qua_sterm: 13.5646, cost=14.6865
+gamma: 0.142864, mu*||W-S||^2: 0.300039
+[FW1] iter=2, ||W||^2: 1.77579, lin_term: 1.27586, qua_sterm: 13.4076, cost=14.6834
+gamma: 0.0990442, mu*||W-S||^2: 0.277579
+[FW1] iter=3, ||W||^2: 1.64935, lin_term: 1.36739, qua_sterm: 13.3147, cost=14.682
+gamma: 0.0116542, mu*||W-S||^2: 0.107422
+[FW1] iter=4, ||W||^2: 1.65271, lin_term: 1.37709, qua_sterm: 13.305, cost=14.682
+gamma: 0.0120309, mu*||W-S||^2: 0.115651
+[FW1] iter=5, ||W||^2: 1.65518, lin_term: 1.36052, qua_sterm: 13.3215, cost=14.682
+gamma: 0.0100764, mu*||W-S||^2: 0.107108
+[FW1] iter=6, ||W||^2: 1.65804, lin_term: 1.36898, qua_sterm: 13.313, cost=14.682
+gamma: 0.00472531, mu*||W-S||^2: 0.227509
+[FW1] iter=7, ||W||^2: 1.65368, lin_term: 1.37291, qua_sterm: 13.3091, cost=14.682
+gamma: 0.00907417, mu*||W-S||^2: 0.114988
+[FW1] iter=8, ||W||^2: 1.65556, lin_term: 1.36045, qua_sterm: 13.3216, cost=14.682
+gamma: 0.00911844, mu*||W-S||^2: 0.106925
+[FW1] iter=9, ||W||^2: 1.65816, lin_term: 1.36811, qua_sterm: 13.3139, cost=14.682
+gamma: 0.00716995, mu*||W-S||^2: 0.114563
+[FW1] iter=10, ||W||^2: 1.65963, lin_term: 1.3583, qua_sterm: 13.3237, cost=14.682
+delta_square: 5.78562
+[(0,4), Undefined, *, *, 0.330462) 
+[(0,4), Insertion, *, -, 0.330462) 
+[(1,4), Undefined, *, T, 1.51936) 
+[(2,1), Undefined, T, #, 2.70826) 
+[FW2] iter=0, ||W||^2: 7, qua_sterm: 26.5699, cost=26.5699
+delta_square: 5.31397
+[(0,4), Undefined, *, *, 0.452685) 
+[(0,4), Insertion, *, -, 0.452685) 
+[(1,4), Undefined, *, A, 2.81138) 
+[(2,0), Undefined, A, #, 5.17007) 
+[FW2] iter=1, ||W||^2: 4.23053, qua_sterm: 26.4457, cost=26.4457
+delta_square: 5.28915
+[(0,4), Undefined, *, *, 0.574907) 
+[(0,4), Insertion, *, -, 0.574907) 
+[(1,4), Undefined, *, A, 4.04388) 
+[(2,0), Undefined, A, #, 7.51284) 
+[FW2] iter=2, ||W||^2: 3.67633, qua_sterm: 26.4336, cost=26.4336
+delta_square: 5.28672
+[(0,4), Undefined, *, *, 0.697129) 
+[(0,4), Insertion, *, -, 0.697129) 
+[(1,4), Undefined, *, A, 5.26034) 
+[(2,0), Undefined, A, #, 9.82355) 
+[FW2] iter=3, ||W||^2: 3.67633, qua_sterm: 26.4336, cost=26.4336
+gamma=1.18836e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.5332, cost=11.5332
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 13.7038, cost=13.7038
+gamma: 0.281791, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.19046, lin_term: 0.619939, qua_sterm: 13.068, cost=13.688
+gamma=7.32703e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.6655, cost=12.6655
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.696, cost=14.896
+gamma: 0.398361, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.04132, lin_term: 1.32361, qua_sterm: 13.5406, cost=14.8642
+gamma: 0.0882753, mu*||W-S||^2: 0.304132
+[FW1] iter=2, ||W||^2: 1.88118, lin_term: 1.40097, qua_sterm: 13.4621, cost=14.8631
+gamma: 0.051685, mu*||W-S||^2: 0.288118
+[FW1] iter=3, ||W||^2: 1.79779, lin_term: 1.44227, qua_sterm: 13.4204, cost=14.8627
+gamma: 0.0354981, mu*||W-S||^2: 0.0717071
+[FW1] iter=4, ||W||^2: 1.81591, lin_term: 1.46917, qua_sterm: 13.3935, cost=14.8626
+gamma: 0.00469339, mu*||W-S||^2: 0.261651
+[FW1] iter=5, ||W||^2: 1.80925, lin_term: 1.4726, qua_sterm: 13.39, cost=14.8626
+gamma: 0.00217139, mu*||W-S||^2: 0.148669
+[FW1] iter=6, ||W||^2: 1.80861, lin_term: 1.4694, qua_sterm: 13.3932, cost=14.8626
+gamma: 0.00545887, mu*||W-S||^2: 0.0674494
+[FW1] iter=7, ||W||^2: 1.81145, lin_term: 1.47339, qua_sterm: 13.3892, cost=14.8626
+gamma: 0.00337946, mu*||W-S||^2: 0.149034
+[FW1] iter=8, ||W||^2: 1.81045, lin_term: 1.46841, qua_sterm: 13.3942, cost=14.8626
+gamma: 0.00462337, mu*||W-S||^2: 0.0673394
+[FW1] iter=9, ||W||^2: 1.81285, lin_term: 1.47179, qua_sterm: 13.3908, cost=14.8626
+gamma: 0.00286676, mu*||W-S||^2: 0.148883
+[FW1] iter=10, ||W||^2: 1.812, lin_term: 1.46757, qua_sterm: 13.3951, cost=14.8626
+delta_square: 5.79741
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.52268) 
+[(2,0), Undefined, A, #, 2.72314) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.5639, cost=26.5639
+delta_square: 5.31279
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.81805) 
+[(2,1), Undefined, T, #, 5.19165) 
+[FW2] iter=1, ||W||^2: 4.00932, qua_sterm: 26.4771, cost=26.4771
+delta_square: 5.29542
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.04341) 
+[(2,1), Undefined, T, #, 7.52016) 
+[FW2] iter=2, ||W||^2: 3.83508, qua_sterm: 26.4763, cost=26.4763
+delta_square: 5.29526
+[(0,4), Undefined, *, *, 0.688889) 
+[(1,4), Undefined, *, T, 5.26404) 
+[(2,1), Undefined, T, #, 9.8392) 
+[FW2] iter=3, ||W||^2: 3.83508, qua_sterm: 26.4763, cost=26.4763
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.945, cost=11.945
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1546, cost=14.1546
+gamma: 0.432254, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.01836, lin_term: 0.950959, qua_sterm: 13.1662, cost=14.1172
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.3181, cost=12.3181
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.3259, cost=14.5259
+gamma: 0.424075, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02306, lin_term: 1.26704, qua_sterm: 13.2229, cost=14.49
+gamma=7.71678e-16, early stop!
+delta_square: 5.81064
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54248) 
+[(2,0), Undefined, A, #, 2.76274) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.5905, cost=26.5905
+delta_square: 5.31809
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.8076) 
+[(2,1), Undefined, T, #, 5.17075) 
+[FW2] iter=1, ||W||^2: 4.07481, qua_sterm: 26.5254, cost=26.5254
+delta_square: 5.30508
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.03766) 
+[(2,1), Undefined, T, #, 7.50865) 
+[FW2] iter=2, ||W||^2: 3.93995, qua_sterm: 26.525, cost=26.525
+delta_square: 5.305
+[(0,4), Undefined, *, *, 0.688889) 
+[(1,4), Undefined, *, T, 5.26437) 
+[(2,1), Undefined, T, #, 9.83984) 
+[FW2] iter=3, ||W||^2: 3.93995, qua_sterm: 26.525, cost=26.525
+gamma=5.06365e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.0298, cost=12.0298
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.2473, cost=14.2473
+gamma: 0.465651, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00472, lin_term: 1.02443, qua_sterm: 13.1795, cost=14.2039
+gamma=3.76516e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2964, cost=12.2964
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2938, cost=14.4938
+gamma: 0.404806, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.03625, lin_term: 1.30943, qua_sterm: 13.1516, cost=14.461
+gamma=2.54067e-15, early stop!
+delta_square: 5.79698
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54552) 
+[(2,0), Undefined, A, #, 2.76881) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.5161, cost=26.5161
+delta_square: 5.30322
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.82362) 
+[(2,1), Undefined, T, #, 5.20279) 
+[FW2] iter=1, ||W||^2: 4.05681, qua_sterm: 26.447, cost=26.447
+delta_square: 5.28939
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.05253) 
+[(2,1), Undefined, T, #, 7.5384) 
+[FW2] iter=2, ||W||^2: 4.05157, qua_sterm: 26.447, cost=26.447
+delta_square: 5.28939
+[(0,4), Undefined, *, *, 0.688889) 
+[(1,4), Undefined, *, T, 5.28133) 
+[(2,1), Undefined, T, #, 9.87377) 
+[FW2] iter=3, ||W||^2: 4.05157, qua_sterm: 26.447, cost=26.447
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9935, cost=11.9935
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.2075, cost=14.2075
+gamma: 0.461068, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.00606, lin_term: 1.01435, qua_sterm: 13.1506, cost=14.1649
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.3266, cost=12.3266
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.3213, cost=14.5213
+gamma: 0.391325, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.04724, lin_term: 1.33909, qua_sterm: 13.1516, cost=14.4906
+gamma=9.06246e-16, early stop!
+delta_square: 5.77237
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54497) 
+[(2,0), Undefined, A, #, 2.76772) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3941, cost=26.3941
+delta_square: 5.27883
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83033) 
+[(2,1), Undefined, T, #, 5.21621) 
+[FW2] iter=1, ||W||^2: 4.04443, qua_sterm: 26.3217, cost=26.3217
+delta_square: 5.26434
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0604) 
+[(2,1), Undefined, T, #, 7.55412) 
+[FW2] iter=2, ||W||^2: 4.04443, qua_sterm: 26.3217, cost=26.3217
+gamma=8.40891e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9591, cost=11.9591
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1698, cost=14.1698
+gamma: 0.445766, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.01177, lin_term: 0.980686, qua_sterm: 13.1494, cost=14.1301
+gamma=1.2604e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2939, cost=12.2939
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2915, cost=14.4915
+gamma: 0.40591, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.03541, lin_term: 1.307, qua_sterm: 13.1516, cost=14.4585
+gamma=0, early stop!
+delta_square: 5.7551
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3078, cost=26.3078
+delta_square: 5.26157
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.2353, cost=26.2353
+delta_square: 5.24706
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.2353, cost=26.2353
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9212, cost=11.9212
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1284, cost=14.1284
+gamma: 0.42833, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02055, lin_term: 0.942327, qua_sterm: 13.1494, cost=14.0917
+gamma=2.06833e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2549, cost=12.2549
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.256, cost=14.456
+gamma: 0.423346, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.0235, lin_term: 1.26864, qua_sterm: 13.1516, cost=14.4202
+gamma=2.32301e-15, early stop!
+delta_square: 5.75292
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.2969, cost=26.2969
+delta_square: 5.25938
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.2244, cost=26.2244
+delta_square: 5.24487
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.2244, cost=26.2244
+gamma=4.2097e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.8996, cost=11.8996
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1048, cost=14.1048
+gamma: 0.418366, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02666, lin_term: 0.920406, qua_sterm: 13.1494, cost=14.0698
+gamma=6.19437e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2327, cost=12.2327
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2358, cost=14.4358
+gamma: 0.43331, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.01779, lin_term: 1.24672, qua_sterm: 13.1516, cost=14.3983
+gamma=2.2174e-15, early stop!
+delta_square: 5.75948
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3297, cost=26.3297
+delta_square: 5.26594
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.2572, cost=26.2572
+delta_square: 5.25143
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.2572, cost=26.2572
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.8969, cost=11.8969
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1019, cost=14.1019
+gamma: 0.41712, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02748, lin_term: 0.917664, qua_sterm: 13.1494, cost=14.0671
+gamma=2.48011e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.23, cost=12.23
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2333, cost=14.4333
+gamma: 0.434556, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.01713, lin_term: 1.24398, qua_sterm: 13.1516, cost=14.3955
+gamma=2.9396e-15, early stop!
+delta_square: 5.76714
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.368, cost=26.368
+delta_square: 5.2736
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.2955, cost=26.2955
+delta_square: 5.2591
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.2955, cost=26.2955
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9049, cost=11.9049
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1107, cost=14.1107
+gamma: 0.420856, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02506, lin_term: 0.925883, qua_sterm: 13.1494, cost=14.0753
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2383, cost=12.2383
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2409, cost=14.4409
+gamma: 0.43082, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.01914, lin_term: 1.2522, qua_sterm: 13.1516, cost=14.4037
+gamma=0, early stop!
+delta_square: 5.77152
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3899, cost=26.3899
+delta_square: 5.27799
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3174, cost=26.3174
+delta_square: 5.26348
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3174, cost=26.3174
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9144, cost=11.9144
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.121, cost=14.121
+gamma: 0.425215, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02237, lin_term: 0.935473, qua_sterm: 13.1494, cost=14.0849
+gamma=8.15515e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.248, cost=12.248
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2497, cost=14.4497
+gamma: 0.426461, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02163, lin_term: 1.26179, qua_sterm: 13.1516, cost=14.4133
+gamma=0, early stop!
+delta_square: 5.77207
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3927, cost=26.3927
+delta_square: 5.27854
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3201, cost=26.3201
+delta_square: 5.26403
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3201, cost=26.3201
+gamma=4.2097e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9198, cost=11.9198
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1269, cost=14.1269
+gamma: 0.427706, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02091, lin_term: 0.940953, qua_sterm: 13.1494, cost=14.0904
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2535, cost=12.2535
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2548, cost=14.4548
+gamma: 0.42397, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02312, lin_term: 1.26727, qua_sterm: 13.1516, cost=14.4188
+gamma=8.36489e-16, early stop!
+delta_square: 5.77043
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3845, cost=26.3845
+delta_square: 5.27689
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3119, cost=26.3119
+delta_square: 5.26238
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3119, cost=26.3119
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9205, cost=11.9205
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1277, cost=14.1277
+gamma: 0.428018, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02073, lin_term: 0.941639, qua_sterm: 13.1494, cost=14.091
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2542, cost=12.2542
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2554, cost=14.4554
+gamma: 0.423659, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02331, lin_term: 1.26795, qua_sterm: 13.1516, cost=14.4195
+gamma=0, early stop!
+delta_square: 5.76851
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3749, cost=26.3749
+delta_square: 5.27497
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3023, cost=26.3023
+delta_square: 5.26047
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3023, cost=26.3023
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9185, cost=11.9185
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1255, cost=14.1255
+gamma: 0.427084, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02127, lin_term: 0.939584, qua_sterm: 13.1494, cost=14.089
+gamma=1.6584e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2522, cost=12.2522
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2535, cost=14.4535
+gamma: 0.424593, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02275, lin_term: 1.2659, qua_sterm: 13.1516, cost=14.4174
+gamma=0, early stop!
+delta_square: 5.76741
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3694, cost=26.3694
+delta_square: 5.27388
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.2969, cost=26.2969
+delta_square: 5.25937
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.2969, cost=26.2969
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9161, cost=11.9161
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1229, cost=14.1229
+gamma: 0.425994, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02191, lin_term: 0.937186, qua_sterm: 13.1494, cost=14.0866
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2497, cost=12.2497
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2513, cost=14.4513
+gamma: 0.425682, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02209, lin_term: 1.2635, qua_sterm: 13.1516, cost=14.4151
+gamma=1.53172e-15, early stop!
+delta_square: 5.76728
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3687, cost=26.3687
+delta_square: 5.27374
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.2962, cost=26.2962
+delta_square: 5.25923
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.2962, cost=26.2962
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9147, cost=11.9147
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1214, cost=14.1214
+gamma: 0.425371, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02228, lin_term: 0.935816, qua_sterm: 13.1494, cost=14.0852
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2483, cost=12.2483
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.25, cost=14.45
+gamma: 0.426305, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02172, lin_term: 1.26213, qua_sterm: 13.1516, cost=14.4137
+gamma=1.52725e-15, early stop!
+delta_square: 5.76769
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3708, cost=26.3708
+delta_square: 5.27415
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.2982, cost=26.2982
+delta_square: 5.25964
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.2982, cost=26.2982
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9146, cost=11.9146
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1212, cost=14.1212
+gamma: 0.425293, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02232, lin_term: 0.935645, qua_sterm: 13.1494, cost=14.0851
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2482, cost=12.2482
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2499, cost=14.4499
+gamma: 0.426383, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02168, lin_term: 1.26196, qua_sterm: 13.1516, cost=14.4135
+gamma=3.05338e-15, early stop!
+delta_square: 5.76817
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3732, cost=26.3732
+delta_square: 5.27463
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3006, cost=26.3006
+delta_square: 5.26012
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3006, cost=26.3006
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9151, cost=11.9151
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1218, cost=14.1218
+gamma: 0.425527, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02219, lin_term: 0.936159, qua_sterm: 13.1494, cost=14.0856
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2487, cost=12.2487
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2503, cost=14.4503
+gamma: 0.426149, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02182, lin_term: 1.26247, qua_sterm: 13.1516, cost=14.414
+gamma=2.29254e-15, early stop!
+delta_square: 5.76844
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3745, cost=26.3745
+delta_square: 5.2749
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.302, cost=26.302
+delta_square: 5.2604
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.302, cost=26.302
+gamma=4.2097e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9157, cost=11.9157
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1224, cost=14.1224
+gamma: 0.425799, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02202, lin_term: 0.936758, qua_sterm: 13.1494, cost=14.0862
+gamma=1.3754e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2493, cost=12.2493
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2509, cost=14.4509
+gamma: 0.425877, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02198, lin_term: 1.26307, qua_sterm: 13.1516, cost=14.4146
+gamma=7.65159e-16, early stop!
+delta_square: 5.76848
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3747, cost=26.3747
+delta_square: 5.27494
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3022, cost=26.3022
+delta_square: 5.26043
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3022, cost=26.3022
+gamma=4.2097e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.916, cost=11.916
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1228, cost=14.1228
+gamma: 0.425955, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02193, lin_term: 0.937101, qua_sterm: 13.1494, cost=14.0865
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2496, cost=12.2496
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2512, cost=14.4512
+gamma: 0.425721, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02207, lin_term: 1.26341, qua_sterm: 13.1516, cost=14.415
+gamma=0, early stop!
+delta_square: 5.76837
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3742, cost=26.3742
+delta_square: 5.27484
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3016, cost=26.3016
+delta_square: 5.26033
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3016, cost=26.3016
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9161, cost=11.9161
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1228, cost=14.1228
+gamma: 0.425974, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02192, lin_term: 0.937143, qua_sterm: 13.1494, cost=14.0866
+gamma=1.00979e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2497, cost=12.2497
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2513, cost=14.4513
+gamma: 0.425702, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02208, lin_term: 1.26346, qua_sterm: 13.1516, cost=14.415
+gamma=0, early stop!
+delta_square: 5.76825
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3736, cost=26.3736
+delta_square: 5.27472
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26021
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9159, cost=11.9159
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1227, cost=14.1227
+gamma: 0.425916, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02195, lin_term: 0.937015, qua_sterm: 13.1494, cost=14.0864
+gamma=3.56212e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2496, cost=12.2496
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2511, cost=14.4511
+gamma: 0.42576, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02205, lin_term: 1.26333, qua_sterm: 13.1516, cost=14.4149
+gamma=0, early stop!
+delta_square: 5.76818
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3732, cost=26.3732
+delta_square: 5.27465
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3007, cost=26.3007
+delta_square: 5.26014
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3007, cost=26.3007
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425848, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02199, lin_term: 0.936865, qua_sterm: 13.1494, cost=14.0863
+gamma=1.52455e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425828, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02201, lin_term: 1.26318, qua_sterm: 13.1516, cost=14.4147
+gamma=1.68382e-15, early stop!
+delta_square: 5.76818
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3732, cost=26.3732
+delta_square: 5.27464
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3007, cost=26.3007
+delta_square: 5.26013
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3007, cost=26.3007
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9157, cost=11.9157
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425809, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02202, lin_term: 0.93678, qua_sterm: 13.1494, cost=14.0862
+gamma=2.24837e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2493, cost=12.2493
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2509, cost=14.4509
+gamma: 0.425867, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02198, lin_term: 1.26309, qua_sterm: 13.1516, cost=14.4146
+gamma=0, early stop!
+delta_square: 5.7682
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3733, cost=26.3733
+delta_square: 5.27466
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3008, cost=26.3008
+delta_square: 5.26016
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3008, cost=26.3008
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9157, cost=11.9157
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1224, cost=14.1224
+gamma: 0.425804, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02202, lin_term: 0.936769, qua_sterm: 13.1494, cost=14.0862
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2493, cost=12.2493
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2509, cost=14.4509
+gamma: 0.425872, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02198, lin_term: 1.26308, qua_sterm: 13.1516, cost=14.4146
+gamma=0, early stop!
+delta_square: 5.76823
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.27469
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3009, cost=26.3009
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3009, cost=26.3009
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9157, cost=11.9157
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425819, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02201, lin_term: 0.936801, qua_sterm: 13.1494, cost=14.0862
+gamma=1.89548e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2493, cost=12.2493
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.2509, cost=14.4509
+gamma: 0.425858, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02199, lin_term: 1.26311, qua_sterm: 13.1516, cost=14.4147
+gamma=1.53046e-15, early stop!
+delta_square: 5.76825
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3736, cost=26.3736
+delta_square: 5.27471
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.2602
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425836, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936838, qua_sterm: 13.1494, cost=14.0862
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.42584, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26315, qua_sterm: 13.1516, cost=14.4147
+gamma=7.65291e-16, early stop!
+delta_square: 5.76825
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3736, cost=26.3736
+delta_square: 5.27471
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26021
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425845, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.93686, qua_sterm: 13.1494, cost=14.0863
+gamma=7.65273e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425831, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26317, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.27471
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.2602
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425847, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02199, lin_term: 0.936862, qua_sterm: 13.1494, cost=14.0863
+gamma=6.99503e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.42583, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.02201, lin_term: 1.26317, qua_sterm: 13.1516, cost=14.4147
+gamma=1.53066e-15, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425843, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936854, qua_sterm: 13.1494, cost=14.0863
+gamma=3.09102e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425833, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26317, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76823
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3009, cost=26.3009
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3009, cost=26.3009
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425839, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936845, qua_sterm: 13.1494, cost=14.0863
+gamma=2.75029e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425837, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=1.68388e-15, early stop!
+delta_square: 5.76823
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3009, cost=26.3009
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3009, cost=26.3009
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425836, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.93684, qua_sterm: 13.1494, cost=14.0862
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.42584, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26315, qua_sterm: 13.1516, cost=14.4147
+gamma=8.41946e-16, early stop!
+delta_square: 5.76823
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.3009, cost=26.3009
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.3009, cost=26.3009
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425836, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936839, qua_sterm: 13.1494, cost=14.0862
+gamma=1.63226e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.42584, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26315, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425837, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936841, qua_sterm: 13.1494, cost=14.0862
+gamma=1.25558e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425839, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26315, qua_sterm: 13.1516, cost=14.4147
+gamma=4.59177e-15, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=4.2097e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936843, qua_sterm: 13.1494, cost=14.0863
+gamma=2.57093e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425839, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936845, qua_sterm: 13.1494, cost=14.0863
+gamma=9.6858e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=2.2959e-15, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=4.2097e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425839, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936845, qua_sterm: 13.1494, cost=14.0863
+gamma=1.9551e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=2.2959e-15, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=3.98194e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=7.653e-16, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=4.2097e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=4.18523e-17, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936843, qua_sterm: 13.1494, cost=14.0863
+gamma=2.50516e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=1.5306e-15, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936843, qua_sterm: 13.1494, cost=14.0863
+gamma=8.49004e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=2.66061e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=7.65299e-16, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=8.4194e-16, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=1.68388e-15, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=8.41941e-16, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=3.0612e-15, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=3.58734e-15, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=1.5306e-15, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 11.9158, cost=11.9158
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 0, qua_sterm: 14.1225, cost=14.1225
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 0.936844, qua_sterm: 13.1494, cost=14.0863
+gamma=0, early stop!
+[FW1] iter=-1, ||W||^2: 0, lin_term: 0, qua_sterm: 12.2494, cost=12.2494
+gamma: 1, mu*||W-S||^2: 0.3
+[FW1] iter=0, ||W||^2: 3, lin_term: 2.2, qua_sterm: 12.251, cost=14.451
+gamma: 0.425838, mu*||W-S||^2: 0.4
+[FW1] iter=1, ||W||^2: 2.022, lin_term: 1.26316, qua_sterm: 13.1516, cost=14.4147
+gamma=0, early stop!
+delta_square: 5.76824
+[(0,4), Undefined, *, *, 0.322222) 
+[(1,4), Undefined, *, A, 1.54495) 
+[(2,0), Undefined, A, #, 2.76769) 
+[FW2] iter=0, ||W||^2: 6, qua_sterm: 26.3735, cost=26.3735
+delta_square: 5.2747
+[(0,4), Undefined, *, *, 0.444444) 
+[(1,4), Undefined, *, T, 2.83058) 
+[(2,1), Undefined, T, #, 5.21671) 
+[FW2] iter=1, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+delta_square: 5.26019
+[(0,4), Undefined, *, *, 0.566667) 
+[(1,4), Undefined, *, T, 4.0607) 
+[(2,1), Undefined, T, #, 7.55473) 
+[FW2] iter=2, ||W||^2: 4.044, qua_sterm: 26.301, cost=26.301
+gamma=0, early stop!
+W_1: 
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=7): 0.574162
+(i=1, j=1, d=4, m=8): 0.425838
+(i=2, j=2, d=0, m=12): 0.574162
+(i=2, j=2, d=1, m=12): 0.425838
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=7): 0.574162
+(i=1, j=1, d=4, m=8): 0.425838
+(i=2, j=2, d=0, m=12): 0.574162
+(i=2, j=2, d=1, m=12): 0.425838
+W_2: 
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=7): 0.574162
+(i=1, j=1, d=4, m=8): 0.425838
+(i=2, j=2, d=0, m=12): 0.574162
+(i=2, j=2, d=1, m=12): 0.425838
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=7): 0.574162
+(i=1, j=1, d=4, m=8): 0.425838
+(i=2, j=2, d=0, m=12): 0.574162
+(i=2, j=2, d=1, m=12): 0.425838
+>>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<
+n = 0
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=7): 0.574162
+(i=1, j=1, d=4, m=8): 0.425838
+(i=2, j=2, d=0, m=12): 0.574162
+(i=2, j=2, d=1, m=12): 0.425838
+n = 1
+(i=0, j=0, d=4, m=11): 1
+(i=1, j=1, d=4, m=7): 0.574162
+(i=1, j=1, d=4, m=8): 0.425838
+(i=2, j=2, d=0, m=12): 0.574162
+(i=2, j=2, d=1, m=12): 0.425838
+>>>>>>>>>>>>>>>>>>>>>>>SequenceView<<<<<<<<<<<<<<<<<<<<<<<<
+Seq    0: *A#
+Seq    1: *T#
+SeqRecov: *A#
+>>>>>>>>>>>>>>>>>>>>>>>MatchingView<<<<<<<<<<<<<<<<<<<<<<<<
+SeqRecov: *AT##
+Seq    0: *AA##
+SeqRecov: *AT##
+Seq    1: *TT##
+#########################################################
