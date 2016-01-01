@@ -166,6 +166,7 @@ char T3idx2dna (int idx) {
 /* Define match identification function */
 bool isMatch2 (char DNA1, char DNA2) { return DNA1==DNA2; }
 
+const double perb_eps = 0.01;
 void set_C (Tensor5D& C, SequenceSet allSeqs) {
 /*{{{*/
     int T0 = C.size();
@@ -205,6 +206,7 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                             }
                             C[n][i][j][k][m] = (dna2T3idx(allSeqs[n][i]) == m-MTH_BASE_IDX)?C_M:C_MM;
                         }
+                        C[n][i][j][k][m] += perb_eps * ((double) rand())/RAND_MAX;
                     }
                 }
             }

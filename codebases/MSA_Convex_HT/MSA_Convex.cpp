@@ -535,7 +535,7 @@ int main (int argn, char** argv) {
         lenSeqs[n] = allSeqs[n].size();
 
     // 3. relaxed convex program: ADMM-based algorithm
-    int T2 = get_init_model_length (lenSeqs); // model_seq_length
+    int T2 = get_init_model_length (lenSeqs) + 1; // model_seq_length
     vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
 
     // 4. output the result
