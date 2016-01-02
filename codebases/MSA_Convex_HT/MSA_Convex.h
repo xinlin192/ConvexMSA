@@ -18,7 +18,12 @@ using namespace std;
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <omp.h>
 // #define CUBE_SMITH_WATERMAN_DEBUG
+
+ #define PARRALLEL_COMPUTING
+
+const int NUM_THREADS = 6;
 
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*1e99;
@@ -29,12 +34,13 @@ const int NUM_MOVEMENT = 9 + 2 + 2;
 
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 10;
-const int MAX_2nd_FW_ITER = 10;
+const int MAX_2nd_FW_ITER = 1;
 const int MIN_ADMM_ITER = 15;
 const int MAX_ADMM_ITER = 50000;
 const double EPS_1st_FW = 1e-8;
 const double EPS_2nd_FW = 1e-8;
 const double EPS_ADMM_CoZ = 1e-8; 
+const double PERB_EPS = 0;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
@@ -44,6 +50,7 @@ const double C_MM = 2.2; // penalty of mismatch
 const double C_M = 0;    // penalty of match
 const double HIGH_COST = 9999;
 const double NO_COST = 0;
+
 
 /* Data Structure */
 /*{{{*/
@@ -166,7 +173,6 @@ char T3idx2dna (int idx) {
 /* Define match identification function */
 bool isMatch2 (char DNA1, char DNA2) { return DNA1==DNA2; }
 
-const double perb_eps = 0.01;
 void set_C (Tensor5D& C, SequenceSet allSeqs) {
 /*{{{*/
     int T0 = C.size();
@@ -206,7 +212,7 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                             }
                             C[n][i][j][k][m] = (dna2T3idx(allSeqs[n][i]) == m-MTH_BASE_IDX)?C_M:C_MM;
                         }
-                        C[n][i][j][k][m] += perb_eps * ((double) rand())/RAND_MAX;
+                        C[n][i][j][k][m] += PERB_EPS * ((double) rand())/RAND_MAX;
                     }
                 }
             }

@@ -157,6 +157,9 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
     first_subproblem_log(fw_iter, W, Z, Y, C, mu);
     while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
+#ifdef PARRALLEL_COMPUTING
+//#pragma omp parallel for
+#endif
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
@@ -173,6 +176,9 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         // 2. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( C + Y_1 + mu*W_1 - mu*Z ) dot (W_1 - S) ] / (mu* || W_1 - S ||^2)
         double numerator = 0.0, denominator = 0.0;
+#ifdef PARRALLEL_COMPUTING
+//#pragma omp parallel for
+#endif
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
@@ -241,6 +247,9 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
     while (fw_iter < MAX_2nd_FW_ITER) {
         fw_iter ++;
         // 1. compute delta
+#ifdef PARRALLEL_COMPUTING
+//#pragma omp parallel for
+#endif
         for (int n = 0; n < numSeq; n ++) {
             int T1 = W[n].size();
             for (int i = 0; i < T1; i ++) { 
@@ -417,6 +426,9 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
         // NOTE: parallelize this for to enable parallelism
+#ifdef PARRALLEL_COMPUTING
+#pragma omp parallel for
+#endif
         for (int n = 0; n < numSeq; n++) {
             // cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
             first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
@@ -535,6 +547,7 @@ int main (int argn, char** argv) {
         lenSeqs[n] = allSeqs[n].size();
 
     // 3. relaxed convex program: ADMM-based algorithm
+    omp_set_num_threads(NUM_THREADS);
     int T2 = get_init_model_length (lenSeqs) + 1; // model_seq_length
     vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
 
