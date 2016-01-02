@@ -21,26 +21,25 @@ using namespace std;
 #include <omp.h>
 // #define CUBE_SMITH_WATERMAN_DEBUG
 
- #define PARRALLEL_COMPUTING
+// #define PARRALLEL_COMPUTING
 
 const int NUM_THREADS = 6;
 
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*1e99;
-const double MAX_DOUBLE = 1e99;
-const double MAX_INT = numeric_limits<int>::max();
+const double MAX_DOUBLE = 1e99; const double MAX_INT = numeric_limits<int>::max();
 const int NUM_DNA_TYPE = 4 + 1 + 1;  // A T C G + START + END
 const int NUM_MOVEMENT = 9 + 2 + 2;  
 
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 10;
-const int MAX_2nd_FW_ITER = 1;
+const int MAX_2nd_FW_ITER = 10;
 const int MIN_ADMM_ITER = 15;
 const int MAX_ADMM_ITER = 50000;
-const double EPS_1st_FW = 1e-8;
-const double EPS_2nd_FW = 1e-8;
-const double EPS_ADMM_CoZ = 1e-8; 
-const double PERB_EPS = 0;
+const double EPS_1st_FW = 1e-5;
+const double EPS_2nd_FW = 1e-5;
+const double EPS_ADMM_CoZ = 1e-5; 
+const double PERB_EPS = 0.01;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
