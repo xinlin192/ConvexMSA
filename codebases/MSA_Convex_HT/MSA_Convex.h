@@ -19,15 +19,24 @@ using namespace std;
 #include <fstream>
 #include <cmath>
 #include <omp.h>
-// #define CUBE_SMITH_WATERMAN_DEBUG
 
+// #define CUBE_SMITH_WATERMAN_DEBUG
 // #define PARRALLEL_COMPUTING
+
+// variable parameters
+char* trainFname = NULL;
+int LENGTH_OFFSET = 0;
+double MU = 0.1;
+double PERB_EPS = 0.0;
+bool ADMM_EARLY_STOP_TOGGLE = true;
+bool REINIT_W_ZERO_TOGGLE = false;
 
 const int NUM_THREADS = 6;
 
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*1e99;
-const double MAX_DOUBLE = 1e99; const double MAX_INT = numeric_limits<int>::max();
+const double MAX_DOUBLE = 1e99; 
+const double MAX_INT = numeric_limits<int>::max();
 const int NUM_DNA_TYPE = 4 + 1 + 1;  // A T C G + START + END
 const int NUM_MOVEMENT = 9 + 2 + 2;  
 
@@ -39,7 +48,6 @@ const int MAX_ADMM_ITER = 50000;
 const double EPS_1st_FW = 1e-5;
 const double EPS_2nd_FW = 1e-5;
 const double EPS_ADMM_CoZ = 1e-5; 
-const double PERB_EPS = 0.01;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
@@ -49,7 +57,6 @@ const double C_MM = 2.2; // penalty of mismatch
 const double C_M = 0;    // penalty of match
 const double HIGH_COST = 9999;
 const double NO_COST = 0;
-
 
 /* Data Structure */
 /*{{{*/
@@ -132,6 +139,23 @@ typedef vector<vector<double> > Matrix; // 2-d double matrix
 typedef vector<Matrix > Tensor;  // 3-d double tensor
 typedef vector<Tensor > Tensor4D; // 4-d double Tensor
 typedef vector<Tensor4D > Tensor5D;  // 5-d double Tensor
+
+void tensor4D_dump (Tensor4D& W) {
+    int T1 = W.size();
+    for (int i = 0; i < T1; i ++) {
+        int T2 = W[i].size();
+        for (int j = 0; j < T2; j ++) 
+            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                    if (W[i][j][d][m] > 0.0)
+                        cout << "(i="  << i
+                            << ", j=" << j
+                            << ", d=" << d
+                            << ", m=" << m
+                            << "): " << W[i][j][d][m]
+                            << endl;
+    }
+}
 /*}}}*/
 
 /* T4 architecture */
@@ -169,9 +193,7 @@ char T3idx2dna (int idx) {
 }
 /*}}}*/
 
-/* Define match identification function */
-bool isMatch2 (char DNA1, char DNA2) { return DNA1==DNA2; }
-
+// C is the tensor specifying the penalties 
 void set_C (Tensor5D& C, SequenceSet allSeqs) {
 /*{{{*/
     int T0 = C.size();

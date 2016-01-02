@@ -11,22 +11,55 @@
 #include "MSA_Convex.h"
 
 /* Debugging option */
-//#define RECURSION_TRACE
+// #define RECURSION_TRACE
 // #define FIRST_SUBPROBLEM_DEBUG
 // #define SECOND_SUBPROBLEM_DEBUG
-#define INIT_ZERO_W
 
-/* Programming Setting option */
-#define ADMM_EARLY_STOP
+void usage () { cout << "./PSA_CUBE (options) [seq_file]" << endl;
+    cout << "seq_file should contain one or more DNA sequence. " << endl;
+    cout << "Options: " << endl;
+    cout << "\t-l Set the maximum length of model sequence. (default 0)";
+    cout << "\t-m Set step size (\\mu) for updating the ADMM coordinate variables. (default 0.1)";
+    cout << "\t-p Set maximum pertubation of penalty to break ties. (default 0)";
+    cout << "\t-s Set ADMM early stop toggle: early stop (on) if > 0. (default on)";
+    cout << "\t-r Set whether reinitialize W_1 and W_2 at each ADMM iteration. (default off)";
+}
 
-/* 
-   The first sequence is observed. 
-   The second sequence is the one to be aligned with the observed one.
-   */
-void usage () { cout << "./PSA_CUBE [seq_file]" << endl;
-    cout << "seq_file should contain two DNA sequence in its first line and second line. " << endl;
-    cout << "The first sequence is observed. " << endl;
-    cout << "The second sequence is the one to be aligned with the observed one." << endl;
+void parse_cmd_line (int argn, char** argv) {
+	int i;
+    for(i = 1; i < argn; i++){
+        if ( argv[i][0] != '-' ) break;
+        if ( ++i >= argn ) usage();
+
+        switch(argv[i-1][1]){
+            case 'e': ADMM_EARLY_STOP_TOGGLE = atoi(argv[i])>0?true:false; break;
+            case 'r': REINIT_W_ZERO_TOGGLE = atoi(argv[i])>0?true:false; break;
+            case 'l': LENGTH_OFFSET = atoi(argv[i]); break;
+            case 'm': MU = atof(argv[i]); break;
+            case 'p': PERB_EPS = atof(argv[i]); break;
+            default:
+                      cerr << "unknown option: -" << argv[i-1][1] << endl;
+                      exit(0);
+        }
+    }
+    if (i >= argn) usage();
+    trainFname = argv[i];
+}
+
+void parse_seqs_file (SequenceSet& allSeqs, int& numSeq, char* fname) {
+    ifstream seq_file(fname);
+    string tmp_str;
+    while (getline(seq_file, tmp_str)) {
+        int seq_len = tmp_str.size();
+        Sequence ht_tmp_seq (seq_len+1+1, 0);
+        ht_tmp_seq[0] = '*';
+        for(int i = 0; i < seq_len; i ++) 
+            ht_tmp_seq[i+1] = tmp_str.at(i);
+        ht_tmp_seq[seq_len+1] = '#';
+        allSeqs.push_back(ht_tmp_seq);
+        ++ numSeq;
+    }
+    seq_file.close();
 }
 
 int get_init_model_length (vector<int>& lenSeqs) {
@@ -36,23 +69,6 @@ int get_init_model_length (vector<int>& lenSeqs) {
         if (lenSeqs[i] > max_seq_length) 
             max_seq_length = lenSeqs[i];
     return max_seq_length;
-}
-
-void tensor4D_dump (Tensor4D& W) {
-    int T1 = W.size();
-    for (int i = 0; i < T1; i ++) {
-        int T2 = W[i].size();
-        for (int j = 0; j < T2; j ++) 
-            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                for (int m = 0; m < NUM_MOVEMENT; m ++)
-                    if (W[i][j][d][m] > 0.0)
-                        cout << "(i="  << i
-                            << ", j=" << j
-                            << ", d=" << d
-                            << ", m=" << m
-                            << "): " << W[i][j][d][m]
-                            << endl;
-    }
 }
 
 double get_sub1_cost (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, Tensor5D& C, double& mu, SequenceSet& allSeqs) {
@@ -145,7 +161,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
     int T2 = W[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
     // reinitialize to all-zero matrix
-#ifdef INIT_ZERO_W
+#ifdef REINIT_ZERO_W
     for (int i = 0; i < T1; i ++) 
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
@@ -226,8 +242,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
     int numSeq = allSeqs.size();
     int T2 = W[0][0].size();
     // reinitialize W_2 to all-zero matrix
-#ifdef INIT_ZERO_W
-    for (int n = 0; n < numSeq; n ++) {
+    for (int n = 0; n < numSeq and REINIT_W_ZERO_TOGGLE; n ++) {
         int T1 = W[n].size();
         for (int i = 0; i < T1; i ++)  
             for (int j = 0; j < T2; j ++) 
@@ -235,7 +250,6 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                     for (int m = 0; m < NUM_MOVEMENT; m ++) 
                         W[n][i][j][d][m] = 0.0;
     }
-#endif
 
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
@@ -421,7 +435,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
 
     // 2. ADMM iteration
     int iter = 0;
-    double mu = 0.1;
+    double mu = MU;
     double prev_CoZ = MAX_DOUBLE;
     while (iter < MAX_ADMM_ITER) {
         // 2a. Subprogram: FrankWolf Algorithm
@@ -488,13 +502,11 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         // cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
 
         // 2f. stopping conditions
-#ifdef ADMM_EARLY_STOP
-        if ( iter > MIN_ADMM_ITER)
-            if ( fabs(prev_CoZ - CoZ) < EPS_ADMM_CoZ  and W1mW2 < 10e-3) {
+        if (ADMM_EARLY_STOP_TOGGLE and iter > MIN_ADMM_ITER)
+            if ( fabs(prev_CoZ - CoZ) < EPS_ADMM_CoZ and W1mW2 < 10e-3) {
                 cerr << "CoZ Converges. ADMM early stop!" << endl;
                 break;
             }
-#endif
         prev_CoZ = CoZ;
         iter ++;
     }
@@ -506,49 +518,39 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
     /*}}}*/
 }
 
+void sequence_dump (SequenceSet& allSeqs, int n) {
+    char buffer [50];
+    sprintf (buffer, "Seq%5d", n);
+    cout << buffer << ": ";
+    for (int j = 0; j < allSeqs[n].size(); j ++) 
+        cout << allSeqs[n][j];
+    cout << endl;
+}
+
 int main (int argn, char** argv) {
-    // 1. usage
-    if (argn < 2) {
-        usage();
-        exit(1);
-    }
+    // 1. parse cmd 
+    parse_cmd_line(argn, argv);
 
     // 2. input DNA sequence file
-    SequenceSet allSeqs (0, Sequence());
-    ifstream seq_file(argv[1]);
-    string tmp_str;
     int numSeq = 0;
-    while (getline(seq_file, tmp_str)) {
-        int seq_len = tmp_str.size();
-        Sequence ht_tmp_seq (seq_len+1+1, 0);
-        ht_tmp_seq[0] = '*';
-        for(int i = 0; i < seq_len; i ++) 
-            ht_tmp_seq[i+1] = tmp_str.at(i);
-        ht_tmp_seq[seq_len+1] = '#';
-        allSeqs.push_back(ht_tmp_seq);
-        ++ numSeq;
-    }
-    seq_file.close();
+    SequenceSet allSeqs (0, Sequence());
+    parse_seqs_file(allSeqs, numSeq, trainFname);
+    vector<int> lenSeqs (numSeq, 0);
+    for (int n = 0; n < numSeq; n ++) 
+        lenSeqs[n] = allSeqs[n].size();
+
+    // pre-info
     cout << "#########################################################" << endl;
     cout << "ScoreMatch: " << C_M;
     cout << ", ScoreInsertion: " << C_I;
     cout << ", ScoreDeletion: " << C_D;
     cout << ", ScoreMismatch: " << C_MM << endl;
-    for (int n = 0; n < numSeq; n ++) {
-        char buffer [50];
-        sprintf (buffer, "Seq%5d", n);
-        cout << buffer << ": ";
-        for (int j = 0; j < allSeqs[n].size(); j ++) 
-            cout << allSeqs[n][j];
-        cout << endl;
-    }
-    vector<int> lenSeqs (numSeq, 0);
     for (int n = 0; n < numSeq; n ++) 
-        lenSeqs[n] = allSeqs[n].size();
+        sequence_dump(allSeqs, n);
 
     // 3. relaxed convex program: ADMM-based algorithm
     omp_set_num_threads(NUM_THREADS);
-    int T2 = get_init_model_length (lenSeqs) + 1; // model_seq_length
+    int T2 = get_init_model_length (lenSeqs) + LENGTH_OFFSET; // model_seq_length
     vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
 
     // 4. output the result
