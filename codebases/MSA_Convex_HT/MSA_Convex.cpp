@@ -15,7 +15,7 @@
 // #define FIRST_SUBPROBLEM_DEBUG
 // #define SECOND_SUBPROBLEM_DEBUG
 
-void usage () { cout << "./PSA_CUBE (options) [seq_file]" << endl;
+void usage () { cout << "./MSA_Convex (options) [seq_file]" << endl;
     cout << "seq_file should contain one or more DNA sequence. " << endl;
     cout << "Options: " << endl;
     cout << "\t-l Set the maximum length of model sequence. (default 0)";
