@@ -708,11 +708,17 @@ int main (int argn, char** argv) {
             }
         if (terminated) break;
     }
+    string fname (trainFname);
+    ofstream co_out (fname+".co");
     for (int i = 0; i < numSeq; i ++) {
-        for (int j = 0; j < allCOSeqs[i].size(); j++)  
+        for (int j = 0; j < allCOSeqs[i].size(); j++)  {
+            co_out << allCOSeqs[i][j];
             cout << allCOSeqs[i][j];
+        }
+        co_out << endl;
         cout << endl;
     }
+    co_out.close();
     cout << "#########################################################" << endl;
     return 0;
 }
