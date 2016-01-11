@@ -120,12 +120,12 @@ double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y,
                     qua_term += 0.5*mu *sterm * sterm;
                 }
     cost = lin_term + qua_term;
-    cout << "[FW1] iter=" << fw_iter
+    /*cout << "[FW1] iter=" << fw_iter
          << ", ||W||^2: " << Ws 
          << ", lin_term: " << lin_term 
          << ", qua_sterm: " << qua_term
          << ", cost=" << cost 
-         << endl;
+         << endl;*/
 }
 
 double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double mu) {
@@ -146,11 +146,11 @@ double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y
                     }
     }
     cost = qua_term;
-    cout << "[FW2] iter=" << fw_iter 
+    /*cout << "[FW2] iter=" << fw_iter 
          << ", ||W||^2: " << Ws  
          << ", qua_sterm: " << qua_term
          << ", cost=" << cost  
-         << endl;
+         << endl;*/
 }
 
 /* We resolve the first subproblem through the frank-wolfe algorithm */
@@ -212,11 +212,12 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         gamma = max(gamma, 0.0);
         gamma = min(gamma, 1.0);
         // 3b. early stop condition: neglible gamma
-        if (fabs(gamma) < EPS_1st_FW) {
+        /*if (fabs(gamma) < EPS_1st_FW) {
             cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
         cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
+	*/
 
         // 4. update W
         for (int i = 0; i < T1; i ++) 
@@ -307,9 +308,9 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         double delta_square = 0.0;
         for (int n = 0; n < numSeq; n ++) 
             delta_square += tensor4D_frob_prod (delta[n], delta[n]);
-        cout << "delta_square: " << delta_square << endl;
+        //cout << "delta_square: " << delta_square << endl;
         if ( delta_square < 1e-12 ) {
-            cout << "small delta. early stop." << endl;
+            //cout << "small delta. early stop." << endl;
             break;
         }
 
@@ -325,7 +326,6 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
             int sj = trace[t].location[0];
             int sd = trace[t].location[1];
             int sm = dna2T3idx(trace[t].acidB);
-            cout << trace[t].toString() << endl;
             for (int n = 0; n < numSeq; n ++) {
                 int T1 = S[n].size();
                 for (int i = 0; i < T1; i ++) {
@@ -372,7 +372,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         cout << "numerator: " << numerator << ", denominator: " << denominator << endl;
 #endif
         if ( denominator < 10e-6) {
-            cout << "small denominator: " << denominator << endl;
+            //cout << "small denominator: " << denominator << endl;
             break;
         }
         double gamma = numerator / denominator;
@@ -401,7 +401,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
         second_subproblem_log(fw_iter, W, Z, Y, mu);
         // 5. early stop condition
         if (fabs(gamma) < EPS_2nd_FW) {
-            cout << "gamma=" << gamma << ", early stop!" << endl;
+            //cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
     }
@@ -487,7 +487,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++) {
                             double value = (W_1[n][i][j][d][m] - W_2[n][i][j][d][m]);
-                            W1mW2 += value * value;
+                            W1mW2 = max( fabs(value), W1mW2 ) ;
                         }
         }
         // cerr << "=============================================================================" << endl;
@@ -496,14 +496,14 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
         sprintf(w1mw2_val, "%6f", W1mW2);
         cerr << "ADMM_iter = " << iter 
             << ", C o Z = " << COZ_val
-            << ", || W_1 - W_2 ||_2 = " << w1mw2_val
+            << ", || W_1 - W_2 ||_{max} = " << w1mw2_val
             << endl;
         // cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
         // cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
 
         // 2f. stopping conditions
         if (ADMM_EARLY_STOP_TOGGLE and iter > MIN_ADMM_ITER)
-            if ( fabs(prev_CoZ - CoZ) < EPS_ADMM_CoZ and W1mW2 < 10e-3) {
+            if ( W1mW2 < EPS_Wdiff ) {
                 cerr << "CoZ Converges. ADMM early stop!" << endl;
                 break;
             }
