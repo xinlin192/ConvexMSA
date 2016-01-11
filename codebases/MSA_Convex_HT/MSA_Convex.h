@@ -310,8 +310,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
     // cout << T1 << T2 << T3 << endl;
     Cube cube (T1, Plane (T2, Trace (T3, Cell(3))));
     // 2. fill in the tensor
-    // for (int i = 0; i < T1; i ++) for (int k = 0; k < T3; k ++) cube[i][0][k].score = MAX_DOUBLE;
-    // for (int j = 0; j < T2; j ++) for (int k = 0; k < T3; k ++) cube[0][j][k].score = MAX_DOUBLE;
     for (int i = 0; i < T1; i ++) for (int j = 0; j < T2; j ++) cube[i][j][4].score = MAX_DOUBLE;
     for (int k = 0; k < T3; k ++) cube[0][0][k].score = MAX_DOUBLE;
     for (int i = 1; i < T1; i ++) {
@@ -532,7 +530,6 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         if (trace[j].acidA != '#')
             tmp_vec.push_back(trace[j]);
     trace = tmp_vec;
-    
 
     // 3. consider insertion
     for (int j = trace.size()-1; j >= 0; j --) {
