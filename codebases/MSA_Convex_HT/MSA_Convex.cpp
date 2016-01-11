@@ -153,21 +153,21 @@ double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y
 }
 
 /* We resolve the first subproblem through the frank-wolfe algorithm */
-void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double& mu, Sequence data_seq) {
+void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, double& mu, Sequence data_seq) {
     /*{{{*/
     // 1. Find the update direction
-    int T1 = W.size();
-    int T2 = W[0].size();
+    int T1 = W_1.size();
+    int T2 = W_1[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
     // reinitialize to all-zero matrix
     for (int i = 0; i < T1 and REINIT_W_ZERO_TOGGLE; i ++) 
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                 for (int m = 0; m < NUM_MOVEMENT; m ++)
-                    W[i][j][d][m] = 0.0;
+                    W_1[i][j][d][m] = 0.0;
                     
     int fw_iter = -1;
-    // first_subproblem_log(fw_iter, W, Z, Y, C, mu);
+    // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
     while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
 #ifdef PARRALLEL_COMPUTING
@@ -177,7 +177,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        M[i][j][d][m] = mu*(W[i][j][d][m] - Z[i][j][d][m]) + Y[i][j][d][m]; 
+                        M[i][j][d][m] = mu*(W_1[i][j][d][m] - W_2[i][j][d][m]) + Y[i][j][d][m]; 
         Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         Trace trace (0, Cell(3));
         cube_smith_waterman (S, trace, M, C, data_seq);
@@ -192,8 +192,8 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        double wms = W[i][j][d][m] - S[i][j][d][m];
-                        numerator += (C[i][j][d][m] + Y[i][j][d][m] + mu*W[i][j][d][m] - mu*Z[i][j][d][m]) * wms;
+                        double wms = W_1[i][j][d][m] - S[i][j][d][m];
+                        numerator += (C[i][j][d][m] + Y[i][j][d][m] + mu*W_1[i][j][d][m] - mu*W_2[i][j][d][m]) * wms;
                         denominator += mu * wms * wms;
                     }
         // 3a. early stop condition: neglible denominator
@@ -208,33 +208,33 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         if (fabs(gamma) < EPS_1st_FW) break;  // early stop condition
        // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
-        // 4. update W
+        // 4. update W_1
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        W[i][j][d][m] = (1-gamma) * W[i][j][d][m] + gamma* S[i][j][d][m];
+                        W_1[i][j][d][m] = (1-gamma) * W_1[i][j][d][m] + gamma* S[i][j][d][m];
 
         // 5. output iteration tracking info
-        // first_subproblem_log(fw_iter, W, Z, Y, C, mu);
+        // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
     }
     return; 
     /*}}}*/
 }
 
 /* We resolve the second subproblem through sky-plane projection */
-void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
+void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
 /*{{{*/
     int numSeq = allSeqs.size();
-    int T2 = W[0][0].size();
+    int T2 = W_2[0][0].size();
     // reinitialize W_2 to all-zero matrix
-    for (int n = 0; n < numSeq and REINIT_W_ZERO_TOGGLE; n ++) {
-        int T1 = W[n].size();
+    for (int n = 0; REINIT_W_ZERO_TOGGLE and n < numSeq; n ++) {
+        int T1 = W_2[n].size();
         for (int i = 0; i < T1; i ++)  
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++) 
-                        W[n][i][j][d][m] = 0.0;
+                        W_2[n][i][j][d][m] = 0.0;
     }
 
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
@@ -251,12 +251,12 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
 //#pragma omp parallel for
 #endif
         for (int n = 0; n < numSeq; n ++) {
-            int T1 = W[n].size();
+            int T1 = W_2[n].size();
             for (int i = 0; i < T1; i ++) { 
                 for (int j = 0; j < T2; j ++) 
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                            delta[n][i][j][d][m] = -1.0 * mu * (W[n][i][j][d][m] - Z[n][i][j][d][m] + (1.0/mu)*Y[n][i][j][d][m]);
+                            delta[n][i][j][d][m] = -1.0* mu * (W_2[n][i][j][d][m] - W_1[n][i][j][d][m]) + Y[n][i][j][d][m];
 #ifdef SECOND_SUBPROBLEM_DEBUG
                             if (delta[n][i][j][d][m] > 0)
                                 cout <<"delta: " << n << "," << i << "," << j << "," << d  << "," << m << ": "
@@ -339,7 +339,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
 #endif
 
         // 4. Exact Line search: determine the optimal step size \gamma
-        // gamma = [ ( Y_2 + mu*W_2 - mu*Z ) dot (W_2 - S) ] / || W_2 - S ||^2
+        // gamma = [ ( Y_2 + mu*W - mu*Z ) dot (W_2 - S) ] / || W_2 - S ||^2
         //           ---------------combo------------------
         double numerator = 0.0, denominator = 0.0;
         for (int n = 0; n < numSeq; n ++) {
@@ -348,8 +348,8 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                 for (int j = 0; j < T2; j ++) 
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                            double wms = W[n][i][j][d][m] - S[n][i][j][d][m];
-                            numerator += (Y[n][i][j][d][m] + mu*W[n][i][j][d][m] - mu*Z[n][i][j][d][m]) * wms;
+                            double wms = W_2[n][i][j][d][m] - S[n][i][j][d][m];
+                            numerator += (-1.0*Y[n][i][j][d][m] + mu*W_2[n][i][j][d][m] - mu*W_1[n][i][j][d][m]) * wms;
                             denominator += mu * wms * wms;
                         }
         }
@@ -373,7 +373,7 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                 for (int j = 0; j < T2; j ++) 
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++)
-                            W[n][i][j][d][m] = (1-gamma) * W[n][i][j][d][m] + gamma* S[n][i][j][d][m];
+                            W_2[n][i][j][d][m] = (1-gamma) * W_2[n][i][j][d][m] + gamma* S[n][i][j][d][m];
         }
 
         // 4. output iteration tracking info
@@ -389,24 +389,18 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
     /*{{{*/
     // 1. initialization
     int numSeq = allSeqs.size();
-    vector<Tensor4D> Z (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
-                        vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> C (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> W_1 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     vector<Tensor4D> W_2 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
-    vector<Tensor4D> Y_1 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
+    vector<Tensor4D> Y (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
-    vector<Tensor4D> Y_2 (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
-                        vector<double>(NUM_MOVEMENT, 0.0)))));  
-    tensor5D_init (Z, allSeqs, lenSeqs, T2);
     tensor5D_init (C, allSeqs, lenSeqs, T2);
     tensor5D_init (W_1, allSeqs, lenSeqs, T2);
     tensor5D_init (W_2, allSeqs, lenSeqs, T2);
-    tensor5D_init (Y_1, allSeqs, lenSeqs, T2);
-    tensor5D_init (Y_2, allSeqs, lenSeqs, T2);
+    tensor5D_init (Y, allSeqs, lenSeqs, T2);
     set_C (C, allSeqs);
 
     // 2. ADMM iteration
@@ -419,42 +413,20 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
 #ifdef PARRALLEL_COMPUTING
 #pragma omp parallel for
 #endif
-        for (int n = 0; n < numSeq; n++) {
-            // cout << "----------------------n=" << n <<"-----------------------------------------" << endl;
-            first_subproblem (W_1[n], Z[n], Y_1[n], C[n], mu, allSeqs[n]);
-            // tensor4D_dump (W_1[n]);
-        }
+        for (int n = 0; n < numSeq; n++) 
+            first_subproblem (W_1[n], W_2[n], Y[n], C[n], mu, allSeqs[n]);
 
-#ifdef FIRST_SUBPROBLEM_DEBUG
-        cout << "W_1: " << endl;
-        for (int n = 0; n < numSeq; n++) { 
-            cout << "n = " << n << endl;
-            tensor4D_dump(W_1[n]);
-        }
-#endif
-        // double sub1_cost = get_sub1_cost (W_1, Z, Y_1, C, mu, allSeqs);
-        // cout << "=============================================================================" << endl;
         // 2b. Subprogram: 
-        second_subproblem (W_2, Z, Y_2, mu, allSeqs, lenSeqs);
+        second_subproblem (W_1, W_2, Y, mu, allSeqs, lenSeqs);
 
-        // double sub2_cost = get_sub2_cost (W_2, Z, Y_2, mu, allSeqs);
-        // cout << "=============================================================================" << endl;
-
-        // 2c. update Z: Z = (W_1 + W_2) / 2
-        // NOTE: parallelize this for to enable parallelism
-        for (int n = 0; n < numSeq; n ++) 
-            tensor4D_average (Z[n], W_1[n], W_2[n]);
-        // 2d. update Y_1 and Y_2: Y_1 += mu * (W_1 - Z)
-        // NOTE: parallelize this for to enable parallelism
+        // 2d. update Y: Y += mu * (W_1 - W_2)
         for (int n = 0; n < numSeq; n ++)
-            tensor4D_lin_update (Y_1[n], W_1[n], Z[n], mu);
-        for (int n = 0; n < numSeq; n ++)
-            tensor4D_lin_update (Y_2[n], W_2[n], Z[n], mu);
+            tensor4D_lin_update (Y[n], W_1[n], W_2[n], mu);
 
         // 2e. print out tracking info
         double CoZ = 0.0;
         for (int n = 0; n < numSeq; n++) 
-            CoZ += tensor4D_frob_prod(C[n], Z[n]);
+            CoZ += tensor4D_frob_prod(C[n], W_2[n]);
         double W1mW2 = 0.0;
         for (int n = 0; n < numSeq; n ++) {
             int T1 = W_1[n].size();
@@ -490,7 +462,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
     for (int i = 0; i < numSeq; i ++) tensor4D_dump(W_1[i]);
     cout << "W_2: " << endl;
     for (int i = 0; i < numSeq; i ++) tensor4D_dump(W_2[i]);
-    return Z;
+    return W_2;
     /*}}}*/
 }
 
