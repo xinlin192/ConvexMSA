@@ -44,11 +44,11 @@ const int NUM_MOVEMENT = 9 + 2 + 2;
 const int MAX_1st_FW_ITER = 100;
 const int MAX_2nd_FW_ITER = 100;
 const int MIN_ADMM_ITER = 15;
-const int MAX_ADMM_ITER = 100;
+const int MAX_ADMM_ITER = 10000;
 const double EPS_1st_FW = 1e-5;
 const double EPS_2nd_FW = 1e-5;
 //const double EPS_ADMM_CoZ = 1e-5; 
-const double EPS_Wdiff = 1e-2;
+const double EPS_Wdiff = 1e-3;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
@@ -352,21 +352,12 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 // 1c. get max matach/mismatch score
                 double mth_score;
                 // cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
-                // d is inheriter, FIXME: verify the semantics of M
-                // double max_mth_score = -1;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
-                    // double mscore = (dna_idx==k)?C_M:C_MM;
                     mth_score = (i==0 or j == 0)?MAX_DOUBLE:cube[i-1][j-1][d].score + 
                                    M[i][j][d][MTH_BASE_IDX+k] +
                                    C[i][j][d][MTH_BASE_IDX+k]; 
                     scores[MTH_BASE_IDX+d] = mth_score;
-                    // if (mth_score > max_mth_score) max_mth_score = mth_score;
                 }
-                /*
-                if (i == 1 or j == 1) 
-                    for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
-                        scores[MTH_BASE_IDX+d] = max_mth_score;
-                        */
                 // 1d. get optimal action for the current cell
                 double min_score = MAX_DOUBLE;
                 int min_ansid = -1;
@@ -404,8 +395,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
                 } else if (DEL_BASE_IDX <= act and act < MTH_BASE_IDX) {
                     cube[i][j][k].acidA = GAP_NOTATION; 
                     cube[i][j][k].acidB = T3idx2dna(act-DEL_BASE_IDX); 
-                   // for (int d = 0; d < NUM_DNA_TYPE ; d ++) 
-                    //    M[i][j][d][act] += 1e-3;
                 } else if (MTH_BASE_IDX <= act < NUM_DNA_TYPE) {
                     cube[i][j][k].acidA = data_dna; 
                     cube[i][j][k].acidB = T3idx2dna(act-MTH_BASE_IDX); 
@@ -431,13 +420,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
             }
         }
     }
-    /*
-    cout << "min_i: " << gmin_i 
-        << ", min_j: " << gmin_j 
-        << ", min_k: " << gmin_k 
-        << ", min_score: " << cube[gmin_i][gmin_j][gmin_k].score
-        << endl;
-        */
     if (gmin_i == 0 or gmin_j == 0) {
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
@@ -459,8 +441,6 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         }
     }
 
-    // if (i == 0 and j == 0) return;
-    // else trace.insert(trace.begin(), cube[1][1][dna2T3idx(data_seq[0])]);
     // 4. reintepret it as 4-d data structure
     int ntr = trace.size();
     for (int t = 0; t < ntr; t ++) {
