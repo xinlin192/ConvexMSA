@@ -549,7 +549,7 @@ int main (int argn, char** argv) {
         sequence_dump(allSeqs, n);
 
     // 3. relaxed convex program: ADMM-based algorithm
-    omp_set_num_threads(NUM_THREADS);
+    // omp_set_num_threads(NUM_THREADS);
     int T2 = get_init_model_length (lenSeqs) + LENGTH_OFFSET; // model_seq_length
     vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
 
@@ -634,6 +634,7 @@ int main (int argn, char** argv) {
         }
     cout << endl;
     cout << ">>>>>>>>>>>>>>>>>>>>>>>MatchingView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
+    SequenceSet allModelSeqs, allDataSeqs;
     for (int n = 0; n < numSeq; n ++) {
         Sequence model_seq;
         Sequence data_seq;
@@ -642,7 +643,7 @@ int main (int argn, char** argv) {
             for (int j = 0; j < T2m; j ++) {
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) {
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        if (W[n][i][j][d][m] > 0.0) {
+                        if (W[n][i][j][d][m] > 0.95) {
                             if (m == INSERTION) {
                                 data_seq.push_back(allSeqs[n][i]);
                                 model_seq.push_back(GAP_NOTATION);
@@ -667,6 +668,49 @@ int main (int argn, char** argv) {
         cout << buffer << ": ";
         for (int i = 0; i < data_seq.size(); i ++) 
             cout << data_seq[i];
+        cout << endl;
+        data_seq.erase(data_seq.begin());
+        model_seq.erase(model_seq.begin());
+        data_seq.erase(data_seq.end()-1);
+        model_seq.erase(model_seq.end()-1);
+        allModelSeqs.push_back(model_seq);
+        allDataSeqs.push_back(data_seq);
+    }
+    cout << ">>>>>>>>>>>>>>>>>>>>>ClustalOmegaView<<<<<<<<<<<<<<<<<<<<<<" << endl;
+    SequenceSet allCOSeqs (numSeq, Sequence(0));
+    vector<int> pos(numSeq, 0);
+    while (true) {
+        set<int> insertion_ids;
+        for (int i = 0; i < numSeq; i ++) {
+            if (pos[i] >= allModelSeqs[i].size()) continue;
+            if (allModelSeqs[i][pos[i]] == '-') 
+                insertion_ids.insert(i);
+        }
+        if (insertion_ids.size() != 0) {
+            // insertion exists
+            for (int i = 0; i < numSeq; i ++) {
+                if (insertion_ids.find(i)==insertion_ids.end()) // not in set
+                    allCOSeqs[i].push_back('-');
+                else { // in set
+                    allCOSeqs[i].push_back(allDataSeqs[i][pos[i]++]);
+                }
+            }
+        } else { // no insertion
+            for (int i = 0; i < numSeq; i ++) 
+                allCOSeqs[i].push_back(allDataSeqs[i][pos[i]++]);
+        }
+        // terminating
+        bool terminated = true;
+        for (int i = 0; i < numSeq; i ++) 
+            if (pos[i] != allModelSeqs[i].size()) {
+                terminated = false; 
+                break;
+            }
+        if (terminated) break;
+    }
+    for (int i = 0; i < numSeq; i ++) {
+        for (int j = 0; j < allCOSeqs[i].size(); j++)  
+            cout << allCOSeqs[i][j];
         cout << endl;
     }
     cout << "#########################################################" << endl;
