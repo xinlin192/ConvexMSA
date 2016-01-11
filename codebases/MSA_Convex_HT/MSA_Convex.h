@@ -14,11 +14,11 @@ using namespace std;
 #include "stdlib.h"
 #include <limits>
 #include <vector>
+#include <set>
 #include <sstream> 
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#include <omp.h>
 
 // #define CUBE_SMITH_WATERMAN_DEBUG
 // #define PARRALLEL_COMPUTING
