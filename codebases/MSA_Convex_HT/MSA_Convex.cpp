@@ -119,12 +119,12 @@ double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y,
                     qua_term += 0.5*mu *sterm * sterm;
                 }
     cost = lin_term + qua_term;
-    /*cout << "[FW1] iter=" << fw_iter
+    cout << "[FW1] iter=" << fw_iter
          << ", ||W||^2: " << Ws 
          << ", lin_term: " << lin_term 
          << ", qua_sterm: " << qua_term
          << ", cost=" << cost 
-         << endl;*/
+         << endl;
 }
 
 double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double mu) {
@@ -145,11 +145,11 @@ double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y
                     }
     }
     cost = qua_term;
-    /*cout << "[FW2] iter=" << fw_iter 
+    cout << "[FW2] iter=" << fw_iter 
          << ", ||W||^2: " << Ws  
          << ", qua_sterm: " << qua_term
          << ", cost=" << cost  
-         << endl;*/
+         << endl;
 }
 
 /* We resolve the first subproblem through the frank-wolfe algorithm */
@@ -160,16 +160,14 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
     int T2 = W[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
     // reinitialize to all-zero matrix
-#ifdef REINIT_ZERO_W
-    for (int i = 0; i < T1; i ++) 
+    for (int i = 0; i < T1 and REINIT_W_ZERO_TOGGLE; i ++) 
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                 for (int m = 0; m < NUM_MOVEMENT; m ++)
                     W[i][j][d][m] = 0.0;
-#endif
                     
     int fw_iter = -1;
-    first_subproblem_log(fw_iter, W, Z, Y, C, mu);
+    // first_subproblem_log(fw_iter, W, Z, Y, C, mu);
     while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
 #ifdef PARRALLEL_COMPUTING
@@ -180,13 +178,9 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         M[i][j][d][m] = mu*(W[i][j][d][m] - Z[i][j][d][m]) + Y[i][j][d][m]; 
-        // cout << "M[1036]:" << M[1][0][3][6] << endl;
-        // cout << "W_1[1036]:" << W[1][0][3][6] << endl;
-        // cout << "Y_1[1036]:" << Y[1][0][3][6] << endl;
         Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         Trace trace (0, Cell(3));
         cube_smith_waterman (S, trace, M, C, data_seq);
-        // tensor4D_dump(S);
 
         // 2. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( C + Y_1 + mu*W_1 - mu*Z ) dot (W_1 - S) ] / (mu* || W_1 - S ||^2)
@@ -211,10 +205,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         gamma = max(gamma, 0.0);
         gamma = min(gamma, 1.0);
         // 3b. early stop condition: neglible gamma
-        if (fabs(gamma) < EPS_1st_FW) {
-           // cout << "gamma=" << gamma << ", early stop!" << endl;
-            break; 
-        }
+        if (fabs(gamma) < EPS_1st_FW) break;  // early stop condition
        // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
         // 4. update W
@@ -225,10 +216,7 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
                         W[i][j][d][m] = (1-gamma) * W[i][j][d][m] + gamma* S[i][j][d][m];
 
         // 5. output iteration tracking info
-        first_subproblem_log(fw_iter, W, Z, Y, C, mu);
-
-        // NOTE: remove this after debug the second subproblem
-        // if (fw_iter == 0) break;
+        // first_subproblem_log(fw_iter, W, Z, Y, C, mu);
     }
     return; 
     /*}}}*/
@@ -387,20 +375,11 @@ void second_subproblem (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Seque
                         for (int m = 0; m < NUM_MOVEMENT; m ++)
                             W[n][i][j][d][m] = (1-gamma) * W[n][i][j][d][m] + gamma* S[n][i][j][d][m];
         }
-        /* dumping
-        for (int n = 0; n < numSeq; n ++) {
-            cout << "W2, n = " << n << endl;
-            tensor4D_dump(W[n]);
-        }
-        */
 
         // 4. output iteration tracking info
-        second_subproblem_log(fw_iter, W, Z, Y, mu);
+        // second_subproblem_log(fw_iter, W, Z, Y, mu);
         // 5. early stop condition
-        if (fabs(gamma) < EPS_2nd_FW) {
-            //cout << "gamma=" << gamma << ", early stop!" << endl;
-            break; 
-        }
+        if (fabs(gamma) < EPS_2nd_FW) break; 
     }
     return;
 /*}}}*/
