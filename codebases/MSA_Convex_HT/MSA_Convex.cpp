@@ -30,10 +30,9 @@ void parse_cmd_line (int argn, char** argv) {
     for(i = 1; i < argn; i++){
         if ( argv[i][0] != '-' ) break;
         if ( ++i >= argn ) usage();
-
         switch(argv[i-1][1]){
-            case 'e': ADMM_EARLY_STOP_TOGGLE = atoi(argv[i])>0?true:false; break;
-            case 'r': REINIT_W_ZERO_TOGGLE = atoi(argv[i])>0?true:false; break;
+            case 'e': ADMM_EARLY_STOP_TOGGLE = (atoi(argv[i])>0); break;
+            case 'r': REINIT_W_ZERO_TOGGLE = (atoi(argv[i])>0); break;
             case 'l': LENGTH_OFFSET = atoi(argv[i]); break;
             case 'm': MU = atof(argv[i]); break;
             case 'p': PERB_EPS = atof(argv[i]); break;
@@ -212,12 +211,11 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         gamma = max(gamma, 0.0);
         gamma = min(gamma, 1.0);
         // 3b. early stop condition: neglible gamma
-        /*if (fabs(gamma) < EPS_1st_FW) {
-            cout << "gamma=" << gamma << ", early stop!" << endl;
+        if (fabs(gamma) < EPS_1st_FW) {
+           // cout << "gamma=" << gamma << ", early stop!" << endl;
             break; 
         }
-        cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
-	*/
+       // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
         // 4. update W
         for (int i = 0; i < T1; i ++) 
@@ -232,7 +230,6 @@ void first_subproblem (Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, doubl
         // NOTE: remove this after debug the second subproblem
         // if (fw_iter == 0) break;
     }
-
     return; 
     /*}}}*/
 }
@@ -554,28 +551,6 @@ int main (int argn, char** argv) {
     vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
 
     // 4. output the result
-    /*
-    cout << ">>>>>>>>>>>>>>>>>>>>>>>Summary<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
-       cout << "Length of Trace: " << trace.size();
-       cout << ", Score: " << trace.back().score;
-       cout << endl;
-       int numInsertion = 0, numDeletion = 0, numMatch = 0, numMismatch = 0, numUndefined = 0;
-       for (int i = 0; i < trace.size(); i ++) {
-           switch (trace[i].action) {
-               case MATCH: ++numMatch; break;
-               case INSERTION: ++numInsertion; break;
-               case DELETION: ++numDeletion; break;
-               case MISMATCH: ++numMismatch; break;
-               case UNDEFINED: ++numUndefined; break;
-           }
-       }
-       cout << "numMatch: " << numMatch;
-       cout << ", numInsertion: " << numInsertion;
-       cout << ", numDeletion: " << numDeletion;
-       cout << ", numMismatch: " << numMismatch;
-       cout << ", numUndefined: " << numUndefined;
-       cout << endl;
-       */
     // a. tuple view
     cout << ">>>>>>>>>>>>>>>>>>>>>>>TupleView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     for (int n = 0; n < numSeq; n ++) {
