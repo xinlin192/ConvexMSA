@@ -500,7 +500,9 @@ int main (int argn, char** argv) {
     // 3. relaxed convex program: ADMM-based algorithm
     // omp_set_num_threads(NUM_THREADS);
     int T2 = get_init_model_length (lenSeqs) + LENGTH_OFFSET; // model_seq_length
+    time_t begin = time(NULL);
     vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
+    time_t end = time(NULL);
 
     // 4. output the result
     // a. tuple view
@@ -648,5 +650,6 @@ int main (int argn, char** argv) {
     }
     co_out.close();
     cout << "#########################################################" << endl;
+    cout << "Time Spent: " << end - begin << " seconds" << endl;
     return 0;
 }
