@@ -1,6 +1,8 @@
-#include <vector>
+#include<vector>
 #include<fstream>
 #include<cmath>
+#include<string>
+#include<set>
 #include<stdlib.h>
 
 using namespace std;
