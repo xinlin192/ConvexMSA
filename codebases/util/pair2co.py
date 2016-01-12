@@ -22,12 +22,14 @@ def convertPair2CO (allModelSeqs, allDataSeqs):
         if bool(insertions_ids):
             for i in range(numSeqs):
                 if i in insertions_ids:
+                    if pos[i] >= len(allDataSeqs[i]): continue
                     allCOSeqs[i] += allDataSeqs[i][pos[i]]
                     pos[i] += 1
                 else:
                     allCOSeqs[i] += '-'
         else:
             for i in range(numSeqs):
+                if pos[i] >= len(allDataSeqs[i]): continue
                 allCOSeqs[i] += allDataSeqs[i][pos[i]]
                 pos[i] += 1
         terminated = True
