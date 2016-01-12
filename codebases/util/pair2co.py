@@ -8,6 +8,7 @@ It is assumed that all sequences in the input file are of the same length
 Please use Python 2.7 to run this program.'''
     print usage_info
 
+### Conversion from .pair to .co 
 def convertPair2CO (allModelSeqs, allDataSeqs):
     numSeqs = len(allModelSeqs)
     allCOSeqs = ["" for i in range(numSeqs)]
@@ -48,13 +49,15 @@ def main():
     numSeqs = len(allSeqs)
     allModelSeqs = []
     allDataSeqs = []
+    # odd-indexed sequence is model sequence
     for i in range(0, numSeqs,2):
         allModelSeqs.append(allSeqs[i])
+    # even-indexed sequence is data sequence
     for i in range(1, numSeqs,2):
         allDataSeqs.append(allSeqs[i])
     allCOSeqs = convertPair2CO (allModelSeqs, allDataSeqs)
     for seq in allCOSeqs:
-        print " ", seq
+        print seq
     
 if __name__ == "__main__":
     main()
