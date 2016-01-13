@@ -301,6 +301,7 @@ void tensor4D_copy (Tensor4D& dest, Tensor4D& src1) {
 /*}}}*/
 
 void smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
+/*{{{*/
     int nRow = plane.size();
     int nCol = plane[0].size();
     // 1. fill in the plane
@@ -353,18 +354,6 @@ void smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
     }
     double min_score = MAX_DOUBLE;
     int min_i = -1, min_j = -1;
-    /*
-    for (int i = 0; i < nRow; i ++) {
-        for (int j = 0; j < nCol; j ++) {
-            if (i == 0 || j == 0) continue;
-            if (plane[i][j].score <= min_score) {
-                min_score = plane[i][j].score;
-                min_i = i;
-                min_j = j;
-            }
-        }
-    }
-    */
     for (int i = 0; i < nRow; i ++) {
         double score = plane[i][nCol-1].score + (nRow-i-1)*C_I;
         if (score <= min_score) {
@@ -399,6 +388,7 @@ void smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
         }
     }
     return ;
+/*}}}*/
 }
 
 /* 3-d smith waterman algorithm */
