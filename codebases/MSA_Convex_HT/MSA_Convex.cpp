@@ -564,47 +564,75 @@ int main (int argn, char** argv) {
     cout << endl;
     cout << ">>>>>>>>>>>>>>>>>>>>>>>MatchingView<<<<<<<<<<<<<<<<<<<<<<<<" << endl;
     SequenceSet allModelSeqs, allDataSeqs;
+    
     for (int n = 0; n < numSeq; n ++) {
-        Sequence model_seq;
-        Sequence data_seq;
-        int T1 = W[n].size();
-        for (int i = 0; i < T1; i ++) { 
-            for (int j = 0; j < T2m; j ++) {
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) {
-                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        if (W[n][i][j][d][m] > 0.95) {
-                            if (m == INSERTION) {
-                                data_seq.push_back(allSeqs[n][i]);
-                                model_seq.push_back(GAP_NOTATION);
-                            } else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) { 
-                                data_seq.push_back(GAP_NOTATION);
-                                model_seq.push_back(T3idx2dna(m-DEL_BASE_IDX));
-                            } else if (MTH_BASE_IDX <= m and m < NUM_MOVEMENT) {
-                                data_seq.push_back(allSeqs[n][i]);
-                                model_seq.push_back(T3idx2dna(m-MTH_BASE_IDX));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        cout << "SeqRecov: ";
-        for (int i = 0; i < model_seq.size(); i ++) 
-            cout << model_seq[i];
-        cout << endl;
-        char buffer [50];
-        sprintf (buffer, "Seq%5d", n);
-        cout << buffer << ": ";
-        for (int i = 0; i < data_seq.size(); i ++) 
-            cout << data_seq[i];
-        cout << endl;
-        data_seq.erase(data_seq.begin());
-        model_seq.erase(model_seq.begin());
+        Sequence model_seq = recSeq, data_seq = allSeqs[n];
+       data_seq.erase(data_seq.begin());
+       model_seq.erase(model_seq.begin());
         data_seq.erase(data_seq.end()-1);
         model_seq.erase(model_seq.end()-1);
+
+        // align sequences locally
+        Plane plane (data_seq.size()+1, Trace(model_seq.size()+1, Cell(2)));
+        Trace trace (0, Cell(2));
+        smith_waterman (model_seq, data_seq, plane, trace);
+
+        // 4. output the result
+        model_seq.clear(); data_seq.clear();
+        for (int i = 0; i < trace.size(); i ++) 
+            model_seq.push_back(trace[i].acidA);
+        for (int i = 0; i < trace.size(); i ++) 
+            data_seq.push_back(trace[i].acidB);
         allModelSeqs.push_back(model_seq);
         allDataSeqs.push_back(data_seq);
+        for (int i = 0; i < model_seq.size(); i ++) cout << model_seq[i];
+        cout << endl;
+        for (int i = 0; i < data_seq.size(); i ++) cout << data_seq[i];
+        cout << endl;
     }
+    /*
+       for (int n = 0; n < numSeq; n ++) {
+       Sequence model_seq;
+       Sequence data_seq;
+       int T1 = W[n].size();
+       for (int i = 0; i < T1; i ++) { 
+       for (int j = 0; j < T2m; j ++) {
+       for (int d = 0; d < NUM_DNA_TYPE; d ++) {
+       for (int m = 0; m < NUM_MOVEMENT; m ++) {
+       if (W[n][i][j][d][m] > 0.95) {
+       if (m == INSERTION) {
+       data_seq.push_back(allSeqs[n][i]);
+       model_seq.push_back(GAP_NOTATION);
+       } else if (DEL_BASE_IDX <= m and m < MTH_BASE_IDX) { 
+       data_seq.push_back(GAP_NOTATION);
+       model_seq.push_back(T3idx2dna(m-DEL_BASE_IDX));
+       } else if (MTH_BASE_IDX <= m and m < NUM_MOVEMENT) {
+       data_seq.push_back(allSeqs[n][i]);
+       model_seq.push_back(T3idx2dna(m-MTH_BASE_IDX));
+       }
+       }
+       }
+       }
+       }
+       }
+       cout << "SeqRecov: ";
+       for (int i = 0; i < model_seq.size(); i ++) 
+       cout << model_seq[i];
+       cout << endl;
+       char buffer [50];
+       sprintf (buffer, "Seq%5d", n);
+       cout << buffer << ": ";
+       for (int i = 0; i < data_seq.size(); i ++) 
+       cout << data_seq[i];
+       cout << endl;
+       data_seq.erase(data_seq.begin());
+       model_seq.erase(model_seq.begin());
+       data_seq.erase(data_seq.end()-1);
+       model_seq.erase(model_seq.end()-1);
+       allModelSeqs.push_back(model_seq);
+       allDataSeqs.push_back(data_seq);
+       }
+       */
     cout << ">>>>>>>>>>>>>>>>>>>>>ClustalOmegaView<<<<<<<<<<<<<<<<<<<<<<" << endl;
     SequenceSet allCOSeqs (numSeq, Sequence(0));
     vector<int> pos(numSeq, 0);

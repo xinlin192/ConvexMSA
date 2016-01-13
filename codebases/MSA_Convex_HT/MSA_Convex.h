@@ -300,6 +300,107 @@ void tensor4D_copy (Tensor4D& dest, Tensor4D& src1) {
 }
 /*}}}*/
 
+void smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
+    int nRow = plane.size();
+    int nCol = plane[0].size();
+    // 1. fill in the plane
+    for (int i = 0; i < nRow; i ++) {
+        for (int j = 0; j < nCol; j ++) {
+            plane[i][j].location[0] = i;
+            plane[i][j].location[1] = j;
+            if (i == 0 && j == 0) continue;
+            if (i == 0 || j == 0) {
+                plane[i][j].score = i * C_I + j* C_D;
+                plane[i][j].action = i>0?INSERTION:DELETION_A;
+                plane[i][j].acidA = i>0?'-':seqA[j-1];
+                plane[i][j].acidB = j>0?'-':seqB[i-1];
+                continue;
+            }
+            char acidA = seqA[j-1];
+            char acidB = seqB[i-1];
+            double mscore = acidA==acidB?C_M:C_MM;
+            double mm_score = plane[i-1][j-1].score + mscore;
+            double del_score = MAX_DOUBLE;
+            for (int l = 1; j - l > 0 ; l ++) 
+                del_score = min(del_score, plane[i][j-l].score + l * C_D);
+            double ins_score = MAX_DOUBLE;
+            for (int l = 1; i - l > 0 ; l ++) 
+                ins_score = min(ins_score, plane[i-l][j].score + l * C_I);
+            double opt_score = MAX_DOUBLE;
+            Action opt_action;
+            char opt_acidA, opt_acidB;
+            if (ins_score <= min(mm_score, del_score)) {
+                opt_score = ins_score;
+                opt_action = INSERTION;
+                opt_acidA = GAP_NOTATION;
+                opt_acidB = acidB;
+            } else if (del_score <= min(mm_score, ins_score)) {
+                opt_score = del_score;
+                opt_action = DELETION_A;
+                opt_acidA = acidA;
+                opt_acidB = GAP_NOTATION;
+            } else if (mm_score <= min(ins_score, del_score)) {
+                opt_score = mm_score;
+                opt_action = acidA==acidB?MATCH_A:MATCH_G;
+                opt_acidA = acidA;
+                opt_acidB = acidB;
+            }
+            plane[i][j].score = opt_score;
+            plane[i][j].action = opt_action;
+            plane[i][j].acidA = opt_acidA;
+            plane[i][j].acidB = opt_acidB;
+        }
+    }
+    double min_score = MAX_DOUBLE;
+    int min_i = -1, min_j = -1;
+    /*
+    for (int i = 0; i < nRow; i ++) {
+        for (int j = 0; j < nCol; j ++) {
+            if (i == 0 || j == 0) continue;
+            if (plane[i][j].score <= min_score) {
+                min_score = plane[i][j].score;
+                min_i = i;
+                min_j = j;
+            }
+        }
+    }
+    */
+    for (int i = 0; i < nRow; i ++) {
+        double score = plane[i][nCol-1].score + (nRow-i-1)*C_I;
+        if (score <= min_score) {
+            min_score = score;
+            min_i = i;
+            min_j = nCol-1;
+        }
+    }
+    for (int j = 0; j < nCol; j ++) {
+        double score = plane[nRow-1][j].score + (nCol-j-1)*C_D;
+        if (score <= min_score) {
+            min_score = score;
+            min_i = nRow-1;
+            min_j = j;
+        }
+    }
+    // 2. trace back
+    // cout << "min_i: " << min_i << ", min_j: " << min_j << endl;
+    if (min_i == 0 || min_j == 0) {
+        trace.push_back(plane[min_i][min_j]);
+        return; 
+    }
+    int i,j;
+    for (i = min_i, j = min_j; i != 0 || j != 0; ) {
+        trace.insert(trace.begin(), plane[i][j]);
+        switch (plane[i][j].action) {
+            case MATCH_A: i--; j--; break;
+            case MATCH_G: i--; j--; break;
+            case INSERTION: i--; break;
+            case DELETION_A: j--; break;
+            case UNDEFINED: cerr << "uncatched action." << endl; break;
+        }
+    }
+    return ;
+}
+
 /* 3-d smith waterman algorithm */
 void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, Sequence& data_seq) {
     /*{{{*/
