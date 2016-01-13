@@ -29,7 +29,7 @@ int main(int argc, char** argv){
     string msa_file = outputFile+".msa";
     string gtco_file = outputFile+".gtco";
     string info_file = outputFile+".info";
-    string pair_file = outputFile+".pair";
+    string pair_file = outputFile+".gtpair";
 	
 	// generate ancestral sequence (geometric with p = ins_rate/del_rate)
 	vector<char> anc_seq;
