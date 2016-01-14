@@ -1,0 +1,7 @@
+par_seq: GCTGTGCATT
+N= 15, L=10
+sub=0.05, ins=0.0454545, del=0.05
+P(taxon survive)=0.951229
+P(insert|taxon not die)=0.0433839
+P(insert|taxon die)=0.0214947
+P(subsitution)=0.0487706
