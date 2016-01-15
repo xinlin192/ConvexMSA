@@ -14,7 +14,6 @@ def main():
         sys.exit()
     seqfile = sys.argv[1]
     allSeqs = parseSequences(seqfile)
-    print "Input Sequence File:", seqfile
     for i in range(len(allSeqs)):
         print ">seq"+str(i), str(i)
         print allSeqs[i]
