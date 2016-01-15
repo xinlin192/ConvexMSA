@@ -1,3 +1,0 @@
-training_algorithm = "MaximumLikelihoodHMM"
-initial_specification="casino.txt"
-training_set="observation.seq"

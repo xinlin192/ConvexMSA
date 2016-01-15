@@ -1,6 +1,0 @@
-training_algorithm="ProfileHMMBaumWelch"
-initial_model="profile_trained_ml.txt"
-training_set="fasta_alignment.txt"
-threshold = 0.03
-maxiter= 200
-pseudocounts = 1

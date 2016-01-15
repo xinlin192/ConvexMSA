@@ -1,2 +1,0 @@
-classes=("initial": "profile_init.model"; "trained": "profile_trained.model")
-model_probabilities=("initial": 0.5; "trained": 0.5)
