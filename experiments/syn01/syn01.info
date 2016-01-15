@@ -1,5 +1,5 @@
 par_seq: GTTCCAACGTATACGGGTAAGTTTATGCAGTCAGCTGTGTGATATTAGCT
-N= 50, L=50
+N= 30, L=50
 sub=0.01, ins=0.00980392, del=0.01
 P(taxon survive)=0.99005
 P(insert|taxon not die)=0.0097078
