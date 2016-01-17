@@ -436,9 +436,9 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 for (int j = 0; j < T2; j ++) 
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++)
-                            gfw += delta[n][i][j][d][m]*(W_2[n][i][j][d][m]-S[n][i][j][d][m]);
-        // cout << "GFW: " << gfw << endl;
-        if (fw_iter > 0 && (gfw < 1e-3)) break;
+                            gfw += delta[n][i][j][d][m]*(S[n][i][j][d][m]-W_2[n][i][j][d][m]);
+        cout << "GFW: " << gfw << endl;
+        if (fw_iter > 0 && (gfw < 1e-4)) break;
 
         // away step
         Tensor5D V (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0))))); 
@@ -450,7 +450,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             for ( auto& x: alpha_lookup) {
                 double val = 0.0;
                 for (int p = 0; p < x.first.size(); p+=5 )
-                    val += delta[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]][x.first[p+4]];
+                    val += -1.0*delta[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]][x.first[p+4]];
                 if (val > max_val) {
                     max_val = val; 
                     V_atom = x.first; 
@@ -511,7 +511,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         }
 
         // 4. output iteration tracking info
-         second_subproblem_log(fw_iter, W_1, W_2, Y, mu);
+         // second_subproblem_log(fw_iter, W_1, W_2, Y, mu);
     }
     return;
     /*}}}*/
