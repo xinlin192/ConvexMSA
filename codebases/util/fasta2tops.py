@@ -1,5 +1,9 @@
 import sys
 
+def usage():
+    usage_info = '''This program convert .fasta file to .tops file, used for ToPS library.
+    python fasta2tops.py [.fasta File] '''
+
 def fasta2tops(allNames, allSeqs):
     nSeqs = len(allSeqs)
     for i in range(nSeqs):
