@@ -178,13 +178,13 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
                     
     int fw_iter = -1;
     // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
-    for (int i = 0; i < T1; i ++) 
-        for (int j = 0; j < T2; j ++) 
+        while (fw_iter < MAX_1st_FW_ITER) {
+        fw_iter ++;
+        for (int i = 0; i < T1; i ++) 
+            for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                 for (int m = 0; m < NUM_MOVEMENT; m ++)
                     M[i][j][d][m] = mu*(W_1[i][j][d][m] - W_2[i][j][d][m]) + Y[i][j][d][m]; 
-    while (fw_iter < MAX_1st_FW_ITER) {
-        fw_iter ++;
         Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         Trace trace (0, Cell(3));
         cube_smith_waterman (S, trace, M, C, data_seq);
@@ -204,7 +204,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
                         denominator += mu * wms * wms;
                     }
         // 3a. early stop condition: neglible denominator
-        if (denominator < 1e-6) break; // early stop
+        if (denominator < 1e-6*T1*T2) break; // early stop
         double gamma = numerator / denominator;
         // initially pre-set to Conv(A)
         if (fw_iter == 0) gamma = 1.0;
@@ -219,11 +219,8 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        M[i][j][d][m] -= mu*W_1[i][j][d][m];
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) 
                         W_1[i][j][d][m] = (1-gamma) * W_1[i][j][d][m] + gamma* S[i][j][d][m];
-                        M[i][j][d][m] += mu*W_1[i][j][d][m];
-                    }
 
         // 5. output iteration tracking info
         // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
