@@ -319,7 +319,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             int sj = trace[t].location[0];
             int sd = trace[t].location[1];
             int sm = dna2T3idx(trace[t].acidB);
-                cout << trace[t].acidB << endl;
+            cout << trace[t].acidB;
             for (int n = 0; n < numSeq; n ++) {
                 int T1 = S[n].size();
                 for (int i = 0; i < T1; i ++) {
