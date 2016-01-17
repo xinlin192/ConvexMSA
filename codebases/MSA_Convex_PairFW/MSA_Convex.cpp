@@ -222,7 +222,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                     gfw += (C[i][j][d][m]+M[i][j][d][m])*(W_1[i][j][d][m]-S[i][j][d][m]);
         // cout << "GFW: " << gfw << endl;
-        if (fw_iter > 0 && (gfw < 1e-2)) break;
+        if (fw_iter > 0 && (gfw < 1e-4)) break;
 
         // find atom V for away direction 
         Tensor4D V (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
