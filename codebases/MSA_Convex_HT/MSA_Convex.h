@@ -29,7 +29,7 @@ int LENGTH_OFFSET = 0;
 double MU = 1.0;
 double PERB_EPS = 0.0;
 bool ADMM_EARLY_STOP_TOGGLE = true;
-bool REINIT_W_ZERO_TOGGLE = false;
+bool REINIT_W_ZERO_TOGGLE = true;
 
 const int NUM_THREADS = 6;
 
