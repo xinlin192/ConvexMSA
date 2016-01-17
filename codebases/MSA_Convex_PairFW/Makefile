@@ -5,7 +5,7 @@ hfiles=$(shell ls *.h)
 exec='MSA_Convex'
 
 all: 
-	$(CC) -O3 MSA_Convex.cpp  -o $(exec)
+	$(CC) -O3 -std=c++0x MSA_Convex.cpp  -o $(exec)
 
 push:
 	git add $(cpps) $(hfiles) Makefile README

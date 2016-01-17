@@ -12,13 +12,13 @@
 using namespace std;
 #include "stdio.h"
 #include "stdlib.h"
+#include <iostream>
+#include <fstream>
 #include <limits>
 #include <vector>
 #include <unordered_map>
 #include <set>
 #include <sstream> 
-#include <iostream>
-#include <fstream>
 #include <cmath>
 
 // #define CUBE_SMITH_WATERMAN_DEBUG
@@ -49,7 +49,7 @@ const int MAX_ADMM_ITER = 10000;
 const double EPS_1st_FW = 1e-2;
 const double EPS_2nd_FW = 1e-2;
 //const double EPS_ADMM_CoZ = 1e-5; 
-const double EPS_Wdiff = 0.05;
+const double EPS_Wdiff = 0.01;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
@@ -393,7 +393,7 @@ void smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
 }
 
 /* 3-d smith waterman algorithm */
-void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, Sequence& data_seq) {
+void cube_smith_waterman (Tensor4D& S, vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor4D& C, Sequence& data_seq) {
     /*{{{*/
     // 1. set up 3-d model
     int T1 = S.size();
@@ -545,10 +545,16 @@ void cube_smith_waterman (Tensor4D& S, Trace& trace, Tensor4D& M, Tensor4D& C, S
         k = tmp_cell.location[2];
         int m = tmp_cell.action;
         // NOTE: k now is the dna of j-1 position
-        if (t == 0) 
+        S_atom.push_back(i);
+        S_atom.push_back(j);
+        if (t == 0) {
             S[i][j][4][m] = 1.0;
-        else
+            S_atom.push_back(4);
+        } else {
             S[i][j][trace[t-1].location[2]][m] = 1.0;
+            S_atom.push_back(trace[t-1].location[2]);
+        }
+        S_atom.push_back(m);
     }
     /*}}}*/
 }
