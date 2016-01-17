@@ -178,7 +178,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
                     
     int fw_iter = -1;
     // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
-        while (fw_iter < MAX_1st_FW_ITER) {
+    while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
@@ -224,7 +224,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
                         W_1[i][j][d][m] = (1-gamma) * W_1[i][j][d][m] + gamma* S[i][j][d][m];
 
         // 5. output iteration tracking info
-        // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+        first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
     }
     return; 
     /*}}}*/
@@ -319,7 +319,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             int sj = trace[t].location[0];
             int sd = trace[t].location[1];
             int sm = dna2T3idx(trace[t].acidB);
-            cout << trace[t].acidB;
+            // cout << trace[t].acidB;
             for (int n = 0; n < numSeq; n ++) {
                 int T1 = S[n].size();
                 for (int i = 0; i < T1; i ++) {
@@ -334,7 +334,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 }
             }
         }
-        cout <<  endl;
+        // cout <<  endl;
 
 #ifdef SECOND_SUBPROBLEM_DEBUG
         cout << "Result of viterbi:" << endl;
