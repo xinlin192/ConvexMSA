@@ -19,11 +19,11 @@
 void usage () { cout << "./MSA_Convex (options) [seq_file]" << endl;
     cout << "seq_file should contain one or more DNA sequence. " << endl;
     cout << "Options: " << endl;
-    cout << "\t-l Set the maximum length of model sequence. (default 0)";
-    cout << "\t-m Set step size (\\mu) for updating the ADMM coordinate variables. (default 0.1)";
-    cout << "\t-p Set maximum pertubation of penalty to break ties. (default 0)";
-    cout << "\t-s Set ADMM early stop toggle: early stop (on) if > 0. (default on)";
-    cout << "\t-r Set whether reinitialize W_1 and W_2 at each ADMM iteration. (default off)";
+    cout << "\t-l Set the maximum length of model sequence. (default 0)" << endl;
+    cout << "\t-m Set step size (\\mu) for updating the ADMM coordinate variables. (default 0.1)"<< endl;
+    cout << "\t-p Set maximum pertubation of penalty to break ties. (default 0)"<< endl;
+    cout << "\t-s Set ADMM early stop toggle: early stop (on) if > 0. (default on)"<< endl;
+    cout << "\t-r Set whether reinitialize W_1 and W_2 at each ADMM iteration. (default off)"<< endl;
 }
 
 void parse_cmd_line (int argn, char** argv) {
