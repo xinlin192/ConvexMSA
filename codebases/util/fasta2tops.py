@@ -19,7 +19,7 @@ def main():
     i = 0
     fp = open(fname)
     for line in fp:
-        if i % 2 == 0: allNames.append(line.strip("\n"))
+        if i % 2 == 0: allNames.append(line.strip(">\n"))
         else: allSequences.append(line.strip("\n"))
         i += 1
     fasta2tops(allNames, allSequences)
