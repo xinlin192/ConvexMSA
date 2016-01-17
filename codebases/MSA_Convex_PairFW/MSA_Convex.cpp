@@ -221,7 +221,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                     gfw += (C[i][j][d][m]+M[i][j][d][m])*(W_1[i][j][d][m]-S[i][j][d][m]);
-        cout << "GFW: " << gfw << endl;
+        // cout << "GFW: " << gfw << endl;
         if (fw_iter > 0 && (gfw < 1e-2)) break;
 
         // find atom V for away direction 
@@ -241,7 +241,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
                 }
             }
         }
-        cout << "alpha_v_atom: " << alpha_lookup[V_atom] << endl;
+       //  cout << "alpha_v_atom: " << alpha_lookup[V_atom] << endl;
         for (int p = 0; p < V_atom.size(); p+=4 ) 
             V[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]] = 1.0;
 
@@ -281,20 +281,20 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         if (alpha_lookup.size() == 0) {
             pair<vector<int>,double> new_item(S_atom, 1.0);
             alpha_lookup.insert(new_item);
-            cout << "gamma = " << gamma << ", init_insert. " << endl;
+           // cout << "gamma = " << gamma << ", init_insert. " << endl;
         } else {
             alpha_lookup[S_atom] += gamma;
             if (alpha_lookup[V_atom] - gamma < 1e-5) alpha_lookup.erase(V_atom);
             else alpha_lookup[V_atom] -= gamma;
-            cout << "gamma = " << gamma << ", update " << endl;
+            // cout << "gamma = " << gamma << ", update " << endl;
         }
 
-        cout << "alpha_look: ";
-        for ( auto& x: alpha_lookup) cout << x.second << ",";
-        cout << endl;
+        // cout << "alpha_look: ";
+        // for ( auto& x: alpha_lookup) cout << x.second << ",";
+        //cout << endl;
 
         // 5. output iteration tracking info
-        first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+        // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
     }
     return; 
     /*}}}*/
