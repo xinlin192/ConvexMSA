@@ -195,16 +195,19 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
 #ifdef PARRALLEL_COMPUTING
         //#pragma omp parallel for
 #endif
+        double wms_square_max = -1;
         for (int i = 0; i < T1; i ++) 
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
                         double wms = W_1[i][j][d][m] - S[i][j][d][m];
                         numerator += (C[i][j][d][m] + Y[i][j][d][m] + mu*W_1[i][j][d][m] - mu*W_2[i][j][d][m]) * wms;
-                        denominator += mu * wms * wms;
+                        double wms_square = wms * wms;
+                        wms_square_max = max(wms_max, wms_square);
+                        denominator += mu * wms_square;
                     }
         // 3a. early stop condition: neglible denominator
-        if (denominator < 1e-6*T1*T2) break; // early stop
+        if (wms_square_max < 1e-6) break; // early stop
         double gamma = numerator / denominator;
         // initially pre-set to Conv(A)
         if (fw_iter == 0) gamma = 1.0;
