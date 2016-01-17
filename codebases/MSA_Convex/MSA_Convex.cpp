@@ -371,7 +371,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             break;
         }
         double gamma = numerator / denominator;
-        // if (fw_iter == 0) gamma = 1.0;
+        if (fw_iter == 0) gamma = 1.0;
         gamma = max(gamma, 0.0);
         gamma = min(gamma, 1.0);
         // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
