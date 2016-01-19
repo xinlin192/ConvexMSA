@@ -173,7 +173,7 @@ double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        double sterm =  (W[n][i][j][d][m] - Z[n][i][j][d][m] + 1.0/mu*Y[n][i][j][d][m]);
+                        double sterm =  (W[n][i][j][d][m] - Z[n][i][j][d][m] - 1.0/mu*Y[n][i][j][d][m]);
                         qua_term += 0.5*mu *sterm * sterm;
                     }
     }
@@ -382,8 +382,8 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
         refined_viterbi_algo (trace, tensor, mat_insertion);
         Tensor5D S (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0))))); 
-        vector<int> S_atom;
         tensor5D_init (S, allSeqs, lenSeqs, T2);
+        vector<int> S_atom;
 
         // 3. recover values for S 
         // 3b. set a number of selected elements to 1
@@ -397,15 +397,15 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 for (int i = 0; i < T1; i ++) {
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         if (delta[n][i][sj][sd][m] > 0.0) { 
-                            bool addtoatom = false;
-                            if (m == DEL_BASE_IDX + sm or m == MTH_BASE_IDX + sm) {
+                            if (m == DEL_BASE_IDX + sm || m == MTH_BASE_IDX + sm) {
                                 S[n][i][sj][sd][m] = 1.0;
-                                addtoatom = true;
-                            } else if (m == INSERTION and trace[t].action == INSERTION) {
+                                S_atom.push_back(n);
+                                S_atom.push_back(i);
+                                S_atom.push_back(sj);
+                                S_atom.push_back(sd);
+                                S_atom.push_back(m);
+                            } else if (m == INSERTION && trace[t].action == INSERTION) {
                                 S[n][i][sj][sd][m] = 1.0;
-                                addtoatom = true;
-                            }
-                            if (addtoatom) {
                                 S_atom.push_back(n);
                                 S_atom.push_back(i);
                                 S_atom.push_back(sj);
@@ -437,7 +437,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++)
                             gfw += delta[n][i][j][d][m]*(S[n][i][j][d][m]-W_2[n][i][j][d][m]);
-        cout << "GFW: " << gfw << endl;
+        // cout << "GFW: " << gfw;
         if (fw_iter > 0 && (gfw < 1e-4)) break;
 
         // away step
@@ -450,7 +450,8 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             for ( auto& x: alpha_lookup) {
                 double val = 0.0;
                 for (int p = 0; p < x.first.size(); p+=5 )
-                    val += -1.0*delta[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]][x.first[p+4]];
+                    val += delta[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]][x.first[p+4]];
+                cout << "val: " << val << endl;
                 if (val > max_val) {
                     max_val = val; 
                     V_atom = x.first; 
@@ -502,16 +503,16 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         if (alpha_lookup.size() == 0) {
             pair<vector<int>,double> new_item(S_atom, 1.0);
             alpha_lookup.insert(new_item);
-            cout << "gamma = " << gamma << ", init_insert. " << endl;
+            cout << ", gamma = " << gamma << ", init_insert. " << endl;
         } else {
             alpha_lookup[S_atom] += gamma;
             if (alpha_lookup[V_atom] - gamma < 1e-5) alpha_lookup.erase(V_atom);
             else alpha_lookup[V_atom] -= gamma;
-             cout << "gamma = " << gamma << ", update " << endl;
+             cout << ", gamma = " << gamma << ", update " << endl;
         }
 
         // 4. output iteration tracking info
-         // second_subproblem_log(fw_iter, W_1, W_2, Y, mu);
+         second_subproblem_log(fw_iter, W_2, W_1, Y, mu);
     }
     return;
     /*}}}*/
