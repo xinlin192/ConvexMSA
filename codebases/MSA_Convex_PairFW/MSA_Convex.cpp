@@ -263,7 +263,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         if (denominator < 1e-6) break; // early stop
         double gamma = numerator / denominator;
         // initially pre-set to Conv(A)
-        if (fw_iter == 0) gamma = 1.0;
+        if ((REINIT_W_ZERO_TOGGLE && fw_iter == 0)) gamma = 1.0;
         // Gamma should be bounded by [0,1]
         gamma = max(gamma, 0.0);
         gamma = min(gamma, gamma_max);
@@ -272,11 +272,10 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
         // 4. update W_1
-        for (int i = 0; i < T1; i ++) 
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++) 
-                        W_1[i][j][d][m] =  W_1[i][j][d][m] + gamma*S[i][j][d][m] - gamma*V[i][j][d][m];
+        for (int p = 0; p < S_atom.size(); p+=4 ) 
+            W_1[S_atom[p]][S_atom[p+1]][S_atom[p+2]][S_atom[p+3]] += gamma;
+        for (int p = 0; p < V_atom.size(); p+=4 ) 
+            W_1[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]] -= gamma;
 
         if (alpha_lookup.size() == 0) {
             pair<vector<int>,double> new_item(S_atom, 1.0);
@@ -437,8 +436,11 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++)
                             gfw += delta[n][i][j][d][m]*(S[n][i][j][d][m]-W_2[n][i][j][d][m]);
-        // cout << "GFW: " << gfw;
-        if (fw_iter > 0 && (gfw < 1e-4)) break;
+        cout << "GFW: " << gfw << endl;
+        if (fw_iter > 0 && (gfw < 1e-4)) {
+            cout << "break; " << endl;
+            break;
+        }
 
         // away step
         Tensor5D V (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0))))); 
@@ -446,14 +448,14 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         vector<int> V_atom;
         double gamma_max = 1.0;
         if (alpha_lookup.size() > 0) {
-            double max_val = -1;
+            double min_val = 1e99;
             for ( auto& x: alpha_lookup) {
                 double val = 0.0;
                 for (int p = 0; p < x.first.size(); p+=5 )
                     val += delta[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]][x.first[p+4]];
-                // cout << "val: " << val << endl;
-                if (val > max_val) {
-                    max_val = val; 
+                cout << "val: " << val << endl;
+                if (val < min_val) {
+                    min_val = val; 
                     V_atom = x.first; 
                     gamma_max = x.second;
                 }
@@ -485,13 +487,14 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             break;
         }
         double gamma = numerator / denominator;
-        if (fw_iter == 0) gamma = 1.0;
+        if ((REINIT_W_ZERO_TOGGLE && fw_iter == 0)) gamma = 1.0;
         gamma = max(gamma, 0.0);
         gamma = min(gamma, gamma_max);
         if (fabs(gamma) < EPS_2nd_FW) break; 
         // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
         // 3. update W
+        /*
         for (int n = 0; n < numSeq; n ++) {
             int T1 = S[n].size();
             for (int i = 0; i < T1; i ++) 
@@ -500,13 +503,18 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                         for (int m = 0; m < NUM_MOVEMENT; m ++)
                             W_2[n][i][j][d][m] += gamma* S[n][i][j][d][m] - gamma*V[n][i][j][d][m];
         }
+        */
+        for (int p = 0; p < S_atom.size(); p+=5 ) 
+            W_2[S_atom[p]][S_atom[p+1]][S_atom[p+2]][S_atom[p+3]][S_atom[p+4]] += gamma;
+        for (int p = 0; p < V_atom.size(); p+=5 ) 
+            W_2[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]][V_atom[p+4]] -= gamma;
         if (alpha_lookup.size() == 0) {
             pair<vector<int>,double> new_item(S_atom, 1.0);
             alpha_lookup.insert(new_item);
             // cout << ", gamma = " << gamma << ", init_insert. " << endl;
         } else {
             alpha_lookup[S_atom] += gamma;
-            if (alpha_lookup[V_atom] - gamma < 1e-5) alpha_lookup.erase(V_atom);
+            if (alpha_lookup[V_atom] - gamma < 1e-3) alpha_lookup.erase(V_atom);
             else alpha_lookup[V_atom] -= gamma;
             //  cout << ", gamma = " << gamma << ", update " << endl;
         }
