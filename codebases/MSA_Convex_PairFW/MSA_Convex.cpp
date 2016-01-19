@@ -385,8 +385,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         // 2. determine the trace: run viterbi algorithm
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
         refined_viterbi_algo (trace, tensor, mat_insertion);
-        Tensor5D S (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0))))); 
-        tensor5D_init (S, allSeqs, lenSeqs, T2);
         vector<int> S_atom;
 
         // 3. recover values for S 
@@ -396,19 +394,13 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             int sd = trace[t].location[1];
             int sm = dna2T3idx(trace[t].acidB);
             // cout << trace[t].acidB;
-            for (int n = 0; n < numSeq; n ++) {
-                int T1 = S[n].size();
-                for (int i = 0; i < T1; i ++) {
+            for (int n = 0; n < numSeq; n ++) 
+                for (int i = 0; i < delta[n].size(); i ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         if (delta[n][i][sj][sd][m] > 0.0) { 
                             bool added = false;
-                            if (m == DEL_BASE_IDX + sm || m == MTH_BASE_IDX + sm) {
-                                S[n][i][sj][sd][m] = 1.0;
-                                added = true;
-                            } else if (m == INSERTION && trace[t].action == INSERTION) {
-                                S[n][i][sj][sd][m] = 1.0;
-                                added = true;
-                            }
+                            if (m == DEL_BASE_IDX + sm || m == MTH_BASE_IDX + sm) added = true;
+                            else if (m == INSERTION && trace[t].action == INSERTION) added = true;
                             if (added) {
                                 S_atom.push_back(n);
                                 S_atom.push_back(i);
@@ -417,39 +409,28 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                                 S_atom.push_back(m);
                             }
                         }
-                }
-            }
         }
         // cout <<  endl;
 
-#ifdef SECOND_SUBPROBLEM_DEBUG
-        cout << "Result of viterbi:" << endl;
-        for (int t = 0; t < trace.size(); t++) 
-            cout << "(" <<  trace[t].location[0] << ", " << trace[t].acidA << ", "<< trace[t].acidB << ")=" << trace[t].score << endl;
-        double S_s = 0.0;
-        for (int n = 0; n < numSeq; n ++) 
-            S_s += tensor4D_frob_prod (S[n], S[n]);
-        cout << "S_s: " << S_s << endl;
-        for (int n = 0; n < numSeq; n ++) 
-            tensor4D_dump(S[n]);
-#endif
         // early stopping
         double gfw = 0.0;
-        for (int n = 0; n < numSeq; n++ ) 
-            for (int i = 0; i < W_2[n].size(); i ++) 
-                for (int j = 0; j < T2; j ++) 
-                    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                        for (int m = 0; m < NUM_MOVEMENT; m ++)
-                            gfw += delta[n][i][j][d][m]*(S[n][i][j][d][m]-W_2[n][i][j][d][m]);
-        cout << "GFW: " << gfw << endl;
+        for (int p = 0; p < S_atom.size(); p+=5 ) {
+            int n = S_atom[p], i = S_atom[p+1], j = S_atom[p+2], d = S_atom[p+3], m = S_atom[p+4];
+            gfw += delta[n][i][j][d][m];
+        }
+        for ( auto& x: alpha_lookup) {
+            for (int p = 0; p < x.first.size(); p+=5 ) {
+                int n = x.first[p], i = x.first[p+1], j = x.first[p+2], d = x.first[p+3], m = x.first[p+4];
+                gfw -= delta[n][i][j][d][m] * x.second;
+            }
+        }
+        // cout << "GFW: " << gfw << endl;
         if (fw_iter > 0 && (gfw < 1e-4)) {
             cout << "break; " << endl;
             break;
         }
 
         // away step
-        Tensor5D V (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0))))); 
-        tensor5D_init (V, allSeqs, lenSeqs, T2);
         vector<int> V_atom;
         double gamma_max = 1.0;
         if (alpha_lookup.size() > 0) {
@@ -466,23 +447,26 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 }
             }
         }
-        for (int p = 0; p < V_atom.size(); p+=5 ) 
-            V[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]][V_atom[p+4]] = 1.0;
 
         // 4. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( W_1 - W_2 + 1/mu*Y ) dot (S - V) ] / || S-V ||^2
         //           ---------------combo------------------
         double numerator = 0.0, denominator = 0.0;
-        for (int n = 0; n < numSeq; n ++) {
-            int T1 = S[n].size();
-            for (int i = 0; i < T1; i ++) 
-                for (int j = 0; j < T2; j ++) 
-                    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                        for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                            double smv = S[n][i][j][d][m] - V[n][i][j][d][m];
-                            numerator += ((1.0/mu)*Y[n][i][j][d][m] + W_1[n][i][j][d][m] - W_2[n][i][j][d][m]) * smv;
-                            denominator += mu * smv * smv;
-                        }
+        unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > smv_lookup;
+        for (int p = 0; p < S_atom.size(); p+=5 ) {
+            int n = S_atom[p], i = S_atom[p+1], j = S_atom[p+2], d = S_atom[p+3], m = S_atom[p+4];
+            numerator += (1.0/mu)*Y[n][i][j][d][m] + W_1[n][i][j][d][m] - W_2[n][i][j][d][m];
+            vector<int> state (S_atom.begin()+p, S_atom.begin()+p+5);
+            pair<vector<int>, double> state_pair (state, 1.0);
+            smv_lookup.insert(state_pair); 
+            denominator += mu;
+        }
+        for (int p = 0; p < V_atom.size(); p+=5 ) {
+            int n = V_atom[p], i = V_atom[p+1], j = V_atom[p+2], d = V_atom[p+3], m = V_atom[p+4];
+            numerator -= (1.0/mu)*Y[n][i][j][d][m] + W_1[n][i][j][d][m] - W_2[n][i][j][d][m];
+            vector<int> state (V_atom.begin()+p, V_atom.begin()+p+5);
+            if (smv_lookup.find(state) == smv_lookup.end()) denominator += mu;
+            else denominator -= mu;
         }
 #ifdef SECOND_SUBPROBLEM_DEBUG
         cout << "numerator: " << numerator << ", denominator: " << denominator << endl;
