@@ -48,7 +48,7 @@ const int MAX_ADMM_ITER = 10000;
 const double EPS_1st_FW = 1e-4;
 const double EPS_2nd_FW = 1e-4;
 //const double EPS_ADMM_CoZ = 1e-5; 
-const double EPS_Wdiff = 0.01;
+const double EPS_Wdiff = 0.001;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
