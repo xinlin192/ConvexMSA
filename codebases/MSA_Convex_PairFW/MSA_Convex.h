@@ -393,12 +393,12 @@ void smith_waterman (Sequence seqA, Sequence seqB, Plane& plane, Trace& trace) {
 }
 
 /* 3-d smith waterman algorithm */
-void cube_smith_waterman (Tensor4D& S, vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor4D& C, Sequence& data_seq) {
+void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor4D& C, Sequence& data_seq) {
     /*{{{*/
     // 1. set up 3-d model
-    int T1 = S.size();
-    int T2 = S[0].size();
-    int T3 = S[0][0].size();
+    int T1 = C.size();
+    int T2 = C[0].size();
+    int T3 = C[0][0].size();
     // cout << T1 << T2 << T3 << endl;
     Cube cube (T1, Plane (T2, Trace (T3, Cell(3))));
     // 2. fill in the tensor
@@ -548,10 +548,8 @@ void cube_smith_waterman (Tensor4D& S, vector<int>& S_atom, Trace& trace, Tensor
         S_atom.push_back(i);
         S_atom.push_back(j);
         if (t == 0) {
-            S[i][j][4][m] = 1.0;
             S_atom.push_back(4);
         } else {
-            S[i][j][trace[t-1].location[2]][m] = 1.0;
             S_atom.push_back(trace[t-1].location[2]);
         }
         S_atom.push_back(m);

@@ -194,7 +194,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
     int T2 = W_1[0].size();
     Tensor4D M (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
     // reinitialize to all-zero matrix
-    for (int i = 0; i < T1 and REINIT_W_ZERO_TOGGLE; i ++) 
+    for (int i = 0; i < T1; i ++) 
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                 for (int m = 0; m < NUM_MOVEMENT; m ++) {
@@ -208,29 +208,34 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
     while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
         // find atom S for FW direction 
-        Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         vector<int> S_atom;
         Trace trace (0, Cell(3));
-        cube_smith_waterman (S, S_atom, trace, M, C, data_seq);
+        cube_smith_waterman (S_atom, trace, M, C, data_seq);
         double gfw = 0.0;
-        for (int i = 0; i < T1; i ++) 
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        gfw += (C[i][j][d][m]+M[i][j][d][m])*(W_1[i][j][d][m]-S[i][j][d][m]);
+        for ( auto& x: alpha_lookup) {
+            for (int p = 0; p < x.first.size(); p+=4 ) {
+                int i = x.first[p], j = x.first[p+1], d = x.first[p+2], m = x.first[p+3];
+                gfw += (C[i][j][d][m]+M[i][j][d][m]) * x.second;
+            }
+        }
+        for (int p = 0; p < S_atom.size(); p+=4 ) {
+            int i = S_atom[p], j = S_atom[p+1], d = S_atom[p+2], m = S_atom[p+3];
+            gfw -= C[i][j][d][m]+M[i][j][d][m];
+        }
         // cout << "GFW: " << gfw << endl;
         if (fw_iter > 0 && (gfw < 1e-4)) break;
 
         // find atom V for away direction 
-        Tensor4D V (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         vector<int> V_atom;
         double gamma_max = 1.0;
         if (alpha_lookup.size() > 0) {
             double max_val = -1e99;
             for ( auto& x: alpha_lookup) {
                 double val = 0.0;
-                for (int p = 0; p < x.first.size(); p+=4 )
-                    val += C[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]]+M[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]];
+                for (int p = 0; p < x.first.size(); p+=4 ) {
+                    int i = x.first[p], j = x.first[p+1], d = x.first[p+2], m = x.first[p+3];
+                    val += C[i][j][d][m] + M[i][j][d][m];
+                }
                 if (val > max_val) {
                     max_val = val; 
                     V_atom = x.first; 
@@ -239,23 +244,26 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             }
         }
        //  cout << "alpha_v_atom: " << alpha_lookup[V_atom] << endl;
-        for (int p = 0; p < V_atom.size(); p+=4 ) 
-            V[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]] = 1.0;
 
         // 2. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( mu*W_1 - mu*W_1 - Y - C ) dot (S-V) ] / (mu* || S-V ||^2)
         double numerator = 0.0, denominator = 0.0;
-#ifdef PARRALLEL_COMPUTING
-        //#pragma omp parallel for
-#endif
-        for (int i = 0; i < T1; i ++) 
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        double smv = S[i][j][d][m] - V[i][j][d][m];
-                        numerator += (mu*(W_2[i][j][d][m] - W_1[i][j][d][m])- C[i][j][d][m] - Y[i][j][d][m]) * smv;
-                        denominator += mu * smv * smv;
-                    }
+        unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > smv_lookup;
+        for (int p = 0; p < S_atom.size(); p+=4 ) {
+            int i = S_atom[p], j = S_atom[p+1], d = S_atom[p+2], m = S_atom[p+3];
+            numerator += (mu*(W_2[i][j][d][m] - W_1[i][j][d][m])- C[i][j][d][m] - Y[i][j][d][m]);
+            vector<int> state (S_atom.begin()+p, S_atom.begin()+p+4);
+            pair<vector<int>, double> state_pair (state, 1.0);
+            smv_lookup.insert(state_pair); 
+            denominator += mu;
+        }
+        for (int p = 0; p < V_atom.size(); p+=4 ) {
+            int i = V_atom[p], j = V_atom[p+1], d = V_atom[p+2], m = V_atom[p+3];
+            numerator -= (mu*(W_2[i][j][d][m] - W_1[i][j][d][m])- C[i][j][d][m] - Y[i][j][d][m]);
+            vector<int> state (V_atom.begin()+p, V_atom.begin()+p+4);
+            if (smv_lookup.find(state) == smv_lookup.end()) denominator += mu;
+            else denominator -= mu;
+        }
         // 3a. early stop condition: neglible denominator
         if (denominator < 1e-6) break; // early stop
         double gamma = numerator / denominator;
@@ -267,12 +275,14 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
 
         // 4. update W_1
         for (int p = 0; p < S_atom.size(); p+=4 ) {
-            W_1[S_atom[p]][S_atom[p+1]][S_atom[p+2]][S_atom[p+3]] += gamma;
-            M[S_atom[p]][S_atom[p+1]][S_atom[p+2]][S_atom[p+3]] += mu * gamma;
+            int i = S_atom[p], j = S_atom[p+1], d = S_atom[p+2], m = S_atom[p+3];
+            W_1[i][j][d][m] += gamma;
+            M[i][j][d][m] += mu * gamma;
         }
         for (int p = 0; p < V_atom.size(); p+=4 ) {
-            W_1[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]] -= gamma;
-            M[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]] -= mu * gamma;
+            int i = V_atom[p], j = V_atom[p+1], d = V_atom[p+2], m = V_atom[p+3];
+            W_1[i][j][d][m] -= gamma;
+            M[i][j][d][m] -= mu * gamma;
         }
 
         if (alpha_lookup.size() == 0) {
