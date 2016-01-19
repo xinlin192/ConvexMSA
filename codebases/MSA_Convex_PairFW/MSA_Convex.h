@@ -193,6 +193,16 @@ char T3idx2dna (int idx) {
     }
     return -1;
 }
+int move2T3idx (int m) {
+    if (m == 0) return -1;
+    else if (m == DELETION_A || m == MATCH_A) return 0;
+    else if (m == DELETION_T || m == MATCH_T) return 1;
+    else if (m == DELETION_C || m == MATCH_C) return 2;
+    else if (m == DELETION_G || m == MATCH_G) return 3;
+    else if (m == DELETION_START || m == MATCH_START) return 4;
+    else if (m == DELETION_END || m == MATCH_END) return 5;
+    else return -2;
+}
 /*}}}*/
 
 // C is the tensor specifying the penalties 

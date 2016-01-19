@@ -340,26 +340,10 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 for (int j = 0; j < T2; j ++) 
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++) {
-#ifdef SECOND_SUBPROBLEM_DEBUG
-                            if (delta[n][i][j][d][m] > 0)
-                                cout <<"delta: " << n << "," << i << "," << j << "," << d  << "," << m << ": "
-                                    << delta[n][i][j][d][m] << endl;
-#endif
-                            if (m == DELETION_A or m == MATCH_A)
-                                tensor[j][d][dna2T3idx('A')] += max(0.0, delta[n][i][j][d][m]);
-                            else if (m == DELETION_T or m == MATCH_T)
-                                tensor[j][d][dna2T3idx('T')] += max(0.0, delta[n][i][j][d][m]);
-                            else if (m == DELETION_C or m == MATCH_C)
-                                tensor[j][d][dna2T3idx('C')] += max(0.0, delta[n][i][j][d][m]);
-                            else if (m == DELETION_G or m == MATCH_G)
-                                tensor[j][d][dna2T3idx('G')] += max(0.0, delta[n][i][j][d][m]);
-                            else if (m == DELETION_START or m == MATCH_START)
-                                tensor[j][d][dna2T3idx('*')] += max(0.0, delta[n][i][j][d][m]);
-                            else if (m == DELETION_END or m == MATCH_END)
-                                tensor[j][d][dna2T3idx('#')] += max(0.0, delta[n][i][j][d][m]);
-                            else if (m == INSERTION) {
+                            if (m == INSERTION) 
                                 mat_insertion[j][d] += max(0.0, delta[n][i][j][d][m]);
-                            }
+                            else
+                                tensor[j][d][move2T3idx(m)] += max(0.0, delta[n][i][j][d][m]);
                         }
             }
         }
