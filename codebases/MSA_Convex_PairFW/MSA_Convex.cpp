@@ -451,7 +451,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 double val = 0.0;
                 for (int p = 0; p < x.first.size(); p+=5 )
                     val += delta[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]][x.first[p+4]];
-                cout << "val: " << val << endl;
+                // cout << "val: " << val << endl;
                 if (val > max_val) {
                     max_val = val; 
                     V_atom = x.first; 
@@ -503,12 +503,12 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         if (alpha_lookup.size() == 0) {
             pair<vector<int>,double> new_item(S_atom, 1.0);
             alpha_lookup.insert(new_item);
-            cout << ", gamma = " << gamma << ", init_insert. " << endl;
+            // cout << ", gamma = " << gamma << ", init_insert. " << endl;
         } else {
             alpha_lookup[S_atom] += gamma;
             if (alpha_lookup[V_atom] - gamma < 1e-5) alpha_lookup.erase(V_atom);
             else alpha_lookup[V_atom] -= gamma;
-             cout << ", gamma = " << gamma << ", update " << endl;
+            //  cout << ", gamma = " << gamma << ", update " << endl;
         }
 
         // 4. output iteration tracking info
