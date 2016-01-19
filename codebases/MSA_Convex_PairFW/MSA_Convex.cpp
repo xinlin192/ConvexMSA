@@ -197,19 +197,16 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
     for (int i = 0; i < T1 and REINIT_W_ZERO_TOGGLE; i ++) 
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                for (int m = 0; m < NUM_MOVEMENT; m ++)
+                for (int m = 0; m < NUM_MOVEMENT; m ++) {
                     W_1[i][j][d][m] = 0.0;
+                    M[i][j][d][m] = Y[i][j][d][m] - mu* W_2[i][j][d][m]; 
+                }
 
     int fw_iter = -1;
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
     // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
     while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
-        for (int i = 0; i < T1; i ++) 
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++)
-                        M[i][j][d][m] = mu*(W_1[i][j][d][m] - W_2[i][j][d][m]) + Y[i][j][d][m]; 
         // find atom S for FW direction 
         Tensor4D S (T1, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0)))); 
         vector<int> S_atom;
@@ -220,7 +217,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             for (int j = 0; j < T2; j ++) 
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
-                    gfw += (C[i][j][d][m]+M[i][j][d][m])*(W_1[i][j][d][m]-S[i][j][d][m]);
+                        gfw += (C[i][j][d][m]+M[i][j][d][m])*(W_1[i][j][d][m]-S[i][j][d][m]);
         // cout << "GFW: " << gfw << endl;
         if (fw_iter > 0 && (gfw < 1e-4)) break;
 
@@ -229,11 +226,11 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         vector<int> V_atom;
         double gamma_max = 1.0;
         if (alpha_lookup.size() > 0) {
-            double max_val = -1;
+            double max_val = -1e99;
             for ( auto& x: alpha_lookup) {
                 double val = 0.0;
                 for (int p = 0; p < x.first.size(); p+=4 )
-                    val += M[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]];
+                    val += C[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]]+M[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]];
                 if (val > max_val) {
                     max_val = val; 
                     V_atom = x.first; 
@@ -246,7 +243,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             V[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]] = 1.0;
 
         // 2. Exact Line search: determine the optimal step size \gamma
-        // gamma = [ ( mu*W_1 - mu*W_1 - A - C ) dot (S-V) ] / (mu* || S-V ||^2)
+        // gamma = [ ( mu*W_1 - mu*W_1 - Y - C ) dot (S-V) ] / (mu* || S-V ||^2)
         double numerator = 0.0, denominator = 0.0;
 #ifdef PARRALLEL_COMPUTING
         //#pragma omp parallel for
@@ -262,20 +259,21 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         // 3a. early stop condition: neglible denominator
         if (denominator < 1e-6) break; // early stop
         double gamma = numerator / denominator;
-        // initially pre-set to Conv(A)
-        if ((REINIT_W_ZERO_TOGGLE && fw_iter == 0)) gamma = 1.0;
-        // Gamma should be bounded by [0,1]
-        gamma = max(gamma, 0.0);
-        gamma = min(gamma, gamma_max);
+        if ((REINIT_W_ZERO_TOGGLE && fw_iter == 0)) gamma = 1.0; // initially pre-set to Conv(A)
+        gamma = min(max(gamma, 0.0), gamma_max); // Gamma should be bounded by [0,1]
         // 3b. early stop condition: neglible gamma
-        if (fabs(gamma) < EPS_1st_FW) break;  // early stop condition
+        if (fabs(gamma) < EPS_1st_FW) break;  
         // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
         // 4. update W_1
-        for (int p = 0; p < S_atom.size(); p+=4 ) 
+        for (int p = 0; p < S_atom.size(); p+=4 ) {
             W_1[S_atom[p]][S_atom[p+1]][S_atom[p+2]][S_atom[p+3]] += gamma;
-        for (int p = 0; p < V_atom.size(); p+=4 ) 
+            M[S_atom[p]][S_atom[p+1]][S_atom[p+2]][S_atom[p+3]] += mu * gamma;
+        }
+        for (int p = 0; p < V_atom.size(); p+=4 ) {
             W_1[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]] -= gamma;
+            M[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]] -= mu * gamma;
+        }
 
         if (alpha_lookup.size() == 0) {
             pair<vector<int>,double> new_item(S_atom, 1.0);
@@ -291,7 +289,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         // cout << "alpha_look: ";
         // for ( auto& x: alpha_lookup) cout << x.second << ",";
         //cout << endl;
-
+        
         // 5. output iteration tracking info
         // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
     }
@@ -304,22 +302,20 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
     /*{{{*/
     int numSeq = allSeqs.size();
     int T2 = W_2[0][0].size();
-    // reinitialize W_2 to all-zero matrix
-    for (int n = 0; REINIT_W_ZERO_TOGGLE and n < numSeq; n ++) {
-        int T1 = W_2[n].size();
-        for (int i = 0; i < T1; i ++)  
-            for (int j = 0; j < T2; j ++) 
-                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                    for (int m = 0; m < NUM_MOVEMENT; m ++) 
-                        W_2[n][i][j][d][m] = 0.0;
-    }
-
+    // initialization
     vector<Tensor4D> delta (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
                         vector<double>(NUM_MOVEMENT, 0.0)))));  
     tensor5D_init (delta, allSeqs, lenSeqs, T2);
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
     Matrix mat_insertion (T2, vector<double>(NUM_DNA_TYPE, 0.0));
-
+    for (int n = 0;  n < numSeq; n ++) 
+        for (int i = 0; i < W_2[n].size(); i ++)  
+            for (int j = 0; j < T2; j ++) 
+                for (int d = 0; d < NUM_DNA_TYPE; d ++) 
+                    for (int m = 0; m < NUM_MOVEMENT; m ++) {
+                        W_2[n][i][j][d][m] = 0.0;
+                        delta[n][i][j][d][m] = mu * W_1[n][i][j][d][m] + Y[n][i][j][d][m];
+                    }
     int fw_iter = -1;
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
     while (fw_iter < MAX_2nd_FW_ITER) {
@@ -334,7 +330,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 for (int j = 0; j < T2; j ++) 
                     for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                         for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                            delta[n][i][j][d][m] = -1.0* mu * (W_2[n][i][j][d][m] - W_1[n][i][j][d][m]) + Y[n][i][j][d][m];
 #ifdef SECOND_SUBPROBLEM_DEBUG
                             if (delta[n][i][j][d][m] > 0)
                                 cout <<"delta: " << n << "," << i << "," << j << "," << d  << "," << m << ": "
@@ -396,15 +391,15 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 for (int i = 0; i < T1; i ++) {
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         if (delta[n][i][sj][sd][m] > 0.0) { 
+                            bool added = false;
                             if (m == DEL_BASE_IDX + sm || m == MTH_BASE_IDX + sm) {
                                 S[n][i][sj][sd][m] = 1.0;
-                                S_atom.push_back(n);
-                                S_atom.push_back(i);
-                                S_atom.push_back(sj);
-                                S_atom.push_back(sd);
-                                S_atom.push_back(m);
+                                added = true;
                             } else if (m == INSERTION && trace[t].action == INSERTION) {
                                 S[n][i][sj][sd][m] = 1.0;
+                                added = true;
+                            }
+                            if (added) {
                                 S_atom.push_back(n);
                                 S_atom.push_back(i);
                                 S_atom.push_back(sj);
@@ -453,7 +448,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 double val = 0.0;
                 for (int p = 0; p < x.first.size(); p+=5 )
                     val += delta[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]][x.first[p+4]];
-                cout << "val: " << val << endl;
+                // cout << "val: " << val << endl;
                 if (val < min_val) {
                     min_val = val; 
                     V_atom = x.first; 
@@ -488,26 +483,39 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         }
         double gamma = numerator / denominator;
         if ((REINIT_W_ZERO_TOGGLE && fw_iter == 0)) gamma = 1.0;
-        gamma = max(gamma, 0.0);
-        gamma = min(gamma, gamma_max);
+        gamma = min(max(gamma, 0.0), gamma_max);
         if (fabs(gamma) < EPS_2nd_FW) break; 
         // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
-        // 3. update W
-        /*
-        for (int n = 0; n < numSeq; n ++) {
-            int T1 = S[n].size();
-            for (int i = 0; i < T1; i ++) 
-                for (int j = 0; j < T2; j ++) 
-                    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                        for (int m = 0; m < NUM_MOVEMENT; m ++)
-                            W_2[n][i][j][d][m] += gamma* S[n][i][j][d][m] - gamma*V[n][i][j][d][m];
+        // 3. update W_2
+        // delta[n][i][j][d][m] = -1.0* mu * (W_2[n][i][j][d][m] - W_1[n][i][j][d][m]) + Y[n][i][j][d][m];
+        for (int p = 0; p < S_atom.size(); p+=5 ) {
+            int n = S_atom[p], i = S_atom[p+1], j = S_atom[p+2], d = S_atom[p+3], m = S_atom[p+4];
+            W_2[n][i][j][d][m] += gamma;
+            delta[n][i][j][d][m] -= mu * gamma;
+            /*
+            if (m == DELETION_A or m == MATCH_A)
+                tensor[j][d][dna2T3idx('A')] += max(0.0, val);
+            else if (m == DELETION_T or m == MATCH_T)
+                tensor[j][d][dna2T3idx('T')] += max(0.0, val);
+            else if (m == DELETION_C or m == MATCH_C)
+                tensor[j][d][dna2T3idx('C')] += max(0.0, val);
+            else if (m == DELETION_G or m == MATCH_G)
+                tensor[j][d][dna2T3idx('G')] += max(0.0, val);
+            else if (m == DELETION_START or m == MATCH_START)
+                tensor[j][d][dna2T3idx('*')] += max(0.0, val);
+            else if (m == DELETION_END or m == MATCH_END)
+                tensor[j][d][dna2T3idx('#')] += max(0.0, val);
+            else if (m == INSERTION) {
+                mat_insertion[j][d] += max(0.0, val);
+                */
         }
-        */
-        for (int p = 0; p < S_atom.size(); p+=5 ) 
-            W_2[S_atom[p]][S_atom[p+1]][S_atom[p+2]][S_atom[p+3]][S_atom[p+4]] += gamma;
-        for (int p = 0; p < V_atom.size(); p+=5 ) 
-            W_2[V_atom[p]][V_atom[p+1]][V_atom[p+2]][V_atom[p+3]][V_atom[p+4]] -= gamma;
+        for (int p = 0; p < V_atom.size(); p+=5 ) {
+            int n = V_atom[p], i = V_atom[p+1], j = V_atom[p+2], d = V_atom[p+3], m = V_atom[p+4];
+            W_2[n][i][j][d][m] -= gamma; 
+            double val = mu *gamma; delta[n][i][j][d][m] += val;
+        }
+
         if (alpha_lookup.size() == 0) {
             pair<vector<int>,double> new_item(S_atom, 1.0);
             alpha_lookup.insert(new_item);
@@ -520,7 +528,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         }
 
         // 4. output iteration tracking info
-         second_subproblem_log(fw_iter, W_2, W_1, Y, mu);
+         // second_subproblem_log(fw_iter, W_2, W_1, Y, mu);
     }
     return;
     /*}}}*/
