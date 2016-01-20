@@ -329,18 +329,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
     while (fw_iter < MAX_2nd_FW_ITER) {
         fw_iter ++;
-        // 1. compute delta
-        /*
-        double delta_square = 0.0;
-        for (int n = 0; n < numSeq; n ++) 
-            delta_square += tensor4D_frob_prod (delta[n], delta[n]);
-        //cout << "delta_square: " << delta_square << endl;
-        if ( delta_square < 1e-12 ) {
-            //cout << "small delta. early stop." << endl;
-            break;
-        }
-        */
-
         // 2. determine the trace: run viterbi algorithm
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
         refined_viterbi_algo (trace, tensor, mat_insertion);
@@ -578,7 +566,7 @@ int main (int argn, char** argv) {
     cout << ", ScoreInsertion: " << C_I;
     cout << ", ScoreDeletion: " << C_D;
     cout << ", ScoreMismatch: " << C_MM << endl;
-    cout << "PERT_EPS: " << PERT_EPS;
+    cout << "PERB_EPS: " << PERB_EPS;
     cout << ", GFW_EPS: " << GFW_EPS;
     cout << ", LENGTH_OFFSET: " << LENGTH_OFFSET;
     cout << ", EPS_Wdiff: " << EPS_Wdiff << endl;
@@ -610,20 +598,9 @@ int main (int argn, char** argv) {
             for (int j = 0; j < T2m; j ++) {
                 for (int d = 0; d < NUM_DNA_TYPE; d ++) {
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                        if (m == DELETION_A or m == MATCH_A)
-                            tensor[j][d][dna2T3idx('A')] += max(0.0, W[n][i][j][d][m]);
-                        else if (m == DELETION_T or m == MATCH_T)
-                            tensor[j][d][dna2T3idx('T')] += max(0.0, W[n][i][j][d][m]);
-                        else if (m == DELETION_C or m == MATCH_C)
-                            tensor[j][d][dna2T3idx('C')] += max(0.0, W[n][i][j][d][m]);
-                        else if (m == DELETION_G or m == MATCH_G)
-                            tensor[j][d][dna2T3idx('G')] += max(0.0, W[n][i][j][d][m]);
-                        else if (m == DELETION_START or m == MATCH_START)
-                            tensor[j][d][dna2T3idx('*')] += max(0.0, W[n][i][j][d][m]);
-                        else if (m == DELETION_END or m == MATCH_END)
-                            tensor[j][d][dna2T3idx('#')] += max(0.0, W[n][i][j][d][m]);
-                        else if (m == INSERTION) 
-                            mat_insertion[j][d] += max(0.0, W[n][i][j][d][m]);
+
+                        if (m == INSERTION) mat_insertion[j][d] += max(0.0, W[n][i][j][d][m]);
+                        else tensor[j][d][move2T3idx(m)] += max(0.0, W[n][i][j][d][m]);
                     }
                 }
             }
