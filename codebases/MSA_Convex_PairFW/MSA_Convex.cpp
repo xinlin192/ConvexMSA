@@ -222,8 +222,8 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             int i = S_atom[p], j = S_atom[p+1], d = S_atom[p+2], m = S_atom[p+3];
             gfw -= C[i][j][d][m]+M[i][j][d][m];
         }
-        // cout << "GFW: " << gfw << endl;
-        if (fw_iter > 0 && (gfw < 1e-4)) break;
+         // cout << "GFW_1: " << gfw << endl;
+        if (fw_iter > 0 && (gfw < GFW_EPS)) break;
 
         // find atom V for away direction 
         vector<int> V_atom;
@@ -265,13 +265,10 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             else denominator -= mu;
         }
         // 3a. early stop condition: neglible denominator
-        if (denominator < 1e-6) break; // early stop
-        double gamma = numerator / denominator;
-        if ((REINIT_W_ZERO_TOGGLE && fw_iter == 0)) gamma = 1.0; // initially pre-set to Conv(A)
-        gamma = min(max(gamma, 0.0), gamma_max); // Gamma should be bounded by [0,1]
-        // 3b. early stop condition: neglible gamma
-        if (fabs(gamma) < EPS_1st_FW) break;  
-        // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
+        double gamma;
+        gamma = (denominator < 10e-6)?gamma_max:(numerator/denominator);
+        gamma = (REINIT_W_ZERO_TOGGLE && fw_iter == 0)?1.0:gamma;
+        gamma = min(max(gamma, 0.0), gamma_max);
 
         // 4. update W_1
         for (int p = 0; p < S_atom.size(); p+=4 ) {
@@ -325,38 +322,15 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                     for (int m = 0; m < NUM_MOVEMENT; m ++) {
                         W_2[n][i][j][d][m] = 0.0;
                         delta[n][i][j][d][m] = mu * W_1[n][i][j][d][m] + Y[n][i][j][d][m];
+                        if (m == INSERTION) mat_insertion[j][d] += max(0.0, delta[n][i][j][d][m]);
+                        else tensor[j][d][move2T3idx(m)] += max(0.0, delta[n][i][j][d][m]);
                     }
     int fw_iter = -1;
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
     while (fw_iter < MAX_2nd_FW_ITER) {
         fw_iter ++;
         // 1. compute delta
-#ifdef PARRALLEL_COMPUTING
-#pragma omp parallel for
-#endif
-        for (int n = 0; n < numSeq; n ++) {
-            int T1 = W_2[n].size();
-            for (int i = 0; i < T1; i ++) { 
-                for (int j = 0; j < T2; j ++) 
-                    for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                        for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                            if (m == INSERTION) 
-                                mat_insertion[j][d] += max(0.0, delta[n][i][j][d][m]);
-                            else
-                                tensor[j][d][move2T3idx(m)] += max(0.0, delta[n][i][j][d][m]);
-                        }
-            }
-        }
-#ifdef SECOND_SUBPROBLEM_DEBUG
-        cout << "tensor transition input list:" << endl;
-        for (int j = 0; j < T2; j ++) 
-            for (int d = 0; d < NUM_DNA_TYPE; d ++) 
-                for (int k = 0; k < NUM_DNA_TYPE; k ++) {
-                    if (tensor[j][d][k] > 0)
-                        cout << "(" << j << ", " << d << ", " << k << ")=" << tensor[j][d][k] << endl;
-                }
-#endif
-
+        /*
         double delta_square = 0.0;
         for (int n = 0; n < numSeq; n ++) 
             delta_square += tensor4D_frob_prod (delta[n], delta[n]);
@@ -365,6 +339,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             //cout << "small delta. early stop." << endl;
             break;
         }
+        */
 
         // 2. determine the trace: run viterbi algorithm
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
@@ -408,9 +383,9 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 gfw -= delta[n][i][j][d][m] * x.second;
             }
         }
-        // cout << "GFW: " << gfw << endl;
-        if (fw_iter > 0 && (gfw < 1e-4)) {
-            cout << "break; " << endl;
+       //  cout << "GFW_2: " << gfw << endl;
+        if (fw_iter > 0 && (gfw < GFW_EPS)) {
+           // cout << "break; " << endl;
             break;
         }
 
@@ -423,7 +398,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 double val = 0.0;
                 for (int p = 0; p < x.first.size(); p+=5 )
                     val += delta[x.first[p]][x.first[p+1]][x.first[p+2]][x.first[p+3]][x.first[p+4]];
-                // cout << "val: " << val << endl;
                 if (val < min_val) {
                     min_val = val; 
                     V_atom = x.first; 
@@ -452,46 +426,30 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             if (smv_lookup.find(state) == smv_lookup.end()) denominator += mu;
             else denominator -= mu;
         }
-#ifdef SECOND_SUBPROBLEM_DEBUG
-        cout << "numerator: " << numerator << ", denominator: " << denominator << endl;
-#endif
-        if ( denominator < 10e-6) {
-            //cout << "small denominator: " << denominator << endl;
-            break;
-        }
-        double gamma = numerator / denominator;
-        if ((REINIT_W_ZERO_TOGGLE && fw_iter == 0)) gamma = 1.0;
+        double gamma;
+        gamma = (denominator < 10e-6)?gamma_max:(numerator/denominator);
+        gamma = (REINIT_W_ZERO_TOGGLE && fw_iter == 0)?1.0:gamma;
         gamma = min(max(gamma, 0.0), gamma_max);
-        if (fabs(gamma) < EPS_2nd_FW) break; 
-        // cout << "gamma: " << gamma << ", mu*||W-S||^2: " << denominator << endl;
 
         // 3. update W_2
         // delta[n][i][j][d][m] = -1.0* mu * (W_2[n][i][j][d][m] - W_1[n][i][j][d][m]) + Y[n][i][j][d][m];
         for (int p = 0; p < S_atom.size(); p+=5 ) {
             int n = S_atom[p], i = S_atom[p+1], j = S_atom[p+2], d = S_atom[p+3], m = S_atom[p+4];
             W_2[n][i][j][d][m] += gamma;
+            if (m == INSERTION) mat_insertion[j][d] -= max(0.0, delta[n][i][j][d][m]);
+            else tensor[j][d][move2T3idx(m)] -= max(0.0, delta[n][i][j][d][m]);
             delta[n][i][j][d][m] -= mu * gamma;
-            /*
-            if (m == DELETION_A or m == MATCH_A)
-                tensor[j][d][dna2T3idx('A')] += max(0.0, val);
-            else if (m == DELETION_T or m == MATCH_T)
-                tensor[j][d][dna2T3idx('T')] += max(0.0, val);
-            else if (m == DELETION_C or m == MATCH_C)
-                tensor[j][d][dna2T3idx('C')] += max(0.0, val);
-            else if (m == DELETION_G or m == MATCH_G)
-                tensor[j][d][dna2T3idx('G')] += max(0.0, val);
-            else if (m == DELETION_START or m == MATCH_START)
-                tensor[j][d][dna2T3idx('*')] += max(0.0, val);
-            else if (m == DELETION_END or m == MATCH_END)
-                tensor[j][d][dna2T3idx('#')] += max(0.0, val);
-            else if (m == INSERTION) {
-                mat_insertion[j][d] += max(0.0, val);
-                */
+            if (m == INSERTION) mat_insertion[j][d] += max(0.0, delta[n][i][j][d][m]);
+            else tensor[j][d][move2T3idx(m)] += max(0.0, delta[n][i][j][d][m]);
         }
         for (int p = 0; p < V_atom.size(); p+=5 ) {
             int n = V_atom[p], i = V_atom[p+1], j = V_atom[p+2], d = V_atom[p+3], m = V_atom[p+4];
             W_2[n][i][j][d][m] -= gamma; 
+            if (m != INSERTION) tensor[j][d][move2T3idx(m)] -= max(0.0, delta[n][i][j][d][m]);
+            else mat_insertion[j][d] -= max(0.0, delta[n][i][j][d][m]);
             double val = mu *gamma; delta[n][i][j][d][m] += val;
+            if (m != INSERTION) tensor[j][d][move2T3idx(m)] += max(0.0, delta[n][i][j][d][m]);
+            else mat_insertion[j][d] += max(0.0, delta[n][i][j][d][m]);
         }
 
         if (alpha_lookup.size() == 0) {
@@ -620,6 +578,10 @@ int main (int argn, char** argv) {
     cout << ", ScoreInsertion: " << C_I;
     cout << ", ScoreDeletion: " << C_D;
     cout << ", ScoreMismatch: " << C_MM << endl;
+    cout << "PERT_EPS: " << PERT_EPS;
+    cout << ", GFW_EPS: " << GFW_EPS;
+    cout << ", LENGTH_OFFSET: " << LENGTH_OFFSET;
+    cout << ", EPS_Wdiff: " << EPS_Wdiff << endl;
     for (int n = 0; n < numSeq; n ++) 
         sequence_dump(allSeqs, n);
 
