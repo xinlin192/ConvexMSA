@@ -42,20 +42,20 @@ const int NUM_DNA_TYPE = 4 + 1 + 1;  // A T C G + START + END
 const int NUM_MOVEMENT = 9 + 2 + 2;  
 
 /* Algorithmic Setting */
-const int MAX_1st_FW_ITER = 200;
-const int MAX_2nd_FW_ITER = 200;
+const int MAX_1st_FW_ITER = 500;
+const int MAX_2nd_FW_ITER = 500;
 const int MIN_ADMM_ITER = 10;
 const int MAX_ADMM_ITER = 10000;
-const double GFW_EPS = 1e-6;
+const double GFW_EPS = 1e-3;
 //const double EPS_ADMM_CoZ = 1e-5; 
-const double EPS_Wdiff = 1e-8;
+const double EPS_Wdiff = 1e-3;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
-const double C_I = 1.8;  // penalty of insertion
-const double C_D = 1.8;  // penalty of deletion
-const double C_MM = 2.2; // penalty of mismatch
-const double C_M = 0;    // penalty of match
+double C_I = 1.8;  // penalty of insertion
+double C_D = 1.8;  // penalty of deletion
+double C_MM = 2.2; // penalty of mismatch
+double C_M = 0;    // penalty of match
 const double HIGH_COST = 9999;
 const double NO_COST = 0;
 
@@ -464,7 +464,7 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
                 int min_ansid = -1;
                 Action min_action;
 #ifdef CUBE_SMITH_WATERMAN_DEBUG
-                cout << "scores: ";
+                cout << "scores " << i << j << k <<  ": " ;
 #endif
                 for (int ansid = 0; ansid < scores.size(); ansid++) {
 #ifdef CUBE_SMITH_WATERMAN_DEBUG
@@ -483,7 +483,7 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
                     }
                 }
 #ifdef CUBE_SMITH_WATERMAN_DEBUG
-                    cout << endl;
+                    cout << ", min_ansid = " << min_ansid << ", min_score = "<< min_score << endl;
 #endif
                 // 1e. assign the optimal score/action to the cell
                 cube[i][j][k].score = min_score;

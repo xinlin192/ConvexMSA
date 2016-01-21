@@ -211,18 +211,22 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         vector<int> S_atom;
         Trace trace (0, Cell(3));
         cube_smith_waterman (S_atom, trace, M, C, data_seq);
-        double gfw = 0.0;
+        // for (int i = 0; i < trace.size(); i ++)
+         //   cout << trace[i].toString() << endl;
+        double gfw_S = 0.0, gfw_W = 0.0;
         for ( auto& x: alpha_lookup) {
             for (int p = 0; p < x.first.size(); p+=4 ) {
                 int i = x.first[p], j = x.first[p+1], d = x.first[p+2], m = x.first[p+3];
-                gfw += (C[i][j][d][m]+M[i][j][d][m]) * x.second;
+                gfw_W += (C[i][j][d][m]+M[i][j][d][m]) * x.second;
             }
         }
         for (int p = 0; p < S_atom.size(); p+=4 ) {
             int i = S_atom[p], j = S_atom[p+1], d = S_atom[p+2], m = S_atom[p+3];
-            gfw -= C[i][j][d][m]+M[i][j][d][m];
+            gfw_S -= C[i][j][d][m]+M[i][j][d][m];
         }
-         // cout << "GFW_1: " << gfw << endl;
+        double gfw = gfw_S + gfw_W;
+        if (fw_iter > 0)
+            cout << "GFW_1_W: " << gfw_W << ", GFW_1_S: " << gfw_S << ", GFW: " << gfw << endl;
         if (fw_iter > 0 && (gfw < GFW_EPS)) break;
 
         // find atom V for away direction 
@@ -336,11 +340,12 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
 
         // 3. recover values for S 
         // 3b. set a number of selected elements to 1
+        cout << "Rev: ";
         for (int t = 0; t < trace.size(); t++) {
             int sj = trace[t].location[0];
             int sd = trace[t].location[1];
             int sm = dna2T3idx(trace[t].acidB);
-            // cout << trace[t].acidB;
+            cout << trace[t].acidB;
             for (int n = 0; n < numSeq; n ++) 
                 for (int i = 0; i < delta[n].size(); i ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
@@ -357,7 +362,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                             }
                         }
         }
-        // cout <<  endl;
+        cout <<  endl;
 
         // early stopping
         double gfw = 0.0;
@@ -371,7 +376,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 gfw -= delta[n][i][j][d][m] * x.second;
             }
         }
-       //  cout << "GFW_2: " << gfw << endl;
+        if (fw_iter > 0) cout << "GFW_2: " << gfw << endl;
         if (fw_iter > 0 && (gfw < GFW_EPS)) {
            // cout << "break; " << endl;
             break;
@@ -560,6 +565,9 @@ int main (int argn, char** argv) {
     for (int n = 0; n < numSeq; n ++) 
         lenSeqs[n] = allSeqs[n].size();
 
+    int T2 = get_init_model_length (lenSeqs) + LENGTH_OFFSET; // model_seq_length
+    C_I *= T2; C_D *= T2; C_M *= T2; C_MM *= T2;
+
     // pre-info
     cout << "#########################################################" << endl;
     cout << "ScoreMatch: " << C_M;
@@ -575,7 +583,6 @@ int main (int argn, char** argv) {
 
     // 3. relaxed convex program: ADMM-based algorithm
     // omp_set_num_threads(NUM_THREADS);
-    int T2 = get_init_model_length (lenSeqs) + LENGTH_OFFSET; // model_seq_length
     time_t begin = time(NULL);
     vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
     time_t end = time(NULL);
