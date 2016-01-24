@@ -252,7 +252,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
        //  cout << "alpha_v_atom: " << alpha_lookup[V_atom] << endl;
 
         // 2. Exact Line search: determine the optimal step size \gamma
-        // gamma = [ ( mu*W_1 - mu*W_1 - Y - C ) dot (S-V) ] / (mu* || S-V ||^2)
+        // gamma = [ ( mu*W_2 - mu*W_1 - Y - C ) dot (S-V) ] / (mu* || S-V ||^2)
         double numerator = 0.0, denominator = 0.0;
         unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > smv_lookup;
         for (int p = 0; p < S_atom.size(); p+=4 ) {
@@ -294,7 +294,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
            // cout << "gamma = " << gamma << ", init_insert. " << endl;
         } else {
             alpha_lookup[S_atom] += gamma;
-            if (alpha_lookup[V_atom] - gamma < 1e-5) alpha_lookup.erase(V_atom);
+            if (alpha_lookup[V_atom] - gamma < 1e-6) alpha_lookup.erase(V_atom);
             else alpha_lookup[V_atom] -= gamma;
             // cout << "gamma = " << gamma << ", update " << endl;
         }
@@ -452,7 +452,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             // cout << ", gamma = " << gamma << ", init_insert. " << endl;
         } else {
             alpha_lookup[S_atom] += gamma;
-            if (alpha_lookup[V_atom] - gamma < 1e-3) alpha_lookup.erase(V_atom);
+            if (alpha_lookup[V_atom] - gamma < 1e-6) alpha_lookup.erase(V_atom);
             else alpha_lookup[V_atom] -= gamma;
             //  cout << ", gamma = " << gamma << ", update " << endl;
         }
