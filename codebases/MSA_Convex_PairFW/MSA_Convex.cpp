@@ -12,7 +12,7 @@
 
 /* Debugging option */
 // #define RECURSION_TRACE
-#define FIRST_SUBPROBLEM_DEBUG
+// #define FIRST_SUBPROBLEM_DEBUG
 // #define SECOND_SUBPROBLEM_DEBUG
 
 void usage () { cout << "./MSA_Convex (options) [seq_file]" << endl;
@@ -225,8 +225,10 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             gfw_S -= C[i][j][d][m]+M[i][j][d][m];
         }
         double gfw = gfw_S + gfw_W;
-        if (fw_iter > 0)
+        if (fw_iter > 0 && gfw < 0) {
             cout << "GFW_1_W: " << gfw_W << ", GFW_1_S: " << gfw_S << ", GFW: " << gfw << endl;
+            // exit(-1);
+        }
         if (fw_iter > 0 && (gfw < GFW_EPS)) break;
 
         // find atom V for away direction 
@@ -337,7 +339,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
         refined_viterbi_algo (trace, tensor, mat_insertion);
         vector<int> S_atom;
-
         // 3. recover values for S 
         // 3b. set a number of selected elements to 1
         cout << "Rev: ";
@@ -363,7 +364,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                         }
         }
         cout <<  endl;
-
         // early stopping
         double gfw = 0.0;
         for (int p = 0; p < S_atom.size(); p+=5 ) {
@@ -376,12 +376,14 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 gfw -= delta[n][i][j][d][m] * x.second;
             }
         }
-        if (fw_iter > 0) cout << "GFW_2: " << gfw << endl;
+        if (fw_iter > 0 && gfw < 0) {
+            cout << "ISSUE: GFW_2: " << gfw << endl;
+            // exit(-1);
+        }
         if (fw_iter > 0 && (gfw < GFW_EPS)) {
            // cout << "break; " << endl;
             break;
         }
-
         // away step
         vector<int> V_atom;
         double gamma_max = 1.0;
@@ -398,7 +400,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 }
             }
         }
-
         // 4. Exact Line search: determine the optimal step size \gamma
         // gamma = [ ( W_1 - W_2 + 1/mu*Y ) dot (S - V) ] / || S-V ||^2
         //           ---------------combo------------------
@@ -423,7 +424,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         gamma = (denominator < 10e-6)?gamma_max:(numerator/denominator);
         gamma = (REINIT_W_ZERO_TOGGLE && fw_iter == 0)?1.0:gamma;
         gamma = min(max(gamma, 0.0), gamma_max);
-
         // 3. update W_2
         // delta[n][i][j][d][m] = -1.0* mu * (W_2[n][i][j][d][m] - W_1[n][i][j][d][m]) + Y[n][i][j][d][m];
         for (int p = 0; p < S_atom.size(); p+=5 ) {
@@ -444,7 +444,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             if (m != INSERTION) tensor[j][d][move2T3idx(m)] += max(0.0, delta[n][i][j][d][m]);
             else mat_insertion[j][d] += max(0.0, delta[n][i][j][d][m]);
         }
-
         if (alpha_lookup.size() == 0) {
             pair<vector<int>,double> new_item(S_atom, 1.0);
             alpha_lookup.insert(new_item);
@@ -455,7 +454,6 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             else alpha_lookup[V_atom] -= gamma;
             //  cout << ", gamma = " << gamma << ", update " << endl;
         }
-
         // 4. output iteration tracking info
          // second_subproblem_log(fw_iter, W_2, W_1, Y, mu);
     }
@@ -556,7 +554,6 @@ void sequence_dump (SequenceSet& allSeqs, int n) {
 int main (int argn, char** argv) {
     // 1. parse cmd 
     parse_cmd_line(argn, argv);
-
     // 2. input DNA sequence file
     int numSeq = 0;
     SequenceSet allSeqs (0, Sequence());
@@ -564,10 +561,7 @@ int main (int argn, char** argv) {
     vector<int> lenSeqs (numSeq, 0);
     for (int n = 0; n < numSeq; n ++) 
         lenSeqs[n] = allSeqs[n].size();
-
     int T2 = get_init_model_length (lenSeqs) + LENGTH_OFFSET; // model_seq_length
-    C_I *= T2; C_D *= T2; C_M *= T2; C_MM *= T2;
-
     // pre-info
     cout << "#########################################################" << endl;
     cout << "ScoreMatch: " << C_M;
