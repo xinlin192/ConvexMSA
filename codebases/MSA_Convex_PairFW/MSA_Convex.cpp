@@ -333,7 +333,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                     }
     int fw_iter = -1;
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
-    while (fw_iter < MAX_2nd_FW_ITER) {
+    while ( fw_iter < MAX_2nd_FW_ITER) {
         fw_iter ++;
         // 2. determine the trace: run viterbi algorithm
         Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
@@ -342,10 +342,12 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         // 3. recover values for S 
         // 3b. set a number of selected elements to 1
         cout << "Rev: ";
+        bool see_end = false;
         for (int t = 0; t < trace.size(); t++) {
             int sj = trace[t].location[0];
             int sd = trace[t].location[1];
             int sm = dna2T3idx(trace[t].acidB);
+            if(trace[t].acidA == '#') break;
             cout << trace[t].acidB;
             for (int n = 0; n < numSeq; n ++) 
                 for (int i = 0; i < delta[n].size(); i ++) 
@@ -376,8 +378,8 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 gfw -= delta[n][i][j][d][m] * x.second;
             }
         }
+        cout << "ISSUE: GFW_2: " << gfw << endl;
         if (fw_iter > 0 && gfw < 0) {
-            cout << "ISSUE: GFW_2: " << gfw << endl;
             // exit(-1);
         }
         if (fw_iter > 0 && (gfw < GFW_EPS)) {

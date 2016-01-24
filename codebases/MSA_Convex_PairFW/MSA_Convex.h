@@ -608,14 +608,9 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
     trace.insert(trace.begin(), plane[j][max_d2]);
     for (j = J-1; j > 0; j--) {
         int last_d2 = dna2T3idx(trace[0].acidA);
+       // if (last_d2 == 5) trace.clear();
         trace.insert(trace.begin(), plane[j][last_d2]);
     }
-    vector<Cell> tmp_vec;
-    for (int j = 0; j < trace.size(); j++) 
-        if (trace[j].acidA != '#')
-            tmp_vec.push_back(trace[j]);
-    trace = tmp_vec;
-
     // 3. consider insertion
     for (int j = trace.size()-1; j >= 0; j --) {
         for (int d1 = 0; d1 < NUM_DNA_TYPE; d1 ++) {
