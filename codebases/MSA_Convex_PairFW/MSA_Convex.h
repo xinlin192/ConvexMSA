@@ -41,6 +41,7 @@ const double MAX_INT = numeric_limits<int>::max();
 const int NUM_DNA_TYPE = 4 + 1 + 1;  // A T C G + START + END
 const int NUM_MOVEMENT = 9 + 2 + 2;  
 
+const int START_IDX = 4;
 const int END_IDX = 5;
 
 /* Algorithmic Setting */
@@ -580,6 +581,8 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         vector<double> max_score (D2, MIN_DOUBLE);
         vector<int> max_d1 (D1, -1);
         for (int d1 = 0; d1 < D1; d1 ++) {
+            // if (d1 == START_IDX && j > 0) continue;
+            if (d1 == END_IDX) continue;
             for (int d2 = 0; d2 < D2; d2 ++) {
                 double score = plane[j][d1].score + transition[j][d1][d2] + mat_insertion[j][d1];
                 if (score > max_score[d2]) {
