@@ -135,23 +135,21 @@ double get_sub2_cost (Tensor5D& W, Tensor5D& Z, Tensor5D& Y, double& mu, Sequenc
     return qua_term;
 }
 
-double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y, Tensor4D& C, double mu) {
+double first_subproblem_log (int fw_iter, Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, double mu) {
     /*{{{*/
     double cost = 0.0, lin_term = 0.0, qua_term = 0.0;
-    double Ws = tensor4D_frob_prod (W, W); 
-    int T1 = W.size();
-    int T2 = W[0].size();
+    int T1 = W_1.size();
+    int T2 = W_1[0].size();
     for (int i = 0; i < T1; i ++) 
         for (int j = 0; j < T2; j ++) 
             for (int d = 0; d < NUM_DNA_TYPE; d ++) 
                 for (int m = 0; m < NUM_MOVEMENT; m ++) {
-                    double sterm =  (W[i][j][d][m] - Z[i][j][d][m] + 1.0/mu*Y[i][j][d][m]);
-                    lin_term += C[i][j][d][m] * W[i][j][d][m];
+                    double sterm =  (W_1[i][j][d][m] - W_2[i][j][d][m] + 1.0/mu*Y[i][j][d][m]);
+                    lin_term += C[i][j][d][m] * W_1[i][j][d][m];
                     qua_term += 0.5*mu *sterm * sterm;
                 }
     cost = lin_term + qua_term;
     cout << "[FW1] iter=" << fw_iter
-        << ", ||W||^2: " << Ws 
         << ", lin_term: " << lin_term 
         << ", qua_sterm: " << qua_term
         << ", cost=" << cost 
@@ -186,6 +184,15 @@ double second_subproblem_log (int fw_iter, Tensor5D& W, Tensor5D& Z, Tensor5D& Y
     /*}}}*/
 }
 
+void dump_4Datom (vector<int> atom) {
+    for (int p = 0; p < atom.size(); p+=4 ) {
+        int i = atom[p], j = atom[p+1], d = atom[p+2], m = atom[p+3];
+        cout << "(" << i << "," << j << "," << d << "," << m << ")->";
+    }
+    cout << endl;
+    return;
+}
+
 /* We resolve the first subproblem through the frank-wolfe algorithm */
 void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, double& mu, Sequence data_seq) {
     /*{{{*/
@@ -204,7 +211,8 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
 
     int fw_iter = -1;
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
-    // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+     first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+     bool toexit = false;
     while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
         // find atom S for FW direction 
@@ -225,11 +233,13 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             gfw_S -= C[i][j][d][m]+M[i][j][d][m];
         }
         double gfw = gfw_S + gfw_W;
+        cout << "GFW_1_W: " << gfw_W << ", GFW_1_S: " << gfw_S << ", GFW: " << gfw << endl;
+        dump_4Datom (S_atom);
         if (fw_iter > 0 && gfw < 0) {
-            cout << "GFW_1_W: " << gfw_W << ", GFW_1_S: " << gfw_S << ", GFW: " << gfw << endl;
+            toexit = true;
             // exit(-1);
         }
-        if (fw_iter > 0 && (gfw < GFW_EPS)) break;
+       // if (fw_iter > 0 && (gfw < GFW_EPS)) break;
 
         // find atom V for away direction 
         vector<int> V_atom;
@@ -276,6 +286,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         gamma = (REINIT_W_ZERO_TOGGLE && fw_iter == 0)?1.0:gamma;
         gamma = min(max(gamma, 0.0), gamma_max);
 
+        cout << "gamma:" << gamma << endl;
         // 4. update W_1
         for (int p = 0; p < S_atom.size(); p+=4 ) {
             int i = S_atom[p], j = S_atom[p+1], d = S_atom[p+2], m = S_atom[p+3];
@@ -299,12 +310,14 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             // cout << "gamma = " << gamma << ", update " << endl;
         }
 
-        // cout << "alpha_look: ";
-        // for ( auto& x: alpha_lookup) cout << x.second << ",";
-        //cout << endl;
+         cout << "alpha_look: ";
+         for ( auto& x: alpha_lookup) cout << x.second << ",";
+        cout << endl;
         
         // 5. output iteration tracking info
-        // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+         first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+         cout << endl;
+         if (toexit) exit(-1);
     }
     return; 
     /*}}}*/
