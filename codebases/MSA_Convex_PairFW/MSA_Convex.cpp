@@ -378,8 +378,8 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 gfw -= delta[n][i][j][d][m] * x.second;
             }
         }
-        cout << "ISSUE: GFW_2: " << gfw << endl;
         if (fw_iter > 0 && gfw < 0) {
+            cout << "ISSUE: GFW_2: " << gfw << endl;
             // exit(-1);
         }
         if (fw_iter > 0 && (gfw < GFW_EPS)) {
