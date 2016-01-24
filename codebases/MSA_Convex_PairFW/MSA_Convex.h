@@ -41,6 +41,8 @@ const double MAX_INT = numeric_limits<int>::max();
 const int NUM_DNA_TYPE = 4 + 1 + 1;  // A T C G + START + END
 const int NUM_MOVEMENT = 9 + 2 + 2;  
 
+const int END_IDX = 5;
+
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 500;
 const int MAX_2nd_FW_ITER = 500;
@@ -596,6 +598,7 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         }
     }
     // 2. trace backward
+    /*
     int j = J;
     double max_score = MIN_DOUBLE;
     int max_d2 = -1;
@@ -606,9 +609,18 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         }
     }
     trace.insert(trace.begin(), plane[j][max_d2]);
-    for (j = J-1; j > 0; j--) {
+    */
+    double max_score = MIN_DOUBLE;
+    int max_end_pos = -1;
+    for (int j = J; j > 0; j--) { // 5 - #
+        if (plane[j][END_IDX].score > max_score) {
+            max_score = plane[j][END_IDX].score;
+            max_end_pos = j;
+        }
+    }
+    trace.insert(trace.begin(), plane[max_end_pos][END_IDX]);
+    for (int j = J-1; j > 0; j--) {
         int last_d2 = dna2T3idx(trace[0].acidA);
-       // if (last_d2 == 5) trace.clear();
         trace.insert(trace.begin(), plane[j][last_d2]);
     }
     // 3. consider insertion
