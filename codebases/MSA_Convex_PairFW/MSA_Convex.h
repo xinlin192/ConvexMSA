@@ -59,7 +59,7 @@ double C_I = 1.6;  // penalty of insertion
 double C_D = 1.8;  // penalty of deletion
 double C_MM = 2.2; // penalty of mismatch
 double C_M = 0;    // penalty of match
-const double HIGH_COST = 9999;
+const double HIGH_COST = 999999.0;
 const double NO_COST = 0;
 
 /* Data Structure */

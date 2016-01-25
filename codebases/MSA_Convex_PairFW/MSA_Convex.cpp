@@ -211,7 +211,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
 
     int fw_iter = -1;
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
-     first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+     // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
      bool toexit = false;
     while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
@@ -233,13 +233,13 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             gfw_S -= C[i][j][d][m]+M[i][j][d][m];
         }
         double gfw = gfw_S + gfw_W;
-        cout << "GFW_1_W: " << gfw_W << ", GFW_1_S: " << gfw_S << ", GFW: " << gfw << endl;
-        dump_4Datom (S_atom);
+        // dump_4Datom (S_atom);
         if (fw_iter > 0 && gfw < 0) {
+            cout << "GFW_1_W: " << gfw_W << ", GFW_1_S: " << gfw_S << ", GFW: " << gfw << endl;
             toexit = true;
             // exit(-1);
         }
-       // if (fw_iter > 0 && (gfw < GFW_EPS)) break;
+        if (fw_iter > 0 && (gfw < GFW_EPS)) break;
 
         // find atom V for away direction 
         vector<int> V_atom;
@@ -259,6 +259,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
                 }
             }
         }
+        // dump_4Datom (V_atom);
        //  cout << "alpha_v_atom: " << alpha_lookup[V_atom] << endl;
 
         // 2. Exact Line search: determine the optimal step size \gamma
@@ -281,12 +282,11 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             else denominator -= mu;
         }
         // 3a. early stop condition: neglible denominator
-        double gamma;
-        gamma = (denominator < 10e-6)?gamma_max:(numerator/denominator);
+        double gamma = numerator/denominator;
         gamma = (REINIT_W_ZERO_TOGGLE && fw_iter == 0)?1.0:gamma;
         gamma = min(max(gamma, 0.0), gamma_max);
 
-        cout << "gamma:" << gamma << endl;
+        // cout << "gamma:" << gamma << endl;
         // 4. update W_1
         for (int p = 0; p < S_atom.size(); p+=4 ) {
             int i = S_atom[p], j = S_atom[p+1], d = S_atom[p+2], m = S_atom[p+3];
@@ -305,19 +305,19 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
            // cout << "gamma = " << gamma << ", init_insert. " << endl;
         } else {
             alpha_lookup[S_atom] += gamma;
-            if (alpha_lookup[V_atom] - gamma < 1e-6) alpha_lookup.erase(V_atom);
+            if (alpha_lookup[V_atom] - gamma < 1e-10) alpha_lookup.erase(V_atom);
             else alpha_lookup[V_atom] -= gamma;
             // cout << "gamma = " << gamma << ", update " << endl;
         }
-
+/*
          cout << "alpha_look: ";
          for ( auto& x: alpha_lookup) cout << x.second << ",";
         cout << endl;
-        
+        */
         // 5. output iteration tracking info
-         first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
-         cout << endl;
-         if (toexit) exit(-1);
+         // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+         // cout << endl;
+         // if (toexit) exit(-1);
     }
     return; 
     /*}}}*/
@@ -391,10 +391,12 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                 gfw -= delta[n][i][j][d][m] * x.second;
             }
         }
+        /*
         if (fw_iter > 0 && gfw < 0) {
             cout << "ISSUE: GFW_2: " << gfw << endl;
             // exit(-1);
         }
+        */
         if (fw_iter > 0 && (gfw < GFW_EPS)) {
            // cout << "break; " << endl;
             break;
