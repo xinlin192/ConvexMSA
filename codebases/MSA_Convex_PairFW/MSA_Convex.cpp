@@ -440,7 +440,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         gamma = (REINIT_W_ZERO_TOGGLE && fw_iter == 0)?1.0:gamma;
         gamma = min(max(gamma, 0.0), gamma_max);
         // 3. update W_2
-        // delta[n][i][j][d][m] = -1.0* mu * (W_2[n][i][j][d][m] - W_1[n][i][j][d][m]) + Y[n][i][j][d][m];
+        // delta[n][i][j][d][m] = mu * (W_1[n][i][j][d][m]-W_2[n][i][j][d][m]) + Y[n][i][j][d][m];
         for (int p = 0; p < S_atom.size(); p+=5 ) {
             int n = S_atom[p], i = S_atom[p+1], j = S_atom[p+2], d = S_atom[p+3], m = S_atom[p+4];
             W_2[n][i][j][d][m] += gamma;
