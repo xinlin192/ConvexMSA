@@ -46,16 +46,16 @@ const int END_IDX = 5;
 
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 500;
-const int MAX_2nd_FW_ITER = 500;
+const int MAX_2nd_FW_ITER = 1000;
 const int MIN_ADMM_ITER = 10;
 const int MAX_ADMM_ITER = 10000;
-const double GFW_EPS = 1e-3;
+const double GFW_EPS = 1.0;
 //const double EPS_ADMM_CoZ = 1e-5; 
 const double EPS_Wdiff = 1e-3;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
-double C_I = 1.8;  // penalty of insertion
+double C_I = 1.6;  // penalty of insertion
 double C_D = 1.8;  // penalty of deletion
 double C_MM = 2.2; // penalty of mismatch
 double C_M = 0;    // penalty of match
@@ -512,16 +512,14 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
     // 3. trace back
     double global_min_score = MAX_DOUBLE;
     int gmin_i = -1, gmin_j = -1, gmin_k = -1;
-    // 1f. keep track of the globally optimal cell
     for (int i = T1-1, j = 1; j < T2; j ++) {
-        for (int k = 0; k < T3; k ++) {
-            double min_score = cube[i][j][k].score;
-            if (min_score < global_min_score) {
-                global_min_score = min_score;
-                gmin_i = i;
-                gmin_j = j;
-                gmin_k = k;
-            }
+        int k = END_IDX;
+        double min_score = cube[i][j][k].score;
+        if (min_score < global_min_score) {
+            global_min_score = min_score;
+            gmin_i = i;
+            gmin_j = j;
+            gmin_k = k;
         }
     }
     if (gmin_i == 0 or gmin_j == 0) {
@@ -601,18 +599,6 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         }
     }
     // 2. trace backward
-    /*
-    int j = J;
-    double max_score = MIN_DOUBLE;
-    int max_d2 = -1;
-    for (int d2 = 0; d2 < D2; d2++) {
-        if (plane[j][d2].score > max_score) {
-            max_score = plane[j][d2].score;
-            max_d2 = d2;
-        }
-    }
-    trace.insert(trace.begin(), plane[j][max_d2]);
-    */
     double max_score = MIN_DOUBLE;
     int max_end_pos = -1;
     for (int j = J; j > 0; j--) { // 5 - #
