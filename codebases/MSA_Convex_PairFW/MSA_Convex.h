@@ -49,7 +49,7 @@ const int MAX_1st_FW_ITER = 500;
 const int MAX_2nd_FW_ITER = 1000;
 const int MIN_ADMM_ITER = 10;
 const int MAX_ADMM_ITER = 10000;
-const double GFW_EPS = 0.1;
+const double GFW_EPS = 1e-6;
 //const double EPS_ADMM_CoZ = 1e-5; 
 const double EPS_Wdiff = 1e-3;
 
@@ -252,7 +252,6 @@ void set_C (Tensor5D& C, SequenceSet& allSeqs) {
                 }
             }
         }
-        cout << "C00411:" << C[0][0][0][4][11] << endl;
     }
 /*}}}*/
 }
@@ -524,7 +523,7 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
             gmin_k = k;
         }
     }
-    cout << "global_min_score: " << global_min_score << endl;
+   //  cout << "global_min_score: " << global_min_score << endl;
     if (gmin_i == 0 || gmin_j == 0) {
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
