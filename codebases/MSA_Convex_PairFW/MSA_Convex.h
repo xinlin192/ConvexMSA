@@ -41,12 +41,15 @@ const double MAX_INT = numeric_limits<int>::max();
 const int NUM_DNA_TYPE = 4 + 1 + 1;  // A T C G + START + END
 const int NUM_MOVEMENT = 9 + 2 + 2;  
 
+const int START_IDX = 4;
+const int END_IDX = 5;
+
 /* Algorithmic Setting */
 const int MAX_1st_FW_ITER = 500;
-const int MAX_2nd_FW_ITER = 500;
+const int MAX_2nd_FW_ITER = 1000;
 const int MIN_ADMM_ITER = 10;
 const int MAX_ADMM_ITER = 10000;
-const double GFW_EPS = 1e-3;
+const double GFW_EPS = 1e-6;
 //const double EPS_ADMM_CoZ = 1e-5; 
 const double EPS_Wdiff = 1e-3;
 
@@ -56,7 +59,7 @@ double C_I = 1.8;  // penalty of insertion
 double C_D = 1.8;  // penalty of deletion
 double C_MM = 2.2; // penalty of mismatch
 double C_M = 0;    // penalty of match
-const double HIGH_COST = 9999;
+const double HIGH_COST = 999999.0;
 const double NO_COST = 0;
 
 /* Data Structure */
@@ -205,7 +208,7 @@ int move2T3idx (int m) {
 /*}}}*/
 
 // C is the tensor specifying the penalties 
-void set_C (Tensor5D& C, SequenceSet allSeqs) {
+void set_C (Tensor5D& C, SequenceSet& allSeqs) {
 /*{{{*/
     int T0 = C.size();
     int T2 = C[0][0].size();
@@ -413,14 +416,16 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
     // 2. fill in the tensor
     for (int i = 0; i < T1; i ++) for (int j = 0; j < T2; j ++) cube[i][j][4].score = MAX_DOUBLE;
     for (int k = 0; k < T3; k ++) cube[0][0][k].score = MAX_DOUBLE;
+    double acc_ins_cost = C[0][0][4][11] + M[0][0][4][11];
     for (int i = 1; i < T1; i ++) {
-        cube[i][0][4].score = i * C_I; 
+        acc_ins_cost += C[i][0][4][0]+M[i][0][4][0];
+        cube[i][0][4].score = acc_ins_cost; 
         cube[i][0][4].ans_idx = INSERTION; 
         cube[i][0][4].action = INSERTION; 
         cube[i][0][4].acidA = data_seq[i]; 
         cube[i][0][4].acidB = GAP_NOTATION; 
     }
-    cube[0][0][4].score = 0.0;
+    cube[0][0][4].score = C[0][0][4][11]+M[0][0][4][11];
     cube[0][0][4].ans_idx = MATCH_START;
     cube[0][0][4].action = MATCH_START;
     cube[0][0][4].acidA = '*';
@@ -454,7 +459,7 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
                 double mth_score;
                 // cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
-                    mth_score = (i==0 or j == 0)?MAX_DOUBLE:cube[i-1][j-1][d].score + 
+                    mth_score = (i==0 || j == 0)?MAX_DOUBLE:cube[i-1][j-1][d].score + 
                                    M[i][j][d][MTH_BASE_IDX+k] +
                                    C[i][j][d][MTH_BASE_IDX+k]; 
                     scores[MTH_BASE_IDX+d] = mth_score;
@@ -505,23 +510,21 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
             }
         }
     }
-
     // 3. trace back
     double global_min_score = MAX_DOUBLE;
     int gmin_i = -1, gmin_j = -1, gmin_k = -1;
-    // 1f. keep track of the globally optimal cell
     for (int i = T1-1, j = 1; j < T2; j ++) {
-        for (int k = 0; k < T3; k ++) {
-            double min_score = cube[i][j][k].score;
-            if (min_score < global_min_score) {
-                global_min_score = min_score;
-                gmin_i = i;
-                gmin_j = j;
-                gmin_k = k;
-            }
+        int k = END_IDX;
+        double min_score = cube[i][j][k].score;
+        if (min_score < global_min_score) {
+            global_min_score = min_score;
+            gmin_i = i;
+            gmin_j = j;
+            gmin_k = k;
         }
     }
-    if (gmin_i == 0 or gmin_j == 0) {
+   //  cout << "global_min_score: " << global_min_score << endl;
+    if (gmin_i == 0 || gmin_j == 0) {
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
     }
@@ -541,7 +544,6 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
             k = (ans_idx>=MTH_BASE_IDX)?(ans_idx-MTH_BASE_IDX):(ans_idx-DEL_BASE_IDX);
         }
     }
-
     // 4. reintepret it as 4-d data structure
     int ntr = trace.size();
     for (int t = 0; t < ntr; t ++) {
@@ -567,7 +569,7 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
 }
 
 /* 2-d viterbi algorithm */
-void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertion) {
+void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix& mat_insertion) {
 /*{{{*/
     int J = transition.size();
     int D1 = transition[0].size();
@@ -578,6 +580,8 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         vector<double> max_score (D2, MIN_DOUBLE);
         vector<int> max_d1 (D1, -1);
         for (int d1 = 0; d1 < D1; d1 ++) {
+            // if (d1 == START_IDX && j > 0) continue;
+            if (d1 == END_IDX) continue;
             for (int d2 = 0; d2 < D2; d2 ++) {
                 double score = plane[j][d1].score + transition[j][d1][d2] + mat_insertion[j][d1];
                 if (score > max_score[d2]) {
@@ -596,41 +600,18 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         }
     }
     // 2. trace backward
-    int j = J;
     double max_score = MIN_DOUBLE;
-    int max_d2 = -1;
-    for (int d2 = 0; d2 < D2; d2++) {
-        if (plane[j][d2].score > max_score) {
-            max_score = plane[j][d2].score;
-            max_d2 = d2;
+    int max_end_pos = -1;
+    for (int j = J; j > 0; j--) { // 5 - #
+        if (plane[j][END_IDX].score > max_score) {
+            max_score = plane[j][END_IDX].score;
+            max_end_pos = j;
         }
     }
-    trace.insert(trace.begin(), plane[j][max_d2]);
-    for (j = J-1; j > 0; j--) {
+    trace.insert(trace.begin(), plane[max_end_pos][END_IDX]);
+    for (int j = max_end_pos-1; j > 0; j--) {
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);
-    }
-    vector<Cell> tmp_vec;
-    for (int j = 0; j < trace.size(); j++) 
-        if (trace[j].acidA != '#')
-            tmp_vec.push_back(trace[j]);
-    trace = tmp_vec;
-
-    // 3. consider insertion
-    for (int j = trace.size()-1; j >= 0; j --) {
-        for (int d1 = 0; d1 < NUM_DNA_TYPE; d1 ++) {
-            if (mat_insertion[j][d1] > 0) {
-                Cell ins_cell(2);
-                ins_cell.score = trace[j].score;
-                ins_cell.action = INSERTION; 
-                ins_cell.location[0] = trace[j].location[0];
-                ins_cell.location[1] = dna2T3idx(trace[j].acidB);
-                ins_cell.acidA = trace[j].acidB;
-                ins_cell.acidB = GAP_NOTATION;
-                trace.insert(trace.begin()+j+1, ins_cell);
-                break;
-            }
-        }
     }
     // cout << "viterbi_max: " << trace[J-1].score << endl;
     return ;
