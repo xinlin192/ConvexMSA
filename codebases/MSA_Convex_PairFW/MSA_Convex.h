@@ -208,7 +208,7 @@ int move2T3idx (int m) {
 /*}}}*/
 
 // C is the tensor specifying the penalties 
-void set_C (Tensor5D& C, SequenceSet allSeqs) {
+void set_C (Tensor5D& C, SequenceSet& allSeqs) {
 /*{{{*/
     int T0 = C.size();
     int T2 = C[0][0].size();
@@ -252,6 +252,7 @@ void set_C (Tensor5D& C, SequenceSet allSeqs) {
                 }
             }
         }
+        cout << "C00411:" << C[0][0][0][4][11] << endl;
     }
 /*}}}*/
 }
@@ -416,14 +417,16 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
     // 2. fill in the tensor
     for (int i = 0; i < T1; i ++) for (int j = 0; j < T2; j ++) cube[i][j][4].score = MAX_DOUBLE;
     for (int k = 0; k < T3; k ++) cube[0][0][k].score = MAX_DOUBLE;
+    double acc_ins_cost = C[0][0][4][11] + M[0][0][4][11];
     for (int i = 1; i < T1; i ++) {
-        cube[i][0][4].score = i * C_I; 
+        acc_ins_cost += C[i][0][4][0]+M[i][0][4][0];
+        cube[i][0][4].score = acc_ins_cost; 
         cube[i][0][4].ans_idx = INSERTION; 
         cube[i][0][4].action = INSERTION; 
         cube[i][0][4].acidA = data_seq[i]; 
         cube[i][0][4].acidB = GAP_NOTATION; 
     }
-    cube[0][0][4].score = 0.0;
+    cube[0][0][4].score = C[0][0][4][11]+M[0][0][4][11];
     cube[0][0][4].ans_idx = MATCH_START;
     cube[0][0][4].action = MATCH_START;
     cube[0][0][4].acidA = '*';
@@ -457,7 +460,7 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
                 double mth_score;
                 // cout << "dna: " << data_dna << ", " <<  dna_idx << ", k = " << k << endl;
                 for (int d = 0; d < NUM_DNA_TYPE ; d ++) {
-                    mth_score = (i==0 or j == 0)?MAX_DOUBLE:cube[i-1][j-1][d].score + 
+                    mth_score = (i==0 || j == 0)?MAX_DOUBLE:cube[i-1][j-1][d].score + 
                                    M[i][j][d][MTH_BASE_IDX+k] +
                                    C[i][j][d][MTH_BASE_IDX+k]; 
                     scores[MTH_BASE_IDX+d] = mth_score;
@@ -508,7 +511,6 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
             }
         }
     }
-
     // 3. trace back
     double global_min_score = MAX_DOUBLE;
     int gmin_i = -1, gmin_j = -1, gmin_k = -1;
@@ -522,7 +524,8 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
             gmin_k = k;
         }
     }
-    if (gmin_i == 0 or gmin_j == 0) {
+    cout << "global_min_score: " << global_min_score << endl;
+    if (gmin_i == 0 || gmin_j == 0) {
         trace.push_back(cube[gmin_i][gmin_j][gmin_k]);
         return; 
     }
@@ -542,7 +545,6 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
             k = (ans_idx>=MTH_BASE_IDX)?(ans_idx-MTH_BASE_IDX):(ans_idx-DEL_BASE_IDX);
         }
     }
-
     // 4. reintepret it as 4-d data structure
     int ntr = trace.size();
     for (int t = 0; t < ntr; t ++) {
@@ -612,7 +614,7 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix& mat_inserti
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);
     }
-    cout << "viterbi_max: " << trace[J-1].score << endl;
+    // cout << "viterbi_max: " << trace[J-1].score << endl;
     return ;
 }
 /*}}}*/

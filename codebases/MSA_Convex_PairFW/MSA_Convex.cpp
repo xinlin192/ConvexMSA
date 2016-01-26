@@ -211,8 +211,8 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
 
     int fw_iter = -1;
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
-     // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
-     bool toexit = false;
+    // first_subproblem_log(fw_iter, W_1, W_2, Y, C, mu);
+    bool toexit = false;
     while (fw_iter < MAX_1st_FW_ITER) {
         fw_iter ++;
         // find atom S for FW direction 
@@ -231,11 +231,11 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
         for (int p = 0; p < S_atom.size(); p+=4 ) {
             int i = S_atom[p], j = S_atom[p+1], d = S_atom[p+2], m = S_atom[p+3];
             gfw_S -= C[i][j][d][m]+M[i][j][d][m];
+          //  cout << "(" << i << "," << j << "," << d << "," << m << "):" << C[i][j][d][m]+M[i][j][d][m] << "," << C[i][j][d][m] << ", " << M[i][j][d][m] << endl;
         }
         double gfw = gfw_S + gfw_W;
-        // dump_4Datom (S_atom);
         if (fw_iter > 0 && gfw < 0) {
-            cout << "GFW_1_W: " << gfw_W << ", GFW_1_S: " << gfw_S << ", GFW: " << gfw << endl;
+            // cout << "GFW_1_W: " << gfw_W << ", GFW_1_S: " << gfw_S << ", GFW: " << gfw << endl;
             toexit = true;
             // exit(-1);
         }
