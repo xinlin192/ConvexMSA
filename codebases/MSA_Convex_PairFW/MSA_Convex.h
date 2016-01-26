@@ -49,7 +49,7 @@ const int MAX_1st_FW_ITER = 500;
 const int MAX_2nd_FW_ITER = 1000;
 const int MIN_ADMM_ITER = 10;
 const int MAX_ADMM_ITER = 10000;
-const double GFW_EPS = 1e-3;
+const double GFW_EPS = 0.1;
 //const double EPS_ADMM_CoZ = 1e-5; 
 const double EPS_Wdiff = 1e-3;
 
@@ -575,9 +575,6 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix& mat_inserti
     int D2 = transition[0][0].size();
     Plane plane (J+1, Trace(D2, Cell(2)));
     // 1. pass forward
-    for (int d1 = 0; d1 < D1; d1 ++) {
-        plane[0][d1].location[1] = -1;
-    }
     for (int j = 0; j < J; j++) {
         vector<double> max_score (D2, MIN_DOUBLE);
         vector<int> max_d1 (D1, -1);
@@ -585,7 +582,7 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix& mat_inserti
             // if (d1 == START_IDX && j > 0) continue;
             if (d1 == END_IDX) continue;
             for (int d2 = 0; d2 < D2; d2 ++) {
-                double score = plane[j][d1].score + transition[j][d1][d2] + mat_insertion[j][d2];
+                double score = plane[j][d1].score + transition[j][d1][d2] + mat_insertion[j][d1];
                 if (score > max_score[d2]) {
                     max_score[d2] = score;
                     max_d1[d2] = d1;
@@ -612,11 +609,9 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix& mat_inserti
     }
     trace.insert(trace.begin(), plane[max_end_pos][END_IDX]);
     for (int j = max_end_pos-1; j > 0; j--) {
-        if (trace[0].location[1] < 0) break;
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);
     }
-    // 3. consider insertion
     cout << "viterbi_max: " << trace[J-1].score << endl;
     return ;
 }
