@@ -239,7 +239,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
             toexit = true;
             // exit(-1);
         }
-        if (fw_iter > 0 && (gfw < GFW_EPS)) break;
+        if (fw_iter > 0 && (gfw < FW1_GFW_EPS)) break;
 
         // find atom V for away direction 
         vector<int> V_atom;
@@ -400,7 +400,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             // exit(-1);
         }
         */
-        if (fw_iter > 0 && (gfw < GFW_EPS)) {
+        if (fw_iter > 0 && (gfw < FW2_GFW_EPS)) {
            // cout << "break; " << endl;
             break;
         }
@@ -589,7 +589,8 @@ int main (int argn, char** argv) {
     cout << ", ScoreDeletion: " << C_D;
     cout << ", ScoreMismatch: " << C_MM << endl;
     cout << "PERB_EPS: " << PERB_EPS;
-    cout << ", GFW_EPS: " << GFW_EPS;
+    cout << ", FW1_GFW_EPS: " << FW1_GFW_EPS;
+    cout << ", FW2_GFW_EPS: " << FW2_GFW_EPS;
     cout << ", LENGTH_OFFSET: " << LENGTH_OFFSET;
     cout << ", EPS_Wdiff: " << EPS_Wdiff << endl;
     for (int n = 0; n < numSeq; n ++) 
