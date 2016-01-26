@@ -362,6 +362,7 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             int sm = dna2T3idx(trace[t].acidB);
             if (trace[t].acidA == '#') break;
             cout << trace[t].acidB; 
+            cout << trace[t].toString() << endl;
             for (int n = 0; n < numSeq; n ++) 
                 for (int i = 0; i < delta[n].size(); i ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)

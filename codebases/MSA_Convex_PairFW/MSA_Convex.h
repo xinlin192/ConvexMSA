@@ -611,7 +611,7 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix& mat_inserti
         }
     }
     trace.insert(trace.begin(), plane[max_end_pos][END_IDX]);
-    for (int j = J-1; j > 0; j--) {
+    for (int j = max_end_pos-1; j > 0; j--) {
         if (trace[0].location[1] < 0) break;
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);
