@@ -568,13 +568,16 @@ void cube_smith_waterman (vector<int>& S_atom, Trace& trace, Tensor4D& M, Tensor
 }
 
 /* 2-d viterbi algorithm */
-void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertion) {
+void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix& mat_insertion) {
 /*{{{*/
     int J = transition.size();
     int D1 = transition[0].size();
     int D2 = transition[0][0].size();
     Plane plane (J+1, Trace(D2, Cell(2)));
     // 1. pass forward
+    for (int d1 = 0; d1 < D1; d1 ++) {
+        plane[0][d1].location[1] = -1;
+    }
     for (int j = 0; j < J; j++) {
         vector<double> max_score (D2, MIN_DOUBLE);
         vector<int> max_d1 (D1, -1);
@@ -609,27 +612,11 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
     }
     trace.insert(trace.begin(), plane[max_end_pos][END_IDX]);
     for (int j = J-1; j > 0; j--) {
+        if (trace[0].location[1] < 0) break;
         int last_d2 = dna2T3idx(trace[0].acidA);
         trace.insert(trace.begin(), plane[j][last_d2]);
     }
     // 3. consider insertion
-    /*
-    for (int j = trace.size()-1; j >= 0; j --) {
-        for (int d1 = 0; d1 < NUM_DNA_TYPE; d1 ++) {
-            if (mat_insertion[j][d1] > 0) {
-                Cell ins_cell(2);
-                ins_cell.score = trace[j].score;
-                ins_cell.action = INSERTION; 
-                ins_cell.location[0] = trace[j].location[0];
-                ins_cell.location[1] = dna2T3idx(trace[j].acidB);
-                ins_cell.acidA = trace[j].acidB;
-                ins_cell.acidB = GAP_NOTATION;
-                trace.insert(trace.begin()+j+1, ins_cell);
-                break;
-            }
-        }
-    }
-    */
     cout << "viterbi_max: " << trace[J-1].score << endl;
     return ;
 }
