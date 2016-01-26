@@ -360,15 +360,15 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
             int sj = trace[t].location[0];
             int sd = trace[t].location[1];
             int sm = dna2T3idx(trace[t].acidB);
-            if(trace[t].acidA == '#') break;
-            cout << trace[t].acidB;
+            if (trace[t].acidA == '#') break;
+            cout << trace[t].acidB; 
             for (int n = 0; n < numSeq; n ++) 
                 for (int i = 0; i < delta[n].size(); i ++) 
                     for (int m = 0; m < NUM_MOVEMENT; m ++)
                         if (delta[n][i][sj][sd][m] > 0.0) { 
                             bool added = false;
-                            if (m == DEL_BASE_IDX + sm || m == MTH_BASE_IDX + sm) added = true;
-                            else if (m == INSERTION && trace[t].action == INSERTION) added = true;
+                           // if (m == INSERTION && trace[t].action == INSERTION) added = true;
+                            if (m == INSERTION || m == DEL_BASE_IDX + sm || m == MTH_BASE_IDX + sm) added = true;
                             if (added) {
                                 S_atom.push_back(n);
                                 S_atom.push_back(i);
@@ -380,17 +380,19 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         }
         cout <<  endl;
         // early stopping
-        double gfw = 0.0;
+        double gfw_S = 0.0, gfw_W = 0.0, gfw = 0.0;
         for (int p = 0; p < S_atom.size(); p+=5 ) {
             int n = S_atom[p], i = S_atom[p+1], j = S_atom[p+2], d = S_atom[p+3], m = S_atom[p+4];
-            gfw += delta[n][i][j][d][m];
+            gfw_S += delta[n][i][j][d][m];
         }
         for ( auto& x: alpha_lookup) {
             for (int p = 0; p < x.first.size(); p+=5 ) {
                 int n = x.first[p], i = x.first[p+1], j = x.first[p+2], d = x.first[p+3], m = x.first[p+4];
-                gfw -= delta[n][i][j][d][m] * x.second;
+                gfw_W -= delta[n][i][j][d][m] * x.second;
             }
         }
+        gfw = gfw_S + gfw_W;
+        cout << "gfw_S=" << gfw_S << ", gfw_W=" << gfw_W << ", gfw=" << gfw << endl;
         /*
         if (fw_iter > 0 && gfw < 0) {
             cout << "ISSUE: GFW_2: " << gfw << endl;

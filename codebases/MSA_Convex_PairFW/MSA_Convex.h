@@ -49,13 +49,13 @@ const int MAX_1st_FW_ITER = 500;
 const int MAX_2nd_FW_ITER = 1000;
 const int MIN_ADMM_ITER = 10;
 const int MAX_ADMM_ITER = 10000;
-const double GFW_EPS = 1.0;
+const double GFW_EPS = 1e-3;
 //const double EPS_ADMM_CoZ = 1e-5; 
 const double EPS_Wdiff = 1e-3;
 
 /* Define Scores and Other Constants */
 const char GAP_NOTATION = '-';
-double C_I = 1.6;  // penalty of insertion
+double C_I = 1.8;  // penalty of insertion
 double C_D = 1.8;  // penalty of deletion
 double C_MM = 2.2; // penalty of mismatch
 double C_M = 0;    // penalty of match
@@ -582,7 +582,7 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
             // if (d1 == START_IDX && j > 0) continue;
             if (d1 == END_IDX) continue;
             for (int d2 = 0; d2 < D2; d2 ++) {
-                double score = plane[j][d1].score + transition[j][d1][d2] + mat_insertion[j][d1];
+                double score = plane[j][d1].score + transition[j][d1][d2] + mat_insertion[j][d2];
                 if (score > max_score[d2]) {
                     max_score[d2] = score;
                     max_d1[d2] = d1;
@@ -613,6 +613,7 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
         trace.insert(trace.begin(), plane[j][last_d2]);
     }
     // 3. consider insertion
+    /*
     for (int j = trace.size()-1; j >= 0; j --) {
         for (int d1 = 0; d1 < NUM_DNA_TYPE; d1 ++) {
             if (mat_insertion[j][d1] > 0) {
@@ -628,7 +629,8 @@ void refined_viterbi_algo (Trace& trace, Tensor& transition, Matrix mat_insertio
             }
         }
     }
-    // cout << "viterbi_max: " << trace[J-1].score << endl;
+    */
+    cout << "viterbi_max: " << trace[J-1].score << endl;
     return ;
 }
 /*}}}*/
