@@ -45,12 +45,12 @@ const int START_IDX = 4;
 const int END_IDX = 5;
 
 /* Algorithmic Setting */
-const int MAX_1st_FW_ITER = 2000;
-const int MAX_2nd_FW_ITER = 2000;
+const int MAX_1st_FW_ITER = 200;
+const int MAX_2nd_FW_ITER = 300;
 const int MIN_ADMM_ITER = 10;
 const int MAX_ADMM_ITER = 10000;
 const double FW1_GFW_EPS = 1e-6;
-const double FW2_GFW_EPS = 0.003;
+const double FW2_GFW_EPS = 1e-3;
 //const double EPS_ADMM_CoZ = 1e-5; 
 const double EPS_Wdiff = 0.001;
 

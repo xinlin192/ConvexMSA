@@ -324,7 +324,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
 }
 
 /* We resolve the second subproblem through sky-plane projection */
-void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
+Sequence second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     /*{{{*/
     int numSeq = allSeqs.size();
     int T2 = W_2[0][0].size();
@@ -346,22 +346,21 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
                     }
     int fw_iter = -1;
     unordered_map < vector<int> , double, AtomHasher, AtomEqualFn > alpha_lookup;
+    Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
     while ( fw_iter < MAX_2nd_FW_ITER) {
         fw_iter ++;
         // 2. determine the trace: run viterbi algorithm
-        Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
+        trace.clear();
         refined_viterbi_algo (trace, tensor, mat_insertion);
         vector<int> S_atom;
         // 3. recover values for S 
         // 3b. set a number of selected elements to 1
-        cout << "Rev: ";
         bool see_end = false;
         for (int t = 0; t < trace.size(); t++) {
             int sj = trace[t].location[0];
             int sd = trace[t].location[1];
             int sm = dna2T3idx(trace[t].acidB);
             if (trace[t].acidA == '#') break;
-            cout << trace[t].acidB; 
             // cout << trace[t].toString() << endl;
             for (int n = 0; n < numSeq; n ++) 
                 for (int i = 0; i < delta[n].size(); i ++) 
@@ -477,7 +476,10 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         // 4. output iteration tracking info
          // second_subproblem_log(fw_iter, W_2, W_1, Y, mu);
     }
-    return;
+    Sequence recSeq;
+    for (int t = 0; t < trace.size(); t++) 
+        recSeq.push_back(trace[t].acidB);
+    return recSeq;
     /*}}}*/
 }
 
@@ -513,7 +515,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
             first_subproblem (W_1[n], W_2[n], Y[n], C[n], mu, allSeqs[n]);
 
         // 2b. Subprogram: 
-        second_subproblem (W_1, W_2, Y, mu, allSeqs, lenSeqs);
+        Sequence recSeq = second_subproblem (W_1, W_2, Y, mu, allSeqs, lenSeqs);
 
         // 2d. update Y: Y += mu * (W_1 - W_2)
         for (int n = 0; n < numSeq; n ++)
@@ -534,13 +536,49 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
                             W1mW2 = max( fabs(value), W1mW2 ) ;
                         }
         }
+        SequenceSet allModelSeqs, allDataSeqs;
+        double obj_rounded = 0.0;
+        for (int n = 0; n < numSeq; n ++) {
+            Sequence model_seq = recSeq, data_seq = allSeqs[n];
+            data_seq.erase(data_seq.begin());
+            model_seq.erase(model_seq.begin());
+            data_seq.erase(data_seq.end()-1);
+            model_seq.erase(model_seq.end()-1);
+
+            // align sequences locally
+            Plane plane (data_seq.size()+1, Trace(model_seq.size()+1, Cell(2)));
+            Trace trace (0, Cell(2));
+            smith_waterman (model_seq, data_seq, plane, trace);
+
+            // get the objective of rounded result
+            for (int i = 0; i < trace.size(); i ++) {
+                if (trace[i].acidA == '-' && trace[i].acidB != '-') 
+                    obj_rounded += C_I;
+                else if (trace[i].acidA != '-' && trace[i].acidB == '-') 
+                    obj_rounded += C_D;
+                else if (trace[i].acidA == trace[i].acidB) 
+                    obj_rounded += C_M;
+                else if (trace[i].acidA != trace[i].acidB) 
+                    obj_rounded += C_MM;
+            }
+            /*
+            model_seq.clear(); data_seq.clear();
+            for (int i = 0; i < trace.size(); i ++) 
+                model_seq.push_back(trace[i].acidA);
+            for (int i = 0; i < trace.size(); i ++) 
+                data_seq.push_back(trace[i].acidB);
+            allModelSeqs.push_back(model_seq);
+            allDataSeqs.push_back(data_seq);
+            */
+        }
         // cerr << "=============================================================================" << endl;
         char COZ_val [50], w1mw2_val [50]; 
         sprintf(COZ_val, "%6f", CoZ);
         sprintf(w1mw2_val, "%6f", W1mW2);
         cerr << "ADMM_iter = " << iter 
             << ", C o Z = " << COZ_val
-            << ", || W_1 - W_2 ||_{max} = " << w1mw2_val
+            << ", Wdiff_max = " << w1mw2_val
+            << ", obj_rounded = " << obj_rounded
             << endl;
         // cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
         // cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
