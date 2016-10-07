@@ -3,10 +3,10 @@ from util import parseSequences
 
 class Parameters:
     def __init__(self):
-        self.INSERTION_COST = 1.8
-        self.DELETION_COST = 1.8
+        self.INSERTION_COST = 1
+        self.DELETION_COST = 1
         self.MATCH_COST = 0
-        self.MISMATCH_COST = 2.2
+        self.MISMATCH_COST = 1
 
 class Statistics:
     def __init__(self):

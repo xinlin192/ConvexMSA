@@ -26,12 +26,12 @@ using namespace std;
 // variable parameters
 char* trainFname = NULL;
 int LENGTH_OFFSET = 0;
-double MU = 1.0;
+double MU = 1;
 double PERB_EPS = 0.0;
 bool ADMM_EARLY_STOP_TOGGLE = true;
 bool REINIT_W_ZERO_TOGGLE = true;
 
-const int NUM_THREADS = 6;
+const int NUM_THREADS = 1;
 
 /* Self-defined Constants and Global Variables */
 const double MIN_DOUBLE = -1*1e99;
@@ -41,8 +41,8 @@ const int NUM_DNA_TYPE = 4 + 1 + 1;  // A T C G + START + END
 const int NUM_MOVEMENT = 9 + 2 + 2;  
 
 /* Algorithmic Setting */
-const int MAX_1st_FW_ITER = 100;
-const int MAX_2nd_FW_ITER = 100;
+const int MAX_1st_FW_ITER = 10;
+const int MAX_2nd_FW_ITER = 1;
 const int MIN_ADMM_ITER = 15;
 const int MAX_ADMM_ITER = 10000;
 const double EPS_1st_FW = 1e-4;

@@ -9,6 +9,8 @@
 ################################################################*/
 
 #include<iostream>
+#include <stdlib.h>
+#include <stdio.h>
 #include "MSA_Convex.h"
 
 /* Debugging option */
@@ -126,12 +128,13 @@ double first_subproblem_log (int fw_iter, Tensor4D& W, Tensor4D& Z, Tensor4D& Y,
                     qua_term += 0.5*mu *sterm * sterm;
                 }
     cost = lin_term + qua_term;
-    cout << "[FW1] iter=" << fw_iter
+    /*cout << "[FW1] iter=" << fw_iter
          << ", ||W||^2: " << Ws 
          << ", lin_term: " << lin_term 
          << ", qua_sterm: " << qua_term
          << ", cost=" << cost 
          << endl;
+	 */
 /*}}}*/
 }
 
@@ -231,7 +234,7 @@ void first_subproblem (Tensor4D& W_1, Tensor4D& W_2, Tensor4D& Y, Tensor4D& C, d
 }
 
 /* We resolve the second subproblem through sky-plane projection */
-void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
+Sequence second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, SequenceSet& allSeqs, vector<int> lenSeqs) {
     /*{{{*/
     int numSeq = allSeqs.size();
     int T2 = W_2[0][0].size();
@@ -251,12 +254,13 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
     Tensor tensor (T2, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
     Matrix mat_insertion (T2, vector<double>(NUM_DNA_TYPE, 0.0));
 
+    Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
     int fw_iter = -1;
     while (fw_iter < MAX_2nd_FW_ITER) {
         fw_iter ++;
         // 1. compute delta
 #ifdef PARRALLEL_COMPUTING
-#pragma omp parallel for
+//#pragma omp parallel for
 #endif
         for (int n = 0; n < numSeq; n ++) {
             int T1 = W_2[n].size();
@@ -308,8 +312,8 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         }
 
         // 2. determine the trace: run viterbi algorithm
-        Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
-        refined_viterbi_algo (trace, tensor, mat_insertion);
+        trace.clear();
+	refined_viterbi_algo (trace, tensor, mat_insertion);
         Tensor5D S (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE, vector<double>(NUM_MOVEMENT, 0.0))))); 
         tensor5D_init (S, allSeqs, lenSeqs, T2);
 
@@ -391,12 +395,59 @@ void second_subproblem (Tensor5D& W_1, Tensor5D& W_2, Tensor5D& Y, double& mu, S
         // 5. early stop condition
         if (fabs(gamma) < EPS_2nd_FW) break; 
     }
-    return;
+    
+    Sequence recSeq;
+    for (int t = 0; t < trace.size(); t++) 
+        recSeq.push_back(trace[t].acidB);
+    return recSeq;
     /*}}}*/
 }
 
-Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
-    /*{{{*/
+void writeClusterView( string fpath , SequenceSet& allModelSeqs, SequenceSet& allDataSeqs ){
+
+    int numSeq = allDataSeqs.size();
+    SequenceSet allCOSeqs (numSeq, Sequence(0));
+    vector<int> pos(numSeq, 0);
+    while (true) {
+        set<int> insertion_ids;
+        for (int i = 0; i < numSeq; i ++) {
+            if (pos[i] >= allModelSeqs[i].size()) continue;
+            if (allModelSeqs[i][pos[i]] == '-') 
+                insertion_ids.insert(i);
+        }
+        if (insertion_ids.size() != 0) {
+            // insertion exists
+            for (int i = 0; i < numSeq; i ++) {
+                if (insertion_ids.find(i)==insertion_ids.end()) // not in set
+                    allCOSeqs[i].push_back('-');
+                else { // in set
+                    allCOSeqs[i].push_back(allDataSeqs[i][pos[i]++]);
+                }
+            }
+        } else { // no insertion
+            for (int i = 0; i < numSeq; i ++) 
+                allCOSeqs[i].push_back(allDataSeqs[i][pos[i]++]);
+        }
+        // terminating
+        bool terminated = true;
+        for (int i = 0; i < numSeq; i ++) 
+            if (pos[i] != allModelSeqs[i].size()) {
+                terminated = false; 
+                break;
+            }
+        if (terminated) break;
+    }
+    ofstream co_out (fpath.c_str());
+    for (int i = 0; i < numSeq; i ++) {
+        for (int j = 0; j < allCOSeqs[i].size(); j++)  {
+            co_out << allCOSeqs[i][j];
+        }
+        co_out << endl;
+    }
+    co_out.close();
+}
+
+Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2, string& dir_path) {
     // 1. initialization
     int numSeq = allSeqs.size();
     vector<Tensor4D> C (numSeq, Tensor4D(0, Tensor(T2, Matrix(NUM_DNA_TYPE,
@@ -428,7 +479,7 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
 
         // 2b. Subprogram: 
         second_subproblem (W_1, W_2, Y, mu, allSeqs, lenSeqs);
-
+	
         // 2d. update Y: Y += mu * (W_1 - W_2)
         for (int n = 0; n < numSeq; n ++)
             tensor4D_lin_update (Y[n], W_1[n], W_2[n], mu);
@@ -448,13 +499,91 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
                             W1mW2 = max( fabs(value), W1mW2 ) ;
                         }
         }
+        ///////////////////////////////////Copy from Main/////////////////////////////////////////
+	int T2m = T2;
+	Tensor tensor (T2m, Matrix (NUM_DNA_TYPE, vector<double>(NUM_DNA_TYPE, 0.0)));
+	Matrix mat_insertion (T2m, vector<double> (NUM_DNA_TYPE, 0.0));
+	for (int n = 0; n < numSeq; n ++) {
+		int T1 = W_2[n].size();
+		for (int i = 0; i < T1; i ++) { 
+			for (int j = 0; j < T2m; j ++) {
+				for (int d = 0; d < NUM_DNA_TYPE; d ++) {
+					for (int m = 0; m < NUM_MOVEMENT; m ++) {
+						if (m == DELETION_A or m == MATCH_A)
+							tensor[j][d][dna2T3idx('A')] += max(0.0, W_2[n][i][j][d][m]);
+						else if (m == DELETION_T or m == MATCH_T)
+							tensor[j][d][dna2T3idx('T')] += max(0.0, W_2[n][i][j][d][m]);
+						else if (m == DELETION_C or m == MATCH_C)
+							tensor[j][d][dna2T3idx('C')] += max(0.0, W_2[n][i][j][d][m]);
+						else if (m == DELETION_G or m == MATCH_G)
+							tensor[j][d][dna2T3idx('G')] += max(0.0, W_2[n][i][j][d][m]);
+						else if (m == DELETION_START or m == MATCH_START)
+							tensor[j][d][dna2T3idx('*')] += max(0.0, W_2[n][i][j][d][m]);
+						else if (m == DELETION_END or m == MATCH_END)
+							tensor[j][d][dna2T3idx('#')] += max(0.0, W_2[n][i][j][d][m]);
+						else if (m == INSERTION) 
+							mat_insertion[j][d] += max(0.0, W_2[n][i][j][d][m]);
+					}
+				}
+			}
+		}
+	}
+	Trace trace (0, Cell(2)); // 1d: j, 2d: ATCG
+	refined_viterbi_algo (trace, tensor, mat_insertion);
+	
+	Sequence recSeq;
+	for (int i = 0; i < trace.size(); i ++) 
+		if (trace[i].action != INSERTION) {
+			recSeq.push_back(trace[i].acidB);
+			if (trace[i].acidB == '#') break;
+		}
+	////////////////////////////////END copy from MAIN/////////////////////////////////////////////////////
+	
+	SequenceSet allModelSeqs, allDataSeqs;
+        double obj_rounded = 0.0;
+        for (int n = 0; n < numSeq; n ++) {
+            Sequence model_seq = recSeq, data_seq = allSeqs[n];
+            data_seq.erase(data_seq.begin());
+            model_seq.erase(model_seq.begin());
+            data_seq.erase(data_seq.end()-1);
+            model_seq.erase(model_seq.end()-1);
+
+            // align sequences locally
+            Plane plane (data_seq.size()+1, Trace(model_seq.size()+1, Cell(2)));
+            Trace trace (0, Cell(2));
+            smith_waterman (model_seq, data_seq, plane, trace);
+
+            // get the objective of rounded result
+            for (int i = 0; i < trace.size(); i ++) {
+                if (trace[i].acidA == '-' && trace[i].acidB != '-') 
+                    obj_rounded += 1.0;//C_I;
+                else if (trace[i].acidA != '-' && trace[i].acidB == '-') 
+                    obj_rounded += 1.0;//C_D;
+                else if (trace[i].acidA == trace[i].acidB) 
+                    obj_rounded += 0.0;//C_M;
+                else if (trace[i].acidA != trace[i].acidB) 
+                    obj_rounded += 1.0;//C_MM;
+            }
+            
+            model_seq.clear(); data_seq.clear();
+            for (int i = 0; i < trace.size(); i ++) 
+                model_seq.push_back(trace[i].acidA);
+            for (int i = 0; i < trace.size(); i ++) 
+                data_seq.push_back(trace[i].acidB);
+            allModelSeqs.push_back(model_seq);
+            allDataSeqs.push_back(data_seq);
+        }
+	//writeClusterView( dir_path+to_string(iter), allModelSeqs, allDataSeqs );
+	
+
         // cerr << "=============================================================================" << endl;
         char COZ_val [50], w1mw2_val [50]; 
         sprintf(COZ_val, "%6f", CoZ);
         sprintf(w1mw2_val, "%6f", W1mW2);
         cerr << "ADMM_iter = " << iter 
             << ", C o Z = " << COZ_val
-            << ", || W_1 - W_2 ||_{max} = " << w1mw2_val
+            << ", Wdiff_max = " << w1mw2_val
+            << ", obj_rounded = " << obj_rounded
             << endl;
         // cerr << "sub1_Obj = CoW_1+0.5*mu*||W_1-Z+1/mu*Y_1||^2 = " << sub1_cost << endl;
         // cerr << "sub2_Obj = ||W_2-Z+1/mu*Y_2||^2 = " << sub2_cost << endl;
@@ -473,7 +602,6 @@ Tensor5D CVX_ADMM_MSA (SequenceSet& allSeqs, vector<int>& lenSeqs, int T2) {
     cout << "W_2: " << endl;
     for (int i = 0; i < numSeq; i ++) tensor4D_dump(W_2[i]);
     return W_2;
-    /*}}}*/
 }
 
 void sequence_dump (SequenceSet& allSeqs, int n) {
@@ -484,6 +612,7 @@ void sequence_dump (SequenceSet& allSeqs, int n) {
         cout << allSeqs[n][j];
     cout << endl;
 }
+
 
 int main (int argn, char** argv) {
     // 1. parse cmd 
@@ -507,10 +636,13 @@ int main (int argn, char** argv) {
         sequence_dump(allSeqs, n);
 
     // 3. relaxed convex program: ADMM-based algorithm
+    string dir_path = string(trainFname)+".trace/";
+    //system((string("rm -rf ")+dir_path).c_str());
+    //system((string("mkdir ")+dir_path).c_str());
     // omp_set_num_threads(NUM_THREADS);
     int T2 = get_init_model_length (lenSeqs) + LENGTH_OFFSET; // model_seq_length
     time_t begin = time(NULL);
-    vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2);
+    vector<Tensor4D> W = CVX_ADMM_MSA (allSeqs, lenSeqs, T2, dir_path);
     time_t end = time(NULL);
 
     // 4. output the result
@@ -600,49 +732,9 @@ int main (int argn, char** argv) {
         cout << endl;
     }
     cout << ">>>>>>>>>>>>>>>>>>>>>ClustalOmegaView<<<<<<<<<<<<<<<<<<<<<<" << endl;
-    SequenceSet allCOSeqs (numSeq, Sequence(0));
-    vector<int> pos(numSeq, 0);
-    while (true) {
-        set<int> insertion_ids;
-        for (int i = 0; i < numSeq; i ++) {
-            if (pos[i] >= allModelSeqs[i].size()) continue;
-            if (allModelSeqs[i][pos[i]] == '-') 
-                insertion_ids.insert(i);
-        }
-        if (insertion_ids.size() != 0) {
-            // insertion exists
-            for (int i = 0; i < numSeq; i ++) {
-                if (insertion_ids.find(i)==insertion_ids.end()) // not in set
-                    allCOSeqs[i].push_back('-');
-                else { // in set
-                    allCOSeqs[i].push_back(allDataSeqs[i][pos[i]++]);
-                }
-            }
-        } else { // no insertion
-            for (int i = 0; i < numSeq; i ++) 
-                allCOSeqs[i].push_back(allDataSeqs[i][pos[i]++]);
-        }
-        // terminating
-        bool terminated = true;
-        for (int i = 0; i < numSeq; i ++) 
-            if (pos[i] != allModelSeqs[i].size()) {
-                terminated = false; 
-                break;
-            }
-        if (terminated) break;
-    }
-    string fname (trainFname);
-    fname = fname + ".co";
-    ofstream co_out (fname.c_str());
-    for (int i = 0; i < numSeq; i ++) {
-        for (int j = 0; j < allCOSeqs[i].size(); j++)  {
-            co_out << allCOSeqs[i][j];
-            cout << allCOSeqs[i][j];
-        }
-        co_out << endl;
-        cout << endl;
-    }
-    co_out.close();
+    writeClusterView(string(trainFname)+".co", allModelSeqs, allDataSeqs);
+	
+    
     cout << "#########################################################" << endl;
     cout << "Time Spent: " << end - begin << " seconds" << endl;
     return 0;

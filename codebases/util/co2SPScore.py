@@ -3,9 +3,9 @@ from util import parseSequences
 
 class Parameters:
     def __init__(self):
-        self.ONE_GAP_COST = 1.8
+        self.ONE_GAP_COST = 1
         self.MATCH_COST = 0
-        self.MISMATCH_COST = 2.2
+        self.MISMATCH_COST = 1
 
 class Statistics:
     def __init__(self):
